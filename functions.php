@@ -2,10 +2,21 @@
 if (!defined('__TYPECHO_ROOT_DIR__')) exit;
 
 /**
- * 伪跳转，用于记录点击量
+ * 主题初始化
  */
 function themeInit($archive)
 {
+    //初始化表结构
+    $options = Helper::options();
+    if (!$options->get('ITEM-isInit')) {
+        $db = Typecho_Db::get();
+        if (!array_key_exists('views', $db->fetchRow($db->select()->from('table.contents')->limit(1)))) {
+            $db->query('ALTER TABLE `' . $db->getPrefix() . 'contents` ADD `views` INT(10) NOT NULL DEFAULT 0;');
+        }
+        $options->set('ITEM-isInit', true);
+    }
+
+    //伪跳转，用于记录点击量
     $cid = $archive->request->cid;
     if (!is_null($cid) && is_numeric($cid)) {
         getClicks($cid, false);
@@ -128,20 +139,17 @@ function themeFields($layout)
  */
 function getClicks($cid, $display = true)
 {
-    $num = "";
+    $num = 0;
     if (!array_key_exists($cid, $_COOKIE) || is_null($_COOKIE[$cid])) {
+
         //如不存在，从数据库中查询
         $db     = Typecho_Db::get();
-        $prefix = $db->getPrefix();
-        if (!array_key_exists('views', $db->fetchRow($db->select()->from('table.contents')))) {
-            $db->query('ALTER TABLE `' . $prefix . 'contents` ADD `views` INT(10) DEFAULT 1;');
-            $num = 1;
-        } else {
-            $row = $db->fetchRow($db->select('views')->from('table.contents')->where('cid = ?', $cid));
-            $num = $row['views'] + 1;
-            //更新数据库
-            $db->query($db->update('table.contents')->rows(array('views' => (int) $num))->where('cid = ?', $cid));
-        }
+        $row = $db->fetchRow($db->select('views')->from('table.contents')->where('cid = ?', $cid));
+        $num = $row['views'] + 1;
+
+        //更新数据库
+        $db->query('UPDATE `' . $db->getPrefix() . 'contents` SET views = views + 1 WHERE cid = ' . $cid);
+
         // 60s内，同一客户端、同一篇文章不累计点击量
         setcookie($cid, $num, time() + 60);
     } else {
@@ -160,7 +168,7 @@ function getClicks($cid, $display = true)
 /**
  * 点击量排名文章
  */
-function theMostViewed($limit = 10)
+function theMostViewed($limit = 5)
 {
     if (!array_key_exists("mostViewed", $_COOKIE) || is_null($_COOKIE['mostViewed'])) {
 
