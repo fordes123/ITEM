@@ -16,7 +16,7 @@ $this->need('topbar.php'); ?>
                     <div class="post-tags"><?php foreach ($this->tags as $tag) { ?><a><?php echo ($tag['name']); ?></a><?php } ?></div>
                     <div class="post-content">
                         <div class="post-excerpt"> <i class="excerpt-icon"></i>
-                            <h4><?php echo $this->fields->text ?? '暂无介绍' ?></h4>
+                            <h4><?php echo $this->fields->text ? $this->fields->text : $this->title;?></h4>
                         </div>
                         <div>
                             <?php $this->content(); ?>
@@ -26,7 +26,7 @@ $this->need('topbar.php'); ?>
                         <div class="col"> <a href="#" class="btn btn-light btn-icon btn-block btn-lg"><span><i class="far fa-eye"></i></span><b class="num"><?php getClicks($this->cid) ?></b></a></div>
                         <div class="col"> <a href="#" class="btn btn-light btn-icon btn-block btn-lg "><span><i class="far fa-thumbs-up"></i></span></a></div>
                         <div class="col"> <a href="#" class="btn-share-toggler btn btn-light btn-icon btn-block btn-lg"><span><i class="fas fa-external-link-alt"></i></span></a></div>
-                        <div class="col-12 col-md-7"> <a href="<?php echo $this->fields->url ?? '#'; ?>" title="<?php $this->title() ?>" target="_blank" class="btn btn-primary btn-lg btn-block btn-goto">访问 <i class="text-lg fas fa-arrow-right"></i></a></div>
+                        <div class="col-12 col-md-7"> <a href="<?php $this->fields->url ? $this->fields->url : '#'; ?>" title="<?php $this->title() ?>" target="_blank" class="btn btn-primary btn-lg btn-block btn-goto">访问 <i class="text-lg fas fa-arrow-right"></i></a></div>
                     </div>
                 </div>
             </div>
