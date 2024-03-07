@@ -201,8 +201,8 @@ function theMostViewed($limit = 5)
 function printfHotList($cids)
 {
     foreach ($cids as $cid) :
-        $item = Typecho_Widget::widget('Widget_Archive@single', 'cid=' . $cid);
+        $item = Typecho_Widget::widget('Widget_Archive@' . $cid, 'pageSize=1&type=post', 'cid=' . $cid);
         $url = $item->fields->url ? $item->fields->url : $item->permalink;
-        echo sprintf(HOT_LIST_ITEM_TEMPLATE, $item->title, $url, $cid, $item->title, $item->fields->text);
+        echo sprintf(HOT_LIST_ITEM_TEMPLATE, $item->title . ($item->fields->text ? ' - ' . $item->fields->text : ''), $url, $cid, $item->fields->text);
     endforeach;
 }
