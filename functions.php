@@ -140,7 +140,7 @@ function themeFields($layout)
 function getClicks($cid, $display = true)
 {
     $num = 0;
-    if (!array_key_exists($cid, $_COOKIE) || is_null($_COOKIE[$cid])) {
+    if (!array_key_exists($cid, $_COOKIE) || is_null($_COOKIE[$cid])) :
 
         //如不存在，从数据库中查询
         $db     = Typecho_Db::get();
@@ -152,25 +152,34 @@ function getClicks($cid, $display = true)
 
         // 60s内，同一客户端、同一篇文章不累计点击量
         setcookie($cid, $num, time() + 60);
-    } else {
+    else :
         $num = $_COOKIE[$cid];
-    }
+    endif;
 
-    if ($display) {
-        if ($num < 1000) {
-            echo $num;
-        } else if ($num >= 1000) {
-            echo floor($num / 1000) . 'K';
-        }
-    }
+    if ($display) :
+        echo $num < 1000 ? $num : floor($num / 1000) . 'K';
+    endif;
 }
+
+
+
+define('HOT_LIST_ITEM_TEMPLATE', <<<HTML
+<div class="list-item">
+    <div class="list-content">
+        <div class="list-body">
+            <div class="list-title h-1x">%s</div>
+        </div>
+    </div>
+    <a href="%s" target="_blank" cid="%d" title="%s" class="list-goto nav-item"></a>
+</div>
+HTML);
 
 /**
  * 点击量排名文章
  */
 function theMostViewed($limit = 5)
 {
-    if (!array_key_exists("mostViewed", $_COOKIE) || is_null($_COOKIE['mostViewed'])) {
+    if (!array_key_exists("mostViewed", $_COOKIE) || is_null($_COOKIE['mostViewed'])) :
 
         $db = Typecho_Db::get();
         $limit = is_numeric($limit) ? $limit : 5;
@@ -182,21 +191,18 @@ function theMostViewed($limit = 5)
         );
 
         $cids = $posts ? array_column($posts, 'cid') : [];
-        echoMostViewed($cids);
+        printfHotList($cids);
         setcookie('mostViewed', implode('.', $cids), time() + 3600);
-    } else {
-        echoMostViewed(explode('.', $_COOKIE['mostViewed']));
-    }
+    else :
+        printfHotList(explode('.', $_COOKIE['mostViewed']));
+    endif;
 }
 
-function echoMostViewed($cids)
+function printfHotList($cids)
 {
-    foreach ($cids as $cid) {
-        $item = Typecho_Widget::widget('Widget_Archive@' . $cid, 'pageSize=1&type=post', 'cid=' . $cid);
-        $post_title = htmlspecialchars($item->title);
-        $url = $item->fields->url;
-        $desc = $item->fields->text;
-        $text = $post_title . ' - ' . $desc;
-        echo "<div class='list-item'><div class='list-content'><div class='list-body'><div class='list-title h-1x'>$text</div></div></div><div href='$url' target='_blank' cid='$cid' title='$desc' class='list-goto nav-item'></div></div>";
-    }
+    foreach ($cids as $cid) :
+        $item = Typecho_Widget::widget('Widget_Archive@single', 'cid=' . $cid);
+        $url = $item->fields->url ? $item->fields->url : $item->permalink;
+        echo sprintf(HOT_LIST_ITEM_TEMPLATE, $item->title, $url, $cid, $item->title, $item->fields->text);
+    endforeach;
 }

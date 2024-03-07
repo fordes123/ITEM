@@ -8,7 +8,7 @@
           $this->widget('Widget_Contents_Page_List')->to($pages);
           while ($pages->next()) : ?>
             <li class="menu-item menu-item-type-taxonomy menu-item-object-category">
-              <a href="<?php echo $pages->fields->navigation ?  $pages->fields->url ?? '#' : $pages->permalink; ?>" title="<?php echo $pages->fields->text ?? '暂无介绍'; ?>"> <?php $pages->title(); ?></a>
+              <a href="<?php echo $pages->fields->navigation ? $pages->fields->url : $pages->permalink; ?>" title="<?php echo $pages->fields->navigation ? $pages->fields->text : $pages->title; ?>"><?php $pages->title(); ?></a>
             </li>
           <?php endwhile; ?>
         </ul>
