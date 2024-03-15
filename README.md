@@ -19,7 +19,7 @@
 
   <p align="center">
     网址导航型的 Typecho 主题
-    <br />
+    <br /><br />
     <a href="https://item.ink"><strong>演示站点 »</strong></a>
     <br />
     <br />
@@ -47,12 +47,15 @@
 
 <h2 id='2'>🛠️ 快速开始</h2>
 
+<a href="https://vercel.com/new/clone?project-name=ITEM-vercel&repository-name=ITEM-vercel&repository-url=https://github.com/fordes123/ITEM-vercel&from=templates&integration-ids=oac_coKBVWCXNjJnCEth1zzKoF1j"><img src="https://vercel.com/button"></a>
+> 通过 Vercel 托管需要添加一个 MySQL 集成，如 [TiDB](https://tidbcloud.com/)、[PlanetScale](https://planetscale.com/)，参考: [Vercel 托管 Typecho](https://www.fordes.top/posts/tutorials/typecho-vercel/)
+
+### 本地部署
+
 这是一个 Typecho 主题，因此你必须要先安装 Typecho 才能使用它，同时还需要满足以下条件:
 
 - php 7.4+
 - MySQL 8+
-
-### 安装使用
 
 1. 获取主题文件
    克隆仓库源码或下载最新 [Releases](https://github.com/fordes123/ITEM/releases)，
