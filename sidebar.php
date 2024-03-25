@@ -13,7 +13,8 @@
                         $children = $categories->getAllChildren($categories->mid);
                         if (empty($children)) { ?>
                             <li class="menu-item menu-item-type-taxonomy menu-item-object-category">
-                                <a onclick="<?php if ($this->is('index')) : ?>document.getElementById('<?php $categories->slug() ?>').scrollIntoView({behavior: 'smooth', block: 'center'});<?php else : ?>window.location.href = '/';<?php endif; ?>" aria-current="page">
+                                <?php $onclick = $this->is('index') ? "document.getElementById('" . $categories->slug . "').scrollIntoView({behavior: 'smooth', block: 'center'})" : "window.location.href = '/'"; ?>
+                                <a onclick="<?php echo $onclick; ?>" aria-current="page">
                                     <span class="menu-icon"><i class="fas fa-<?php $categories->slug(); ?> fa-sm"></i></span>
                                     <span class="menu-text"><?php $categories->name() ?></span>
                                 </a>
@@ -29,7 +30,8 @@
                                     <?php foreach ($children as $mid) { ?>
                                         <?php $child = $categories->getCategory($mid); ?>
                                         <li class="menu-item menu-item-type-taxonomy menu-item-object-category">
-                                            <a onclick="<?php if ($this->is('index')) : ?>document.getElementById('<?php $child['slug'] ?>').scrollIntoView({behavior: 'smooth', block: 'center'});<?php else : ?>window.location.href = '/';<?php endif; ?>">
+                                            <?php $onclick = $this->is('index') ? "document.getElementById('" . $child['slug'] . "').scrollIntoView({behavior: 'smooth', block: 'center'})" : "window.location.href = '/'"; ?>
+                                            <a onclick="<?php echo $onclick; ?>" aria-current="page">
                                                 <span class="menu-text"><?php echo $child['name'] ?></span>
                                             </a>
                                         </li>
