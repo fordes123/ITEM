@@ -85,7 +85,7 @@ $this->need('topbar.php'); ?>
       <?php global $categories;
       while ($categories->next()) :
         if (count($categories->children) === 0) :
-          $this->widget('Widget_Archive@category-' . $categories->mid, 'pageSize=10000&type=category', 'mid=' . $categories->mid)->to($posts); ?>
+          $this->widget('Widget_Archive@' . $categories->mid, 'pageSize=10000&type=category', 'mid=' . $categories->mid)->to($posts); ?>
           <div class="col-12">
             <div class="card" id="<?php $categories->slug(); ?>">
               <div class="card-header">
