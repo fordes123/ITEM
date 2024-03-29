@@ -1,5 +1,15 @@
 <?php
 if (!defined('__TYPECHO_ROOT_DIR__')) exit;
+define('RANKED_ITEM_TEMPLATE', <<<HTML
+<div class="list-item">
+    <div class="list-content">
+        <div class="list-body">
+            <div class="list-title h-1x">%s</div>
+        </div>
+    </div>
+    <a href="%s" target="_blank" cid="%d" title="%s" class="list-goto nav-item"></a>
+</div>
+HTML);
 
 /**
  * 主题初始化
@@ -19,7 +29,7 @@ function themeInit($archive)
     //伪跳转，用于记录点击量
     $cid = $archive->request->cid;
     if (!is_null($cid) && is_numeric($cid)) {
-        getClicks($cid, false);
+        pageview($cid, false);
     }
 }
 
@@ -51,22 +61,22 @@ function themeConfig($form)
         'searchConfig',
         NULL,
         '[
-        {
-            "name": "谷歌",
-            "url": "https://www.google.com/search?q=",
-            "icon": "fab fa-google"
-        },
-        {
-            "name": "Yandex",
-            "url": "https://yandex.com/search/?text=",
-            "icon": "fab fa-yandex"
-        },
-        {
-            "name": "Github",
-            "url": "https://github.com/search?q=",
-            "icon": "fab fa-github"
-        }
-    ]',
+            {
+                "name": "谷歌",
+                "url": "https://www.google.com/search?q=",
+                "icon": "fab fa-google"
+            },
+            {
+                "name": "Yandex",
+                "url": "https://yandex.com/search/?text=",
+                "icon": "fab fa-yandex"
+            },
+            {
+                "name": "Github",
+                "url": "https://github.com/search?q=",
+                "icon": "fab fa-github"
+            }
+        ]',
         _t('搜索引擎配置'),
         _t('首页搜索引擎配置信息')
     ));
@@ -75,25 +85,25 @@ function themeConfig($form)
         'toolConfig',
         NULL,
         '[
-        {
-            "name": "热榜速览",
-            "url": "https://www.hsmy.fun",
-            "icon": "fas fa-fire",
-            "background": "linear-gradient(45deg, #97b3ff, #2f66ff)"
-        },
-        {
-            "name": "地图",
-            "url": "https://ditu.amap.com/",
-            "icon": "fas fa-fire",
-            "background": "red"
-        },
-        {
-            "name": "微信文件助手",
-            "url": "https://filehelper.weixin.qq.com",
-            "icon": "fab fa-weixin",
-            "background": "#1ba784"
-        }
-    ]',
+            {
+                "name": "热榜速览",
+                "url": "https://www.hsmy.fun",
+                "icon": "fas fa-fire",
+                "background": "linear-gradient(45deg, #97b3ff, #2f66ff)"
+            },
+            {
+                "name": "地图",
+                "url": "https://ditu.amap.com/",
+                "icon": "fas fa-fire",
+                "background": "red"
+            },
+            {
+                "name": "微信文件助手",
+                "url": "https://filehelper.weixin.qq.com",
+                "icon": "fab fa-weixin",
+                "background": "#1ba784"
+            }
+        ]',
         _t('工具直达配置'),
         _t('首页工具直达配置信息')
     ));
@@ -135,9 +145,9 @@ function themeFields($layout)
 }
 
 /**
- * 获取浏览量
+ * 更新并输出指定文章浏览量
  */
-function getClicks($cid, $display = true)
+function pageview($cid, $display = true)
 {
     $num = 0;
     if (!array_key_exists($cid, $_COOKIE) || is_null($_COOKIE[$cid])) :
@@ -161,48 +171,33 @@ function getClicks($cid, $display = true)
     endif;
 }
 
-
-
-define('HOT_LIST_ITEM_TEMPLATE', <<<HTML
-<div class="list-item">
-    <div class="list-content">
-        <div class="list-body">
-            <div class="list-title h-1x">%s</div>
-        </div>
-    </div>
-    <a href="%s" target="_blank" cid="%d" title="%s" class="list-goto nav-item"></a>
-</div>
-HTML);
-
 /**
- * 点击量排名文章
+ * 输出浏览量排名前n的文章列表
  */
-function theMostViewed($limit = 5)
+function ranked($limit = 5)
 {
     if (!array_key_exists("mostViewed", $_COOKIE) || is_null($_COOKIE['mostViewed'])) :
 
         $db = Typecho_Db::get();
         $limit = is_numeric($limit) ? $limit : 5;
-        $posts = $db->fetchAll(
-            $db->select('cid')->from('table.contents')
-                ->where('type = ? AND status = ? AND password IS NULL', 'post', 'publish')
-                ->order('views', Typecho_Db::SORT_DESC)
-                ->limit($limit)
-        );
+        $posts = $db->fetchAll($db->select('cid')->from('table.contents')
+            ->where('type = ? AND status = ? AND password IS NULL', 'post', 'publish')
+            ->order('views', Typecho_Db::SORT_DESC)
+            ->limit($limit));
 
         $cids = $posts ? array_column($posts, 'cid') : [];
-        printfHotList($cids);
+        printRanked($cids);
         setcookie('mostViewed', implode('.', $cids), time() + 3600);
     else :
-        printfHotList(explode('.', $_COOKIE['mostViewed']));
+        printRanked(explode('.', $_COOKIE['mostViewed']));
     endif;
 }
 
-function printfHotList($cids)
+function printRanked($cids)
 {
     foreach ($cids as $cid) :
-        $item = Typecho_Widget::widget('Widget_Archive@' . $cid, 'pageSize=1&type=post', 'cid=' . $cid);
+        $item = Typecho_Widget::widget("Widget_Archive@post-$cid", "pageSize=1&type=post", "cid=$cid");
         $url = $item->fields->url ? $item->fields->url : $item->permalink;
-        echo sprintf(HOT_LIST_ITEM_TEMPLATE, $item->title . ($item->fields->text ? ' - ' . $item->fields->text : ''), $url, $cid, $item->fields->text);
+        echo sprintf(RANKED_ITEM_TEMPLATE, $item->title . ($item->fields->text ? ' - ' . $item->fields->text : ''), $url, $cid, $item->fields->text);
     endforeach;
 }

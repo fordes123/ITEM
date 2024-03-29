@@ -6,41 +6,45 @@
         </a>
         <div class="aside-scroll scrollable hover">
             <ul class="aside-menu">
-                <?php global $categories;
-                $this->widget('Widget_Metas_Category_List')->to($categories);
-                while ($categories->next()) :
-                    if ($categories->levels === 0) :
-                        $children = $categories->getAllChildren($categories->mid);
-                        if (empty($children)) { ?>
-                            <li class="menu-item menu-item-type-taxonomy menu-item-object-category">
-                                <?php $onclick = $this->is('index') ? "document.getElementById('" . $categories->slug . "').scrollIntoView({behavior: 'smooth', block: 'center'})" : "window.location.href = '/'"; ?>
-                                <a onclick="<?php echo $onclick; ?>" aria-current="page">
-                                    <span class="menu-icon"><i class="fas fa-<?php $categories->slug(); ?> fa-sm"></i></span>
-                                    <span class="menu-text"><?php $categories->name() ?></span>
-                                </a>
-                            </li>
-                        <?php } else { ?>
-                            <li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children">
-                                <a>
-                                    <span class="menu-icon"><i class="fas fa-<?php $categories->slug(); ?> fa-sm"></i></span>
-                                    <span class="menu-text"><?php $categories->name(); ?></span>
-                                    <span class="menu-sign fas fa-arrow-right fa-sm"></span>
-                                </a>
-                                <ul class="sub-menu" role="menu">
-                                    <?php foreach ($children as $mid) { ?>
-                                        <?php $child = $categories->getCategory($mid); ?>
-                                        <li class="menu-item menu-item-type-taxonomy menu-item-object-category">
-                                            <?php $onclick = $this->is('index') ? "document.getElementById('" . $child['slug'] . "').scrollIntoView({behavior: 'smooth', block: 'center'})" : "window.location.href = '/'"; ?>
-                                            <a onclick="<?php echo $onclick; ?>" aria-current="page">
-                                                <span class="menu-text"><?php echo $child['name'] ?></span>
-                                            </a>
-                                        </li>
-                                    <?php } ?>
-                                </ul>
-                            </li>
-                        <?php } ?>
-                    <?php endif; ?>
-                <?php endwhile; ?>
+                <?php global $category;
+                $db = Typecho_Db::get();
+                $parent = $db->fetchAll($db->select('mid,name,slug')->from('table.metas')
+                    ->where('type = ? AND parent = ?', 'category', '0')
+                    ->order('order', Typecho_Db::SORT_ASC));
+                foreach ($parent as $item) :
+                    $children = $db->fetchAll($db->select('mid,name,slug')->from('table.metas')
+                        ->where('type = ? AND parent = ? AND count > 0', 'category', $item['mid'])
+                        ->order('order', Typecho_Db::SORT_ASC));
+                    if (empty($children)) :
+                        $category[] = $item; ?>
+                        <li class="menu-item menu-item-type-taxonomy menu-item-object-category">
+                            <?php $onclick = $this->is('index') ? "document.getElementById('" . $item['slug'] . "').scrollIntoView({behavior: 'smooth', block: 'center'})" : "window.location.href = '/'"; ?>
+                            <a onclick="<?php echo $onclick; ?>" aria-current="page">
+                                <span class="menu-icon"><i class="fas fa-<?php echo $item['slug']; ?> fa-sm"></i></span>
+                                <span class="menu-text"><?php echo $item['name'] ?></span>
+                            </a>
+                        </li>
+                    <?php else : ?>
+                        <li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children">
+                            <a>
+                                <span class="menu-icon"><i class="fas fa-<?php echo $item['slug']; ?> fa-sm"></i></span>
+                                <span class="menu-text"><?php echo $item['name'] ?></span>
+                                <span class="menu-sign fas fa-arrow-right fa-sm"></span>
+                            </a>
+                            <ul class="sub-menu" role="menu">
+                                <?php foreach ($children as $child) :
+                                    $category[] = $child; ?>
+                                    <li class="menu-item menu-item-type-taxonomy menu-item-object-category">
+                                        <?php $onclick = $this->is('index') ? "document.getElementById('" . $child['slug'] . "').scrollIntoView({behavior: 'smooth', block: 'center'})" : "window.location.href = '/'"; ?>
+                                        <a onclick="<?php echo $onclick; ?>" aria-current="page">
+                                            <span class="menu-text"><?php echo $child['name'] ?></span>
+                                        </a>
+                                    </li>
+                                <?php endforeach; ?>
+                            </ul>
+                        </li>
+                <?php endif;
+                endforeach; ?>
             </ul>
         </div>
     </div>
