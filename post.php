@@ -23,7 +23,7 @@ $this->need('topbar.php'); ?>
                         </div>
                     </div>
                     <div class="post-actions row g-2 mt-4">
-                        <div class="col"> <a href="#" class="btn btn-light btn-icon btn-block btn-lg"><span><i class="far fa-eye"></i></span><b class="num"><?php getClicks($this->cid) ?></b></a></div>
+                        <div class="col"> <a href="#" class="btn btn-light btn-icon btn-block btn-lg"><span><i class="far fa-eye"></i></span><b class="num"><?php pageview($this->cid) ?></b></a></div>
                         <div class="col"> <a href="#" class="btn btn-light btn-icon btn-block btn-lg "><span><i class="far fa-thumbs-up"></i></span></a></div>
                         <div class="col"> <a href="#" class="btn-share-toggler btn btn-light btn-icon btn-block btn-lg"><span><i class="fas fa-external-link-alt"></i></span></a></div>
                         <div class="col-12 col-md-7"> <a href="<?php echo $this->fields->url ? $this->fields->url : '#'; ?>" title="<?php $this->title() ?>" target="_blank" class="btn btn-primary btn-lg btn-block btn-goto">访问 <i class="text-lg fas fa-arrow-right"></i></a></div>
