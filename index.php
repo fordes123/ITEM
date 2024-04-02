@@ -43,7 +43,7 @@ $this->need('topbar.php'); ?>
               <?php $tool = json_decode($this->options->toolConfig, true);
               if (is_array($tool)) :
                 foreach ($tool as $item) : ?>
-                  <div class='col-4 col-md-2 col-lg-2'>
+                  <div class='col-4 col-md-3 col-md-2 col-lg-2'>
                     <div class='list-item'>
                       <div style='background: <?php echo $item['background'] ?>' class='btn btn-link btn-icon btn-md btn-rounded mx-auto mb-2'>
                         <span><i class='<?php echo $item['icon'] ?>'></i></span>

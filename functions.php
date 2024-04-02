@@ -201,3 +201,22 @@ function printRanked($cids)
         echo sprintf(RANKED_ITEM_TEMPLATE, $item->title . ($item->fields->text ? ' - ' . $item->fields->text : ''), $url, $cid, $item->fields->text);
     endforeach;
 }
+
+function timeago($timestamp)
+{
+    $diff = time() - $timestamp;
+    $units = array(
+        '年前' => 31536000,
+        '个月前' => 2592000,
+        '天前' => 86400,
+        '小时前' => 3600,
+        '分钟前' => 60,
+        '秒前' => 1,
+    );
+    foreach ($units as $unit => $value) {
+        if ($diff >= $value) {
+            $time = floor($diff / $value);
+            return $time . $unit;
+        }
+    }
+}
