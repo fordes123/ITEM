@@ -8,7 +8,7 @@
  * 
  * @package ITEM
  * @author fordes123
- * @version 2.0
+ * @version 1.0.3
  * @link https://fordes.top
  */
 if (!defined('__TYPECHO_ROOT_DIR__')) exit;
