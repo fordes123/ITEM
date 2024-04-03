@@ -13,9 +13,9 @@ $this->need('topbar.php'); ?>
                         <div class="post-heading text-center pt-5 pt-md-5 pb-3 pb-xl-4">
                             <h1 class="post-title"> <?php $this->title(); ?></h1>
                             <div class="post-meta d-flex flex-fill justify-content-center align-items-center text-base mt-3 mt-md-3">
-                                <a href="#" class="d-flex align-items-center text-muted">
+                                <a href="<?php $this->author->url(); ?>" class="d-flex align-items-center text-muted">
                                     <div class="flex-avatar w-16 me-2">
-                                        <?php echo $this->author->gravatar(16); ?>
+                                        <img alt="" src="<?php $this->options->themeUrl('/assets/image/default.gif'); ?>" data-src="https://cravatar.cn/avatar/<?php echo md5($this->author->mail); ?>?s=16" width="16" height="16" class="lazyload" />
                                     </div>
                                     <?php $this->author(); ?>
                                 </a>
