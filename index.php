@@ -65,10 +65,10 @@ $this->need('topbar.php'); ?>
               <?php $search = json_decode($this->options->searchConfig, true);
               if (is_array($search) && count($search) > 0) :
                 foreach ($search as $index => $item) : ?>
-                  <a href='javascript:;' data-url='<?php echo $item['url']; ?>' class='btn btn-link btn-sm btn-rounded <?php echo $index === 0 ? 'active' : ''; ?>'><i class='<?php echo $item['icon']; ?>' aria-hidden='true'></i><?php echo $item['name']; ?></a>
+                  <a href='javascript:;' data-url='<?php echo $item['url']; ?>' class='btn btn-link btn-sm btn-rounded <?php echo $index === 0 ? 'active' : ''; ?>'><i class='<?php echo $item['icon']; ?>' aria-hidden='true'></i>&nbsp;<?php echo $item['name']; ?></a>
                 <?php endforeach;
               else : ?>
-                <a href='javascript:;' data-url='https://www.google.com/search?q=' class='btn btn-link btn-sm btn-rounded active'><i class='fab fa-google'></i> 谷歌</a>
+                <a href='javascript:;' data-url='https://www.google.com/search?q=' class='btn btn-link btn-sm btn-rounded active'><i class='fab fa-google'></i>&nbsp;谷歌</a>
               <?php endif; ?>
             </div>
             <form> <input type="text" class="form-control" placeholder="请输入搜索关键词并按回车键…"></form>
