@@ -48,7 +48,7 @@
 <h2 id='2'>🛠️ 快速开始</h2>
 
 <a href="https://vercel.com/new/clone?project-name=ITEM-vercel&repository-name=ITEM-vercel&repository-url=https://github.com/fordes123/ITEM-vercel&from=templates&integration-ids=oac_coKBVWCXNjJnCEth1zzKoF1j"><img src="https://vercel.com/button"></a>
-> 通过 Vercel 托管需要添加一个 MySQL 集成，如 [TiDB](https://tidbcloud.com/)、[PlanetScale](https://planetscale.com/)，参考: [Vercel 托管 Typecho](https://www.fordes.top/posts/tutorials/typecho-vercel/)
+> 通过 Vercel 托管需要添加一个 MySQL 集成，如 [TiDB](https://tidbcloud.com/)、[PlanetScale](https://planetscale.com/)，参考: [Vercel 托管 Typecho](https://www.fordes.dev/posts/tutorials/typecho-vercel/)
 
 ### 本地部署
 
@@ -64,6 +64,17 @@
    ```
 2. 将主题文件重名为 <code>ITEM</code> 并移动至 Typecho 根目录<code>usr/themes</code> 文件夹中
 3. 在 Typecho 管理面板中选择更换外观并启用主题
+
+### 本地开发
+
+安装 Docker 以及 Docker Compose 后，在项目根目录下执行以下命令：  
+```shell
+cd .docker
+docker compose up -d
+```
+打开浏览器即可访问 `http://localhost:80`，账号: `dev`，密码: `12345678`  
+
+(该配置仅用于开发和测试，请勿直接用于生产环境)
 
 ---
 
@@ -135,7 +146,7 @@
 
 Issues - [https://github.com/fordes123/ITEM/issues](https://github.com/fordes123/ITEM/issues)
 
-博客 - [https://fordes.top](https://fordes.top)
+博客 - [https://fordes.dev](https://fordes.dev)
 
 ---
 
