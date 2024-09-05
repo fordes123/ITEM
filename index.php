@@ -93,7 +93,7 @@ $this->need('topbar.php'); ?>
                     <div class="col-6 col-lg-3">
                       <div class="list-item block">
                         <div href="<?php $posts->permalink() ?>" title="点击进入详情" class="media w-36 rounded-circle">
-                          <img src="<?php $this->options->themeUrl('/assets/image/default.gif'); ?>" data-src="<?php $posts->fields->logo(); ?>" class="media-content lazyload" />
+                          <img src="<?php $this->options->themeUrl('/assets/image/default.gif'); ?>" data-src="<?php echo getSiteFavicon($posts); ?>" class="media-content lazyload" />
                         </div>
                         <div href="<?php $posts->fields->navigation ? $posts->fields->url() : $posts->permalink() ?>" target='_blank' cid="<?php $posts->cid(); ?>" title="<?php $posts->fields->text(); ?>" class="list-content">
                           <div class="list-body">

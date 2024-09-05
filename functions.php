@@ -220,3 +220,12 @@ function timeago($timestamp)
         }
     }
 }
+
+function getSiteFavicon($posts) {
+    $logo = $posts->fields->logo;
+    $url = $posts->fields->url;
+    if (empty($logo) && $url) {
+        $logo = 'https://favicon.im/' . parse_url($url, PHP_URL_HOST);
+    }
+    return $logo;
+}
