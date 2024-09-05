@@ -77,7 +77,7 @@ $this->need('topbar.php'); ?>
                                                 <div class="col-12 col-md-6">
                                                     <div class="list-item block">
                                                         <div href="<?php $item->permalink(); ?>" title="点击查看详情" class="media w-36 rounded-circle">
-                                                            <img src="<?php $this->options->themeUrl('/assets/image/default.gif'); ?>" data-src="<?php $item->fields->logo(); ?>" class="media-content lazyload" />
+                                                            <img src="<?php $this->options->themeUrl('/assets/image/default.gif'); ?>" data-src="<?php echo getSiteFavicon($item); ?>" class="media-content lazyload" />
                                                         </div>
                                                         <div href="<?php $item->fields->url(); ?>" cid="<?php $item->cid(); ?>" class="list-content" title="<?php $item->fields->text(); ?>">
                                                             <div class="list-body">
