@@ -17,6 +17,7 @@
 </ul>
 <script src="<?php $this->options->themeUrl('./assets/js/lazyload.min.js'); ?>" type="application/javascript"></script>
 <script src="<?php $this->options->themeUrl('./assets/js/script.min.js'); ?>" type="text/javascript"></script>
+<script src="<?php $this->options->themeUrl('./assets/js/custom.js'); ?>" type="text/javascript"></script>
 </body>
 
 </html>

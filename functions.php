@@ -62,6 +62,11 @@ function themeConfig($form)
         NULL,
         '[
             {
+                "name": "站内搜索",
+                "url": "https://www.iddh.cn/search/",
+                "icon": "fas fa-search-location"
+            },
+            {
                 "name": "谷歌",
                 "url": "https://www.google.com/search?q=",
                 "icon": "fab fa-google"
@@ -102,6 +107,12 @@ function themeConfig($form)
                 "url": "https://filehelper.weixin.qq.com",
                 "icon": "fab fa-weixin",
                 "background": "#1ba784"
+            },
+            {
+                "name": "Font Awesome",
+                "url": "https://fontawesome.com/v5/search?o=r&m=free",
+                "icon": "fab fa-font-awesome-flag",
+                "background": "linear-gradient(0deg,#434343 0%, #000000 100%)"
             }
         ]',
         _t('工具直达配置'),
@@ -125,22 +136,55 @@ function themeFields($layout)
         new Typecho_Widget_Helper_Form_Element_Radio(
             'navigation',
             array(
-                true => _t('网址导航'),
-                false => _t('普通文章')
+                1 => _t('小程序导航'),
+                2 => _t('网址导航'),
+                0 => _t('普通文章')
             ),
-            true,
+            1,
             _t('文章类型'),
             _t("普通文章: 点击会前往详情页; 网址导航: 点击图标前往详情，点击其他位置直接跳转至对应url")
         )
     );
     $layout->addItem(
-        new Typecho_Widget_Helper_Form_Element_Text('url', NULL, NULL, _t('跳转链接'), _t('请输入跳转URL'))
+        new Typecho_Widget_Helper_Form_Element_Text('url', NULL, NULL, _t('跳转链接'), _t('请输入跳转URL，小程序不填'))
     );
     $layout->addItem(
-        new Typecho_Widget_Helper_Form_Element_Text('text', NULL, NULL, _t('链接描述'), _t('请输入链接描述'))
+        new Typecho_Widget_Helper_Form_Element_Text('text', NULL, NULL, _t('导航描述'), _t('请输入导航描述'))
     );
     $layout->addItem(
-        new Typecho_Widget_Helper_Form_Element_Text('logo', NULL, NULL, _t('链接logo'), _t('请输入Logo URL链接'))
+        new Typecho_Widget_Helper_Form_Element_Text('logo', NULL, NULL, _t('链接logo'), _t('请输入Logo URL链接，网址加favicon.ico就是图标，默认是网站logo')));
+    $layout->addItem(
+        new Typecho_Widget_Helper_Form_Element_Text('qrcode', NULL, NULL, _t('小程序二维码'), _t('请输入小程序二维码链接！'))
+    );
+    $layout->addItem(
+        new Typecho_Widget_Helper_Form_Element_Text('screenshot', NULL, NULL, _t('功能预览'), _t('请输入功能预览链接！'))
+    );
+    $layout->addItem(
+        new Typecho_Widget_Helper_Form_Element_Text('score', NULL, NULL, _t('评分'), _t('请输入评分，1.0～5.0分'))
+    );
+    $layout->addItem(
+        new Typecho_Widget_Helper_Form_Element_Radio(
+            'advertisement',
+            array(
+                1 => _t('有'),
+                0 => _t('无')
+            ),
+            0, // 默认值为 0 (无广告)
+            _t('是否存在广告'),
+            _t("请选择是否有广告！")
+        )
+    );
+    $layout->addItem(
+        new Typecho_Widget_Helper_Form_Element_Radio(
+            'official',
+            array(
+                1 => _t('是'),
+                0 => _t('否')
+            ),
+            0, // 默认值为 0 (非官方小程序)
+            _t('是否是官方小程序'),
+            _t("请选择是否为官方小程序！")
+        )
     );
 }
 
@@ -153,7 +197,7 @@ function pageview($cid, $display = true)
     if (!array_key_exists($cid, $_COOKIE) || is_null($_COOKIE[$cid])) :
 
         //如不存在，从数据库中查询
-        $db     = Typecho_Db::get();
+        $db = Typecho_Db::get();
         $row = $db->fetchRow($db->select('views')->from('table.contents')->where('cid = ?', $cid));
         $num = $row['views'] + 1;
 
@@ -169,6 +213,68 @@ function pageview($cid, $display = true)
     if ($display) :
         echo $num < 1000 ? $num : floor($num / 1000) . 'K';
     endif;
+}
+
+function agreeNum($cid) {
+    $db = Typecho_Db::get();
+    $prefix = $db->getPrefix();
+
+    //  判断点赞数量字段是否存在
+    if (!array_key_exists('agree', $db->fetchRow($db->select()->from('table.contents')))) {
+        //  在文章表中创建一个字段用来存储点赞数量
+        $db->query('ALTER TABLE `' . $prefix . 'contents` ADD `agree` INT(10) NOT NULL DEFAULT 0;');
+    }
+
+    //  查询出点赞数量
+    $agree = $db->fetchRow($db->select('table.contents.agree')->from('table.contents')->where('cid = ?', $cid));
+    //  获取记录点赞的 Cookie
+    $AgreeRecording = Typecho_Cookie::get('typechoAgreeRecording');
+    //  判断记录点赞的 Cookie 是否存在
+    if (empty($AgreeRecording)) {
+        //  如果不存在就写入 Cookie
+        Typecho_Cookie::set('typechoAgreeRecording', json_encode(array(0)));
+    }
+
+    //  返回
+    return array(
+        //  点赞数量
+        'agree' => $agree['agree'],
+        //  文章是否点赞过
+        'recording' => in_array($cid, json_decode(Typecho_Cookie::get('typechoAgreeRecording')))?true:false
+    );
+}
+
+function agree($cid) {
+    $db = Typecho_Db::get();
+    //  根据文章的 `cid` 查询出点赞数量
+    $agree = $db->fetchRow($db->select('table.contents.agree')->from('table.contents')->where('cid = ?', $cid));
+
+    //  获取点赞记录的 Cookie
+    $agreeRecording = Typecho_Cookie::get('typechoAgreeRecording');
+    //  判断 Cookie 是否存在
+    if (empty($agreeRecording)) {
+        //  如果 cookie 不存在就创建 cookie
+        Typecho_Cookie::set('typechoAgreeRecording', json_encode(array($cid)));
+    }else {
+        //  把 Cookie 的 JSON 字符串转换为 PHP 对象
+        $agreeRecording = json_decode($agreeRecording);
+        //  判断文章是否点赞过
+        if (in_array($cid, $agreeRecording)) {
+            //  如果当前文章的 cid 在 cookie 中就返回文章的赞数，不再往下执行
+            return $agree['agree'];
+        }
+        //  添加点赞文章的 cid
+        array_push($agreeRecording, $cid);
+        //  保存 Cookie
+        Typecho_Cookie::set('typechoAgreeRecording', json_encode($agreeRecording));
+    }
+
+    //  更新点赞字段，让点赞字段 +1
+    $db->query($db->update('table.contents')->rows(array('agree' => (int)$agree['agree'] + 1))->where('cid = ?', $cid));
+    //  查询出点赞数量
+    $agree = $db->fetchRow($db->select('table.contents.agree')->from('table.contents')->where('cid = ?', $cid));
+    //  返回点赞数量
+    return $agree['agree'];
 }
 
 /**
