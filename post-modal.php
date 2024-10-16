@@ -6,10 +6,14 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body d-flex flex-column justify-content-center align-items-center gap-3">
-                <img src="<?php $this->fields->logo(); ?>" alt="小程序logo" class="img-fluid mt-3"> <!-- 图片 -->
-                <p class="modal-title mb-3">小程序名称：<?php echo $this->title(); ?></p> <!-- 文章名称 -->
-                <p class="text-danger">恭喜！小程序名称复制成功～</p> <!-- 复制成功的提示 -->
-                <p class="text-danger">快去微信-搜索小程序体验吧！</p> <!-- 复制成功的提示 -->
+                <?php if ($this->fields->qrcode): ?>
+                    <img src="<?php $this->fields->qrcode(); ?>" alt="二维码" class="img-fluid mt-3">
+                <?php else: ?>
+                    <img src="<?php $this->fields->logo(); ?>" alt="logo" class="img-fluid mt-3">
+                <?php endif; ?>
+                <p class="modal-title mb-3">小程序名称：<?php echo $this->title(); ?></p>
+                <p class="text-danger">恭喜！小程序名称复制成功～</p>
+                <p class="text-danger">快去微信-搜索小程序体验吧！</p>
                 <a class="btn btn-success" href="weixin://" role="button">前往微信</a>
             </div>
         </div>
@@ -24,7 +28,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body d-flex flex-column justify-content-center align-items-center gap-3">
-                <img id="nav-large-image" src="" alt="放大后的图片" class="img-fluid">
+                <img id="nav-large-image" src="" alt="<?php echo $this->title(); ?>" class="img-fluid">
             </div>
         </div>
     </div>

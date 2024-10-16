@@ -54,25 +54,15 @@ $this->need('post-modal.php');
                                             <?php
                                             $score = floatval($this->fields->score);
                                             $totalStars = 5;
-
-                                            // 计算全星数
                                             $fullStars = floor($score);
-
-                                            // 计算部分星的分数
                                             $partialScore = $score - $fullStars;
-
-                                            // 显示全黄色星星
                                             for ($i = 0; $i < $fullStars; $i++) {
                                                 echo '<i class="fas fa-star" style="color: #FFD43B;"></i>';
                                             }
-
-                                            // 如果有部分星，则显示部分星
                                             if ($partialScore > 0) {
                                                 echo '<i class="fas fa-star-half-alt" style="color: #FFD43B;"></i>';
-                                                $fullStars++; // 已经显示了一部分星，所以减少剩下的全星数
+                                                $fullStars++;
                                             }
-
-                                            // 显示剩余的星星
                                             for ($i = $fullStars; $i < $totalStars; $i++) {
                                                 echo '<i class="far fa-star" style="color: #FFD43B;"></i>';
                                             }
