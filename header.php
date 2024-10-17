@@ -18,7 +18,6 @@
   <link rel="apple-touch-icon" href="<?php $this->options->themeUrl('/assets/image/apple-touch-icon.png')?>" sizes="180x180" />
   <link rel="stylesheet" href="//lf9-cdn-tos.bytecdntp.com/cdn/expire-1-M/bootstrap/5.1.3/css/bootstrap.min.css">
   <link rel="stylesheet" href="<?php $this->options->themeUrl('./assets/css/style.min.css'); ?>">
-  <link rel="stylesheet" href="<?php $this->options->themeUrl('./assets/css/custom.css'); ?>">
   <link rel="stylesheet" href="//lf3-cdn-tos.bytecdntp.com/cdn/expire-1-M/font-awesome/5.15.4/css/all.min.css">
   <script src="//lf3-cdn-tos.bytecdntp.com/cdn/expire-1-M/jquery/3.6.0/jquery.min.js" type="application/javascript"></script>
   <!--<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>-->
