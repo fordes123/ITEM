@@ -98,7 +98,7 @@ $this->need('topbar.php'); ?>
                           class="media-content lazyload" />
                         </div>
                         <div href="<?php
-                                    if ($posts->fields->navigation == '2') {
+                                    if ($posts->fields->navigation == '1') {
                                         echo $posts->fields->url();
                                     } else {
                                         echo $posts->permalink();

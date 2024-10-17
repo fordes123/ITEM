@@ -108,6 +108,7 @@ $this->need('post-modal.php');
                                        data-cid="<?php echo $this->cid; ?>"
                                        data-url="<?php $this->permalink(); ?>">
                                         <span><i class="far fa-thumbs-up"></i></span>
+                                        <b class="num"><?php echo $agree['agree']; ?></b>
                                     </a>
                                 </div>
                                 <div class="col">
@@ -115,13 +116,13 @@ $this->need('post-modal.php');
                                         <span><i class="far fa-star"></i></span>
                                     </a>
                                 </div>
-                                <?php if ($this->fields->navigation === '1'): ?>
+                                <?php if ($this->fields->navigation === '2'): ?>
                                     <div class="col-12 col-md-7">
                                         <button id="copyTitleButton" class="btn btn-primary btn-lg btn-block btn-goto" data-value="<?php $this->title(); ?>">
                                             进入小程序
                                         </button>
                                     </div>
-                                <?php elseif ($this->fields->navigation === '2'): ?>
+                                <?php elseif ($this->fields->navigation === '1'): ?>
                                     <div class="col-12 col-md-7">
                                         <a href="<?php echo $this->fields->url(); ?>" target="_blank" title="<?php $this->title(); ?>" class="btn btn-primary btn-lg btn-block btn-goto">
                                             访问网站

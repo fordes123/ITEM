@@ -136,8 +136,8 @@ function themeFields($layout)
         new Typecho_Widget_Helper_Form_Element_Radio(
             'navigation',
             array(
-                1 => _t('小程序导航'),
-                2 => _t('网址导航'),
+                2 => _t('小程序导航'),
+                1 => _t('网址导航'),
                 0 => _t('普通文章')
             ),
             1,

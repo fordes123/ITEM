@@ -15,6 +15,7 @@
 <ul class="site-fixedmenu">
     <li id="scrollToTOP"> <a href="#" class="btn btn-start btn-icon btn-rounded"><span><i class="fas fa-arrow-up"></i></span></a></li>
 </ul>
+<script src="//lf3-cdn-tos.bytecdntp.com/cdn/expire-1-M/bootstrap/5.1.3/js/bootstrap.min.js" type="application/javascript"></script>
 <script src="<?php $this->options->themeUrl('./assets/js/lazyload.min.js'); ?>" type="application/javascript"></script>
 <script src="<?php $this->options->themeUrl('./assets/js/script.min.js'); ?>" type="text/javascript"></script>
 <script src="<?php $this->options->themeUrl('./assets/js/custom.js'); ?>" type="text/javascript"></script>

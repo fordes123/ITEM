@@ -34,7 +34,7 @@ $this->need('topbar.php'); ?>
                                                 />
                                             </div>
                                             <div href="<?php
-                                                    if ($this->fields->navigation == '2') {
+                                                    if ($this->fields->navigation == '1') {
                                                         echo $this->fields->url();
                                                     } else {
                                                         echo $this->permalink();
