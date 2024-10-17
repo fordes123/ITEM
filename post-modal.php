@@ -6,9 +6,9 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body d-flex flex-column justify-content-center align-items-center gap-3">
-                <?php if ($this->fields->qrcode): ?>
-                    <img src="<?php $this->fields->qrcode(); ?>" alt="二维码" class="img-fluid mt-3">
-                <?php else: ?>
+                <?php if ($this->fields->url): ?>
+                    <img src="<?php $this->fields->url(); ?>" alt="二维码" class="img-fluid mt-3">
+                <?php elseif ($this->fields->logo): ?>
                     <img src="<?php $this->fields->logo(); ?>" alt="logo" class="img-fluid mt-3">
                 <?php endif; ?>
                 <p class="modal-title mb-3">小程序名称：<?php echo $this->title(); ?></p>

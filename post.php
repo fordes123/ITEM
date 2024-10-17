@@ -1,15 +1,19 @@
 <?php if (!defined('__TYPECHO_ROOT_DIR__')) exit;
+error_log("post.php");
 if (isset($_POST['agree'])) {
     if ($_POST['agree'] == $this->cid) {
-        exit(agree($this->cid));
+    echo agree($this->cid);
+        exit;
     }
-    exit('error');
+    exit;
 }
 $agree = $this->hidden ? array('agree' => 0, 'recording' => true) : agreeNum($this->cid);
 $this->need('header.php');
 $this->need('sidebar.php');
 $this->need('topbar.php');
+if ($this->fields->navigation == 2):
 $this->need('post-modal.php');
+endif;
 ?>
 
 
@@ -39,9 +43,9 @@ $this->need('post-modal.php');
                                 <?php endforeach; ?>
                             </div>
                             <div class="post-content">
-                                <div class="post-excerpt"><i class="excerpt-icon"></i>
+                                <div class="post-excerpt">
                                     <?php if ($this->fields->text): ?>
-                                        <!-- 显示 链接描述 -->
+                                        <i class="excerpt-icon"></i>
                                         <h4><?php echo $this->fields->text; ?></h4>
                                     <?php endif; ?>
                                     <?php if ($this->fields->score): ?>
@@ -51,36 +55,11 @@ $this->need('post-modal.php');
                                             <i class="text-light mx-2">•</i>
                                             <?php echo $this->fields->score ?>分
                                             <i class="text-light mx-2">•</i>
-                                            <?php
-                                            $score = floatval($this->fields->score);
-                                            $totalStars = 5;
-                                            $fullStars = floor($score);
-                                            $partialScore = $score - $fullStars;
-                                            for ($i = 0; $i < $fullStars; $i++) {
-                                                echo '<i class="fas fa-star" style="color: #FFD43B;"></i>';
-                                            }
-                                            if ($partialScore > 0) {
-                                                echo '<i class="fas fa-star-half-alt" style="color: #FFD43B;"></i>';
-                                                $fullStars++;
-                                            }
-                                            for ($i = $fullStars; $i < $totalStars; $i++) {
-                                                echo '<i class="far fa-star" style="color: #FFD43B;"></i>';
-                                            }
-                                            ?>
+                                            <?php echo displayStars($this->fields->score) ?>
                                         </div>
                                     <?php endif; ?>
                                 </div>
                                 <div class="text-wrap text-break fs-6 mx-3">
-                                    <?php if ($this->fields->screenshot): ?>
-                                        <!-- 显示 截图 -->
-                                        <div class="nav-image-container">
-                                            <img class="nav-thumbnail" src="<?php echo $this->fields->screenshot ?>" alt="<?php echo $this->title ?>" data-bs-toggle="modal" data-bs-target="#navModal">
-                                        </div>
-                                    <?php endif; ?>
-                                    <?php if ($this->fields->navigation !== 0): ?>
-                                        <h3><?php $this->title(); ?>-使用体验</h3>
-                                    <?php endif; ?>
-                                    <!-- 显示 文章 -->
                                     <?php $this->content(); ?>
                                 </div>
                             </div>

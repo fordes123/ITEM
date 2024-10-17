@@ -136,55 +136,26 @@ function themeFields($layout)
         new Typecho_Widget_Helper_Form_Element_Radio(
             'navigation',
             array(
-                2 => _t('小程序导航'),
+                0 => _t('站内文章'),
                 1 => _t('网址导航'),
-                0 => _t('普通文章')
+                2 => _t('微信小程序'),
             ),
             1,
             _t('文章类型'),
-            _t("普通文章: 点击会前往详情页; 网址导航: 点击图标前往详情，点击其他位置直接跳转至对应url")
+            _t("• 普通文章: 点击会前往文章页<br/>• 网址导航: 点击图标前往详情，点击其他位置直接跳转至对应url<br/>• 小程序: 点击往详情页")
         )
     );
     $layout->addItem(
-        new Typecho_Widget_Helper_Form_Element_Text('url', NULL, NULL, _t('跳转链接'), _t('请输入跳转URL，小程序不填'))
+        new Typecho_Widget_Helper_Form_Element_Text('url', NULL, NULL, _t('跳转地址'), _t('• 普通文章: 此字段留空即可<br/>• 网址导航: 可访问的URL<br/>• 小程序: 二维码图片URL'))
     );
     $layout->addItem(
-        new Typecho_Widget_Helper_Form_Element_Text('text', NULL, NULL, _t('导航描述'), _t('请输入导航描述'))
+        new Typecho_Widget_Helper_Form_Element_Text('text', NULL, NULL, _t('简单介绍'), _t('简短描述即可，将展示于首页和详情页开头<br/>(其他内容应记录在正文中)'))
     );
     $layout->addItem(
-        new Typecho_Widget_Helper_Form_Element_Text('logo', NULL, NULL, _t('链接logo'), _t('请输入Logo URL链接，网址加favicon.ico就是图标，默认是网站logo')));
-    $layout->addItem(
-        new Typecho_Widget_Helper_Form_Element_Text('qrcode', NULL, NULL, _t('小程序二维码'), _t('请输入小程序二维码链接！'))
-    );
-    $layout->addItem(
-        new Typecho_Widget_Helper_Form_Element_Text('screenshot', NULL, NULL, _t('功能预览'), _t('请输入功能预览链接！'))
+        new Typecho_Widget_Helper_Form_Element_Text('logo', NULL, NULL, _t('图标URL'), _t('文章/网站/小程序的图标链接<br/>留空则自动从 <a href="https://favicon.im/" target="_blank">favicon.im</a> 获取(不支持小程序)'))
     );
     $layout->addItem(
         new Typecho_Widget_Helper_Form_Element_Text('score', NULL, NULL, _t('评分'), _t('请输入评分，1.0～5.0分'))
-    );
-    $layout->addItem(
-        new Typecho_Widget_Helper_Form_Element_Radio(
-            'advertisement',
-            array(
-                1 => _t('有'),
-                0 => _t('无')
-            ),
-            0, // 默认值为 0 (无广告)
-            _t('是否存在广告'),
-            _t("请选择是否有广告！")
-        )
-    );
-    $layout->addItem(
-        new Typecho_Widget_Helper_Form_Element_Radio(
-            'official',
-            array(
-                1 => _t('是'),
-                0 => _t('否')
-            ),
-            0, // 默认值为 0 (非官方小程序)
-            _t('是否是官方小程序'),
-            _t("请选择是否为官方小程序！")
-        )
     );
 }
 
@@ -321,4 +292,27 @@ function getSiteFavicon($posts) {
         $logo = 'https://favicon.im/' . parse_url($url, PHP_URL_HOST);
     }
     return $logo;
+}
+
+function displayStars($score) {
+    $score = max(0, min(5, $score));
+
+    $fullStars = floor($score);
+    $halfStars = ($score - $fullStars) >= 0.5 ? 1 : 0;
+    $emptyStars = 5 - $fullStars - $halfStars;
+
+    $stars = '';
+    for ($i = 0; $i < $fullStars; $i++) {
+        $stars .= '<i class="fas fa-star" style="color: #FFD43B;"></i>';
+    }
+
+    if ($halfStars) {
+        $stars .= '<i class="fas fa-star-half-alt" style="color: #FFD43B;"></i>';
+    }
+
+    for ($i = 0; $i < $emptyStars; $i++) {
+        $stars .= '<i class="far fa-star" style="color: #FFD43B;"></i>';
+    }
+
+    return $stars;
 }
