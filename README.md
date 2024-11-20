@@ -36,7 +36,9 @@
 
 <h2 id='1'>🎉 项目说明</h2>
 
-[![Product Name Screen Shot][product-screenshot]](https://example.com)
+![screenshot](https://github.com/user-attachments/assets/aa9dd5d5-1a19-478f-b147-d346d19d1df4)
+
+> ✨ Hugo 版现已推出：[hugo-theme-item](https://github.com/fordes123/hugo-theme-item/)
 
 在编程语言中，"item" 这个单词常用来代表一个元素、一个选项  
 希望这个主题能够承载更多的 "item"，链接每一个选项~
