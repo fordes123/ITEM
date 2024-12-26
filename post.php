@@ -65,14 +65,14 @@ endif;
                             </div>
                             <div class="post-actions row g-2 mt-4">
                                 <div class="col">
-                                    <a href="#" class="btn btn-light btn-icon btn-block btn-lg disabled">
+                                    <a href="#" class="btn btn-icon btn-block btn-lg disabled">
                                         <span><i class="far fa-eye"></i></span>
                                         <b class="num"><?php pageview($this->cid) ?></b>
                                     </a>
                                 </div>
                                 <div class="col">
                                     <a type="button"
-                                       class="btn btn-light btn-icon btn-block btn-lg <?php echo $agree['recording']?'disabled':''; ?>"
+                                       class="btn btn-icon btn-block btn-lg <?php echo $agree['recording']?'disabled':''; ?>"
                                        id="agree-btn"
                                        data-cid="<?php echo $this->cid; ?>"
                                        data-url="<?php $this->permalink(); ?>">
@@ -81,7 +81,7 @@ endif;
                                     </a>
                                 </div>
                                 <div class="col">
-                                    <a href="#" class="btn-share-toggler btn btn-light btn-icon btn-block btn-lg disabled">
+                                    <a href="#" class="btn-share-toggler btn btn-icon btn-block btn-lg disabled">
                                         <span><i class="far fa-star"></i></span>
                                     </a>
                                 </div>
