@@ -1,7 +1,30 @@
 <?php if (!defined('__TYPECHO_ROOT_DIR__')) exit; ?>
 <!DOCTYPE html>
-<html lang="zh">
+<html lang="zh" data-bs-theme=night>
 <head>
+<script>
+        let state = localStorage.getItem("data-bs-theme") || "default";
+        switch (state) {
+          case "dark":
+            document.documentElement.setAttribute("data-bs-theme", "dark");
+            break;
+          case "light":
+            document.documentElement.setAttribute("data-bs-theme", "light");
+            break;
+          default:
+            localStorage.setItem("data-bs-theme", "default");
+            state = window.matchMedia('(prefers-color-scheme: dark)').matches ? "dark" : "light";
+            document.documentElement.setAttribute("data-bs-theme", state);
+            break;
+        }
+
+        window.matchMedia("(prefers-color-scheme: dark)").addEventListener('change', event => {
+            if (localStorage.getItem("data-bs-theme") === "default") {
+                document.documentElement.setAttribute("data-bs-theme", event.matches ? "dark" : "light");
+            }
+        });
+    </script>
+
   <meta charset="<?php $this->options->charset(); ?>">
   <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1">
   <meta name="author" content="fordes123" />

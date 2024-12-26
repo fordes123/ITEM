@@ -1,4 +1,4 @@
-<aside class="site-aside bg-white">
+<aside class="site-aside">
     <div class="aside-wrapper">
         <a href="<?php $this->options->siteUrl(); ?>" class="aside-brand d-none d-xl-flex" rel="home">
             <img src="<?php empty($this->options->biglogo) ? $this->options->themeUrl('/assets/image/head.png') : $this->options->biglogo(); ?>" class="logo nc-no-lazy" alt="<?php $this->options->title(); ?>">

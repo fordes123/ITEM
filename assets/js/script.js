@@ -141,4 +141,27 @@ jQuery(document).ready(function ($) {
             },
         });
     });
+
+    /** 主题切换 */
+    let themeButtons = {
+        'default': $('#default'),
+        'dark': $('#dark'),
+        'light': $('#light')
+    };
+    let savedTheme = localStorage.getItem("data-bs-theme") || 'default';
+    let target = themeButtons[savedTheme];
+    $('.dropdown-item').removeClass('active');
+    target.addClass('active');
+    $('#theme-toggle').html(target.find("i").prop('outerHTML'));
+
+    $('.dropdown-item').on('click', function() {
+        let $this = $(this);
+        let theme = $this.attr('id');
+
+        localStorage.setItem("data-bs-theme", theme);
+        document.documentElement.setAttribute("data-bs-theme", theme);
+        $('#theme-toggle').html($this.find("i").prop('outerHTML'));
+        $('.dropdown-item').removeClass('active');
+        $this.addClass('active');
+    });
 });
