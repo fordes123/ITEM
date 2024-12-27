@@ -1542,6 +1542,7 @@ img {
     max-width: 800px;
     margin-left: auto;
     margin-right: auto;
+    width: 100%;
 }
 
 .post-other-style .post-heading {
@@ -1589,13 +1590,13 @@ img {
     padding: 0.375rem 1rem;
     margin: 0.25rem;
     border-radius: 3rem;
-    background-color: #f1f4ff;
-    color: var(--color-primary);
+    background-color: var(--bg-secondary);
+    border: 1px solid transparent;
 }
 
 .post-tags a:hover, .post-tags a:focus {
-    background-color: var(--bg-primary);
-    color: #fff;
+    background-color: var(--bg-tertiary);
+    border: 1px solid var(--border-color);
 }
 
 @media (max-width: 992px) {
