@@ -1,12 +1,4 @@
 <?php if (!defined('__TYPECHO_ROOT_DIR__')) exit;
-if (isset($_POST['agree'])) {
-    if ($_POST['agree'] == $this->cid) {
-        echo agree($this->cid);
-        exit;
-    }
-    exit;
-}
-$agree = $this->hidden ? array('agree' => 0, 'recording' => true) : agreeNum($this->cid);
 $this->need('header.php');
 $this->need('sidebar.php');
 $this->need('topbar.php');
@@ -32,7 +24,7 @@ endif;
                                     <?php $this->author(); ?>
                                 </a>
                                 <i class="text-light mx-2">•</i>
-                                <span class="date text-muted"><?php echo timeago($this->modified); ?></span>
+                                <span class="date text-muted"><?php echo Utils::timeago($this->modified); ?></span>
                             </div>
                         </div>
                         <div class="card-body">
@@ -54,7 +46,7 @@ endif;
                                             <i class="text-light mx-2">•</i>
                                             <?php echo $this->fields->score ?>分
                                             <i class="text-light mx-2">•</i>
-                                            <?php echo displayStars($this->fields->score) ?>
+                                            <?php Utils::printStars($this->fields->score) ?>
                                         </div>
                                     <?php endif; ?>
                                 </div>
@@ -66,17 +58,16 @@ endif;
                                 <div class="col">
                                     <a href="#" class="btn btn-icon btn-block btn-lg disabled">
                                         <span><i class="far fa-eye"></i></span>
-                                        <b class="num"><?php pageview($this->cid) ?></b>
+                                        <b class="num"><?php Utils::views($this->cid) ?></b>
                                     </a>
                                 </div>
                                 <div class="col">
                                     <a type="button"
-                                        class="btn btn-icon btn-block btn-lg <?php echo $agree['recording'] ? 'disabled' : ''; ?>"
+                                        class="btn btn-icon btn-block btn-lg <?php echo Utils::agreed($this->cid); ?>"
                                         id="agree-btn"
-                                        data-cid="<?php echo $this->cid; ?>"
-                                        data-url="<?php $this->permalink(); ?>">
+                                        data-cid="<?php echo $this->cid; ?>">
                                         <span><i class="far fa-thumbs-up"></i></span>
-                                        <b class="num"><?php echo $agree['agree']; ?></b>
+                                        <b class="num"><?php Utils::agree($this->cid) ?></b>
                                     </a>
                                 </div>
                                 <div class="col">
@@ -116,7 +107,7 @@ endif;
                                                     <div class="list-item block">
                                                         <div href="<?php $item->permalink(); ?>" title="点击查看详情" class="media w-36 rounded-circle">
                                                             <img src="<?php $this->options->themeUrl('/assets/image/default.gif'); ?>"
-                                                                data-src="<?php echo getSiteFavicon($item); ?>"
+                                                                data-src="<?php echo Utils::favicon($item); ?>"
                                                                 class="media-content lazyload" />
                                                         </div>
                                                         <div href="<?php echo empty($item->fields->url()) ? $item->permalink : $item->fields->url; ?>" cid="<?php $item->cid(); ?>" class="list-content" title="<?php $item->fields->text(); ?>">

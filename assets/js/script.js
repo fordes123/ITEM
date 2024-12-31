@@ -2,8 +2,65 @@
     "use strict";
     var a = {
         initialize: function () {
-            this.event(), this.toggler(), this.sideMenu(), this.siteSearch()
+            this.event(), this.toggler(), this.sideMenu(), this.siteSearch(), this.lazyload(), this.theme()
         }, event: function () {
+            /** 返回顶部 */
+            $(window).scroll(function () {
+                if ($(this).scrollTop() > 500) {
+                    $("#scrollToTOP").fadeIn(200)
+                } else $("#scrollToTOP").fadeOut(200)
+            });
+            $("#scrollToTOP").on("click", function () {
+                $("html, body").animate({ scrollTop: 0 }, 300);
+                return false
+            });
+
+            /** 跳转 */
+            $("div[href]").each(function () {
+                var cid = $(this).attr('cid');
+                $(this).click(function () {
+                    $.ajax({
+                        url: "/",
+                        data: { views: cid },
+                        type: "post"
+                    });
+                    window.open($(this).attr("href"), $(this).attr("target") ? "_blank" : "_self")
+                })
+            });
+
+            /*导航详情页面点击进入小程序*/
+            $('#copyTitleButton').on('click', function (e) {
+                e.preventDefault();
+                const title = $(this).data('value');
+                navigator.clipboard.writeText(title).then(function () {
+                    const openWxModal = new bootstrap.Modal($('#openWxModal')[0]);
+                    openWxModal.show();
+                }).catch(function (err) {
+                    console.error('复制失败:', err);
+                });
+            });
+
+            /** 点赞 */
+            $('#agree-btn').on('click', function () {
+                var cid = $(this).attr('data-cid');
+                var agree = $('#agree-btn .num').html();
+                $.ajax({
+                    type: 'post',
+                    url: '/',
+                    data: { agree: cid },
+                    async: true,
+                    timeout: 30000,
+                    cache: false,
+                    success: function () {
+                        $('#agree-btn').prop('disabled', true);
+                        $('#agree-btn .num').html(parseInt(agree) + 1);
+                        $('#agree-btn').addClass('disabled');
+                    },
+                    error: function () {
+                        $('#agree-btn').prop('disabled', false);
+                    },
+                });
+            });
         }, toggler: function () {
             n(".menu-toggler").each(function () {
                 var a = n(this);
@@ -22,11 +79,18 @@
                 n(".site-aside").removeClass("in"), n("body").removeClass("modal-open")
             })
         }, siteSearch: function () {
-            n(".search-toggler").on("click", function () {
-                n(".search-form-wrapper").toggleClass("in"), n("body").toggleClass("modal-open")
-            }), n(".search-form-wrapper .search-close").on("click", function () {
-                n(".search-form-wrapper").removeClass("in"), n("body").removeClass("modal-open")
-            })
+            var searchBlock = $("#search");
+            searchBlock.find(".search-tab a").click(function () {
+                var $this = $(this);
+                searchBlock.find(".search-tab a").removeClass("active");
+                $this.addClass("active")
+            });
+
+            searchBlock.find("form").submit(function (e) {
+                e.preventDefault();
+                window.open(searchBlock.find(".search-tab a.active").data("url") + searchBlock.find("input").val());
+                return false
+            });
         }, sideMenuNavigation: function (a) {
             a.find(".menu-item-has-children > a").on("click", function (s) {
                 var i = n(this);
@@ -50,118 +114,35 @@
                 pageWrapper.removeClass("sidemenu-hover-active");
                 pageWrapper.addClass("sidemenu-hover-deactive")
             })
+        }, lazyload: function () {
+            $("img.lazyload").lazyload();
+        }, theme: function () {
+            let themeButtons = {
+                'default': $('#default'),
+                'dark': $('#dark'),
+                'light': $('#light')
+            };
+            let savedTheme = localStorage.getItem("data-bs-theme") || 'default';
+            let target = themeButtons[savedTheme];
+            $('.dropdown-item').removeClass('active');
+            target.addClass('active');
+            $('#theme-toggle').html(target.find("i").prop('outerHTML'));
+
+            $('.dropdown-item').on('click', function () {
+                let $this = $(this);
+                let theme = $this.attr('id');
+
+                localStorage.setItem("data-bs-theme", theme);
+                document.documentElement.setAttribute("data-bs-theme", theme);
+                $('#theme-toggle').html($this.find("i").prop('outerHTML'));
+                $('.dropdown-item').removeClass('active');
+                $this.addClass('active');
+            });
         }
     };
     n(document).ready(function () {
         a.initialize()
     }), n(window).on("load", function () {
-        a.mobileMenu()
+        a.mobileMenu();
     })
 }(jQuery);
-jQuery(document).ready(function ($) {
-    $("img.lazyload").lazyload();
-    $("div[href]").each(function () {
-        $(this).click(function () {
-            if ($(this).attr("cid")) $.ajax({
-                url: "/",
-                data: {cid: $(this).attr("cid")},
-                type: "post",
-                success: function () {
-                    console.log("jump success")
-                }
-            });
-            window.open($(this).attr("href"), $(this).attr("target") ? "_blank" : "_self")
-        })
-    });
-    $(window).scroll(function () {
-        if ($(this).scrollTop() > 500) {
-            $("#scrollToTOP").fadeIn(200)
-        } else $("#scrollToTOP").fadeOut(200)
-    });
-    $("#scrollToTOP").on("click", function () {
-        $("html, body").animate({scrollTop: 0}, 300);
-        return false
-    });
-    $(".start-search-input").on("focus", function () {
-        $(".start-poster").addClass("is-focus")
-    });
-    $(".start-search-input").on("blur", function () {
-        $(".start-poster").removeClass("is-focus")
-    });
-    $(document).on("click", ".btn-share-toggler", function (event) {
-        event.preventDefault();
-        ncPopup("mini", $("#single-share-template").html())
-    });
-    var searchBlock = $("#search");
-    searchBlock.find(".search-tab a").click(function () {
-        var $this = $(this);
-        searchBlock.find(".search-tab a").removeClass("active");
-        $this.addClass("active")
-    });
-    searchBlock.find("form").submit(function (e) {
-        e.preventDefault();
-        window.open(searchBlock.find(".search-tab a.active").data("url") + searchBlock.find("input").val());
-        return false
-    });/*导航详情页面点击图片*/
-    $('.nav-thumbnail').on('click', function () {
-        const largeImage = $('#nav-large-image');
-        largeImage.attr('src', this.src);
-    });/*导航详情页面点击进入小程序*/
-    $('#copyTitleButton').on('click', function (e) {
-        e.preventDefault();
-        const title = $(this).data('value');
-        navigator.clipboard.writeText(title).then(function () {
-            const openWxModal = new bootstrap.Modal($('#openWxModal')[0]);
-            openWxModal.show();
-        }).catch(function (err) {
-            console.error('复制失败:', err);
-        });
-    });/*点赞按钮点击*/
-    $('#agree-btn').on('click', function () {
-        var cid = $(this).attr('data-cid');
-        var url = $(this).attr('data-url');
-        $(this).prop('disabled', true);
-        $.ajax({
-            type: 'post',
-            url: url,
-            data: {agree: cid},
-            async: true,
-            timeout: 30000,
-            cache: false,
-            success: function (data) {
-                $('#agree-btn').prop('disabled', true);
-                var re = /\d/; /*匹配数字的正则表达式*/
-                if (re.test(data)) {
-                    $('#agree-btn .num').html(data);
-                    $('#agree-btn').addClass('disabled');
-                }
-            },
-            error: function () {
-                $('#agree-btn').prop('disabled', false);
-            },
-        });
-    });
-
-    /** 主题切换 */
-    let themeButtons = {
-        'default': $('#default'),
-        'dark': $('#dark'),
-        'light': $('#light')
-    };
-    let savedTheme = localStorage.getItem("data-bs-theme") || 'default';
-    let target = themeButtons[savedTheme];
-    $('.dropdown-item').removeClass('active');
-    target.addClass('active');
-    $('#theme-toggle').html(target.find("i").prop('outerHTML'));
-
-    $('.dropdown-item').on('click', function() {
-        let $this = $(this);
-        let theme = $this.attr('id');
-
-        localStorage.setItem("data-bs-theme", theme);
-        document.documentElement.setAttribute("data-bs-theme", theme);
-        $('#theme-toggle').html($this.find("i").prop('outerHTML'));
-        $('.dropdown-item').removeClass('active');
-        $this.addClass('active');
-    });
-});

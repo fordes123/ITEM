@@ -27,7 +27,7 @@ $this->need('topbar.php'); ?>
             </div>
           </div>
           <div class="card-body">
-            <div class="list-number list-row list-bordered"><?php ranked(6) ?></div>
+            <div class="list-number list-row list-bordered"><?php Utils::ranked(6) ?></div>
           </div>
         </div>
       </div>
@@ -94,7 +94,7 @@ $this->need('topbar.php'); ?>
                       <div class="list-item block">
                         <div href="<?php $posts->permalink() ?>" title="点击进入详情" class="media w-36 rounded-circle">
                           <img src="<?php $this->options->themeUrl('/assets/image/default.gif'); ?>"
-                          data-src="<?php echo getSiteFavicon($posts); ?>"
+                          data-src="<?php echo Utils::favicon($posts); ?>"
                           class="media-content lazyload" />
                         </div>
                         <div href="<?php
