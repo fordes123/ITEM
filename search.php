@@ -29,7 +29,7 @@ $this->need('topbar.php'); ?>
                                             <div href="<?php $this->permalink() ?>" title="点击进入详情"
                                                  class="media w-36 rounded-circle">
                                                 <img src="<?php $this->options->themeUrl('/assets/image/default.png'); ?>"
-                                                     data-src="<?php echo getSiteFavicon($this); ?>"
+                                                     data-src="<?php echo Utils::favicon($this); ?>"
                                                      class="media-content lazyload"
                                                 />
                                             </div>
