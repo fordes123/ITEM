@@ -4,12 +4,12 @@
  * 在编程语言中，"item" 这个单词常用来代表一个元素
  * 希望这个主题能够承载更多的 "item"，链接每一个选项<br/>
  * 
- * <a href="https://github.com/fordes123/ITEM" target="_blank">Github</a> | <a href="https://item.ink" target="_blank">Live Demo</a>
+ * <a href="https://github.com/fordes123/ITEM" target="_blank">Github</a> | <a href="https://item-typecho.vercel.app" target="_blank">Live Demo</a>
  * 
  * @package ITEM
  * @author fordes123
  * @version 1.0.5
- * @link https://fordes.top
+ * @link https://fordes.dev
  */
 if (!defined('__TYPECHO_ROOT_DIR__')) exit;
 

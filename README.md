@@ -20,7 +20,7 @@
   <p align="center">
     网址导航型的 Typecho 主题
     <br /><br />
-    <a href="https://item.ink"><strong>演示站点 »</strong></a>
+    <a href="https://item-typecho.vercel.app"><strong>演示站点 »</strong></a>
     <br />
     <br />
     <a href="#1">项目说明</a>
