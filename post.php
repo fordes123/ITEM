@@ -25,6 +25,10 @@ endif;
                                 </a>
                                 <i class="text-light mx-2">•</i>
                                 <span class="date text-muted"><?php echo Utils::timeago($this->modified); ?></span>
+                                <?php if ($this->fields->score): ?>
+                                    <i class="text-light mx-2">•</i>
+                                    <span><?php Utils::printStars($this->fields->score) ?>（<?php echo $this->fields->score ?>）</span>
+                                <?php endif; ?>
                             </div>
                         </div>
                         <div class="card-body">
@@ -39,16 +43,6 @@ endif;
                                         <i class="excerpt-icon"></i>
                                         <h4><?php echo $this->fields->text; ?></h4>
                                     <?php endif; ?>
-                                    <?php if ($this->fields->score): ?>
-                                        <!-- 显示 评分 -->
-                                        <div class="star-rating">
-                                            用户评分
-                                            <i class="text-light mx-2">•</i>
-                                            <?php echo $this->fields->score ?>分
-                                            <i class="text-light mx-2">•</i>
-                                            <?php Utils::printStars($this->fields->score) ?>
-                                        </div>
-                                    <?php endif; ?>
                                 </div>
                                 <div class="text-wrap text-break fs-6 mx-3">
                                     <?php $this->content(); ?>
@@ -62,10 +56,8 @@ endif;
                                     </a>
                                 </div>
                                 <div class="col">
-                                    <a type="button"
-                                        class="btn btn-icon btn-block btn-lg <?php echo Utils::agreed($this->cid); ?>"
-                                        id="agree-btn"
-                                        data-cid="<?php echo $this->cid; ?>">
+                                    <a type="button" class="btn btn-icon btn-block btn-lg <?php echo Utils::agreed($this->cid); ?>"
+                                        id="agree-btn" data-cid="<?php echo $this->cid; ?>">
                                         <span><i class="far fa-thumbs-up"></i></span>
                                         <b class="num"><?php Utils::agree($this->cid) ?></b>
                                     </a>
@@ -77,7 +69,7 @@ endif;
                                 </div>
                                 <?php if ($this->fields->navigation === '2'): ?>
                                     <div class="col-12 col-md-7">
-                                        <button id="copyTitleButton" class="btn btn-primary btn-lg btn-block btn-goto" data-value="<?php $this->title(); ?>">
+                                        <button type="button" class="btn btn-primary btn-lg btn-block btn-goto" data-bs-toggle="modal" data-bs-target="#openWxModal">
                                             进入小程序
                                         </button>
                                     </div>

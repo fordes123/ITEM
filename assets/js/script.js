@@ -28,18 +28,6 @@
                 })
             });
 
-            /*导航详情页面点击进入小程序*/
-            $('#copyTitleButton').on('click', function (e) {
-                e.preventDefault();
-                const title = $(this).data('value');
-                navigator.clipboard.writeText(title).then(function () {
-                    const openWxModal = new bootstrap.Modal($('#openWxModal')[0]);
-                    openWxModal.show();
-                }).catch(function (err) {
-                    console.error('复制失败:', err);
-                });
-            });
-
             /** 点赞 */
             $('#agree-btn').on('click', function () {
                 var cid = $(this).attr('data-cid');
