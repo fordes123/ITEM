@@ -112,6 +112,11 @@ function themeConfig($form)
     $form->addInput(
         new Typecho_Widget_Helper_Form_Element_Text('icp', NULL, NULL, _t('备案号'), _t('有就填没有就不填不要乱填'))
     );
+
+    //时间轴文章数量
+    $form->addInput(
+        new Typecho_Widget_Helper_Form_Element_Text('timeline_num', NULL, 20, _t('时间轴文章数量'), _t('不宜过大'))
+    );
 }
 
 /**
