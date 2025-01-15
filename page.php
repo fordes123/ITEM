@@ -1,4 +1,20 @@
 <?php if (!defined('__TYPECHO_ROOT_DIR__')) exit;
+
+if ($this->fields->url) ?>
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="refresh" content="0;url=<?php $this->fields->url() ?>">
+    <script>
+        window.location.href = "<?php $this->fields->url(); ?>";
+    </script>
+</head>
+
+</html>
+<?php exit(); ?>
+<?php
 $this->need('header.php');
 $this->need('sidebar.php');
 $this->need('topbar.php');
