@@ -178,5 +178,3 @@ Issues - [https://github.com/fordes123/ITEM/issues](https://github.com/fordes123
 [license-shield]:https://img.shields.io/github/license/fordes123/ITEM.svg?style=for-the-badge
 
 [license-url]:https://github.com/fordes123/ITEM/blob/master/LICENSE.txt
-
-[product-screenshot]:screenshot.png
