@@ -18,6 +18,10 @@
 <script src="//lf3-cdn-tos.bytecdntp.com/cdn/expire-1-M/bootstrap/5.1.3/js/bootstrap.min.js" type="application/javascript"></script>
 <script src="<?php $this->options->themeUrl('./assets/js/lazyload.min.js'); ?>" type="application/javascript"></script>
 <script src="<?php $this->options->themeUrl('./assets/js/script.min.js'); ?>" type="text/javascript"></script>
+<?php if ($this->is('page') || $this->is('post')) : ?>
+    <link rel="stylesheet" href="<?php $this->options->themeUrl('./assets/css/prism.css'); ?>">
+    <script defer src="<?php $this->options->themeUrl('./assets/js/prism.js'); ?>"></script>
+<?php endif; ?>
 </body>
 
 </html>

@@ -190,9 +190,9 @@ ul {
 blockquote {
     padding:1rem 1.25rem;
     margin:1.5rem 0;
-    background-color:var(--bg-light);
+    background-color:var(--bg-secondary);
     border-radius:var(--radius-sm);
-    border:1px solid var(--border-light);
+    border:1px solid var(--bg-body);
     color:inherit;
 }
 blockquote i {
