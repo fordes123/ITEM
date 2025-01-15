@@ -3,72 +3,66 @@
 /**
  * 搜索结果
  */
-if (!defined('__TYPECHO_ROOT_DIR__')) exit;
+if (!defined("__TYPECHO_ROOT_DIR__")) {
+    exit();
+}
+$this->need("header.php");
+$this->need("sidebar.php");
+$this->need("topbar.php");
+?>
 
-$this->need('header.php');
-$this->need('sidebar.php');
-$this->need('topbar.php'); ?>
 <main class="site-main">
     <div class="container">
-        <div class="row g-3 g-xl-4">
-            <div class="col-12">
-                <div class="card" id="<?php echo $item['slug']; ?>">
-                    <div class="card-body">
-                        <div class="row g-2 g-md-3 list-grid list-grid-padding">
-                            <form id="search" method="post" role="search">
-                                <input type="text" id="s" name="s" class="text form-control" placeholder="<?php $this->archiveTitle('', '', ''); ?>" value="<?php echo $this->_keywords; ?>"/>
-                            </form>
-                            <hr>
+        <div class="container">
+            <div class="row gx-3 gx-md-4">
+                <div class="post card card-md mb-3 mb-md-4">
+                    <div class="post-other-style">
+                        <div class="post-heading text-center pt-5 pt-md-5 pb-3 pb-xl-4">
                             <?php
-                            $hasData = false;
-                            while ($this->next()) :
-                                $hasData = true;
-                                if (!is_null($this->fields->navigation)) : ?>
-                                    <div class="col-6 col-lg-3">
+                            $keywords = mb_substr($this->request->keywords, 0, 20, 'UTF-8');
+                            $ellipsis = (mb_strlen($keywords, 'UTF-8') > 10) ? mb_substr($keywords, 0, 10, 'UTF-8') . '...' : $keywords;
+
+                            $pageSize = $this->options->pageSize;
+                            $currentPage = isset($_GET['page']) ? intval($_GET['page']) : 1;
+                            $result = Utils::page($pageSize, $currentPage, $keywords);
+                            ?>
+                            <h1 class="post-title">
+                                <?php echo '包含 "' . $ellipsis . '" 的文章'; ?>
+                            </h1>
+                            <div class="post-meta d-flex flex-fill justify-content-center align-items-center text-base mt-3 mt-md-3">
+                                <span class="text-muted">共 <?php echo $result['total']; ?> 条结果</span>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="row g-2 g-md-3 list-grid list-grid-padding">
+                                <?php foreach ($result['data'] as $cid): ?>
+                                    <?php $item = Helper::widgetById('Contents', $cid); ?>
+                                    <div class="col-12 col-md-6">
                                         <div class="list-item block">
-                                            <div href="<?php $this->permalink() ?>" title="点击进入详情"
-                                                 class="media w-36 rounded-circle">
-                                                <img src="<?php $this->options->themeUrl('/assets/image/default.png'); ?>"
-                                                     data-src="<?php echo Utils::favicon($this); ?>"
-                                                     class="media-content lazyload"
-                                                />
+                                            <div href="<?php $item->permalink(); ?>" title="点击查看详情" class="media w-36 rounded-circle">
+                                                <img src="<?php $this->options->themeUrl('/assets/image/default.gif'); ?>"
+                                                    data-src="<?php echo Utils::favicon($item); ?>"
+                                                    class="media-content lazyload" />
                                             </div>
-                                            <div href="<?php
-                                                    if ($this->fields->navigation == '1') {
-                                                        echo $this->fields->url();
-                                                    } else {
-                                                        echo $this->permalink();
-                                                    }
-                                                    ?>"
-                                                 target='_blank'
-                                                 cid="<?php $this->cid(); ?>"
-                                                 title="<?php $this->fields->text(); ?>" class="list-content">
+                                            <div href="<?php echo empty($item->fields->url()) ? $item->permalink : $item->fields->url; ?>" cid="<?php $item->cid(); ?>" class="list-content" title="<?php $item->fields->text(); ?>">
                                                 <div class="list-body">
-                                                    <div class="list-title text-md h-1x">
-                                                        <?php $this->title(); ?>
-                                                    </div>
+                                                    <div class="list-title text-md h-1x"><?php $item->title(); ?></div>
                                                     <div class="list-desc text-xx text-muted mt-1">
-                                                        <div class="h-1x"><?php $this->fields->text(); ?></div>
+                                                        <div class="h-1x"><?php $item->fields->text(); ?></div>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
-                                <?php endif;
-                            endwhile;
-                            // 检查是否有数据
-                            if (!$hasData) :
-                                ?>
-                                <div class="col-12 text-center">
-                                    <p>抱歉，没有搜到<?php $this->archiveTitle('', '「', '」'); ?>相关的内容~</p>
-                                </div>
-                            <?php endif;
-                            ?>
-
+                                <?php endforeach; ?>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
+            <?php
+            $pageLink = $this->permalink . '?page=';
+            echo Utils::pagination($pageLink, $result['currentPage'], $$result['totalPages']); ?>
         </div>
     </div>
 </main>
