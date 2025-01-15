@@ -334,6 +334,78 @@ class Utils
         }
         return $number;
     }
+
+    /**
+     * 生成分页导航
+     * @param string $baseUrl 基础URL
+     * @param int $currentPage 当前页码
+     * @param int $totalPages 总页数
+     * @return string 分页HTML
+     */
+    public static function pagination($baseUrl, $currentPage, $totalPages)
+    {
+        $html = '<nav class="navigation pagination" aria-label="Posts Navigation"><div class="nav-links">';
+        if ($currentPage > 1) {
+            $html .= '<a class="prev page-numbers" href="' . $baseUrl . ($currentPage - 1) . '">上一页</a>';
+        }
+
+        for ($i = 1; $i <= $totalPages; $i++) {
+            if ($i == $currentPage) {
+                $html .= '<span aria-current="page" class="page-numbers current">' . $i . '</span>';
+            } else {
+                if ($i == 1 || $i == $totalPages || ($i >= $currentPage - 2 && $i <= $currentPage + 2)) {
+                    $html .= '<a class="page-numbers" href="' . $baseUrl . $i . '">' . $i . '</a>';
+                } elseif ($i == $currentPage - 3 || $i == $currentPage + 3) {
+                    $html .= '<span class="page-numbers dots">...</span>';
+                }
+            }
+        }
+
+        if ($currentPage < $totalPages) {
+            $html .= '<a class="next page-numbers" href="' . $baseUrl . ($currentPage + 1) . '">下一页</a>';
+        }
+
+        $html .= '</div></nav>';
+        return $html;
+    }
+
+    /**
+     * 分页查询文章
+     * @param int $pageSize 每页文章数
+     * @param int $currentPage 当前页码
+     * @return array 包含文章cid列表和分页信息的数组
+     */
+    public static function page($pageSize, $currentPage)
+    {
+        $db = Typecho_Db::get();
+        $totalPosts = $db->fetchObject($db->select(array('COUNT(cid)' => 'num'))
+            ->from('table.contents')
+            ->where('type = ?', 'post')
+            ->where('status = ?', 'publish')
+            ->order('modified', Typecho_Db::SORT_DESC))->num;
+
+        $totalPages = ceil($totalPosts / $pageSize);
+        if ($currentPage > $totalPages) {
+            $currentPage = $totalPages;
+        } elseif ($currentPage < 1) {
+            $currentPage = 1;
+        }
+
+        $offset = ($currentPage - 1) * $pageSize;
+        $result = $db->fetchAll($db->select('cid')
+            ->from('table.contents')
+            ->where('type = ?', 'post')
+            ->where('status = ?', 'publish')
+            ->order('modified', Typecho_Db::SORT_DESC)
+            ->limit($pageSize)
+            ->offset($offset));
+
+        return array(
+            'data' => array_column($result, 'cid'),
+            'currentPage' => $currentPage,
+            'totalPages' => $totalPages
+        );
+    }
 }
 
 /**
