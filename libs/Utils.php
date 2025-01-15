@@ -373,37 +373,52 @@ class Utils
      * 分页查询文章
      * @param int $pageSize 每页文章数
      * @param int $currentPage 当前页码
+     * @param string|null $keyword 搜索关键字
      * @return array 包含文章cid列表和分页信息的数组
      */
-    public static function page($pageSize, $currentPage)
+    public static function page($pageSize, $currentPage, $keyword = null)
     {
         $db = Typecho_Db::get();
+        $keyword = empty($keyword) ? null : '%' . str_replace('%', '\%', $keyword) . '%';
+        
         $totalPosts = $db->fetchObject($db->select(array('COUNT(cid)' => 'num'))
             ->from('table.contents')
             ->where('type = ?', 'post')
             ->where('status = ?', 'publish')
-            ->order('modified', Typecho_Db::SORT_DESC))->num;
+            ->where($keyword ? 'title LIKE ? OR text LIKE ?' : '1=1', $keyword, $keyword))->num;
 
-        $totalPages = ceil($totalPosts / $pageSize);
-        if ($currentPage > $totalPages) {
-            $currentPage = $totalPages;
-        } elseif ($currentPage < 1) {
-            $currentPage = 1;
+        if ($totalPosts > 0) {
+
+            $totalPages = ceil($totalPosts / $pageSize);
+            if ($currentPage > $totalPages) {
+                $currentPage = $totalPages;
+            } elseif ($currentPage < 1) {
+                $currentPage = 1;
+            }
+
+            $offset = ($currentPage - 1) * $pageSize;
+            $result = $db->fetchAll($db->select()
+                ->from('table.contents')
+                ->where('type = ?', 'post')
+                ->where('status = ?', 'publish')
+                ->where($keyword ? 'title LIKE ? OR text LIKE ?' : '1=1', $keyword, $keyword)
+                ->order('modified', Typecho_Db::SORT_DESC)
+                ->limit($pageSize)
+                ->offset($offset));
+
+            return array(
+                'data' => array_column($result, 'cid'),
+                'currentPage' => $currentPage,
+                'totalPages' => $totalPages,
+                'total' => $totalPosts
+            );
         }
 
-        $offset = ($currentPage - 1) * $pageSize;
-        $result = $db->fetchAll($db->select('cid')
-            ->from('table.contents')
-            ->where('type = ?', 'post')
-            ->where('status = ?', 'publish')
-            ->order('modified', Typecho_Db::SORT_DESC)
-            ->limit($pageSize)
-            ->offset($offset));
-
         return array(
-            'data' => array_column($result, 'cid'),
+            'data' => array(),
             'currentPage' => $currentPage,
-            'totalPages' => $totalPages
+            'totalPages' => 0,
+            'total' => 0
         );
     }
 }
