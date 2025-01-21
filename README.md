@@ -84,8 +84,11 @@ docker compose up -d
 
 #### 文章配置
 
-**文章类型** 为 **网址导航** 时，点击图标前往详情，点击其他位置直接跳转至对应url；**文章类型** 为 **普通文章** 时，
-代表站内文章，点击会前往文章页，所以普通文章无需跳转链接
+在本主题中，我们将文章分为以下3类
+
+  -  **网址导航**（默认）：点击图标前往文章详情页，点击其他位置直接跳转至对应url
+  -  **站内文章**：顾名思义，与网址导航对应，点击会直接前往文章详情页
+  -  **微信小程序**：作为网址导航的分支，点击会直接前往文章详情页
 
 #### 分类配置
 
@@ -97,18 +100,25 @@ docker compose up -d
 配置格式为 JSON，其中 icon 为 [FontAwesome 5](https://fontawesome.com/v5/search?o=r&m=free) 图标， 需要使用 **完整类名**。
 示例如下：
 
+（站内搜索 url 请指向站点 `/search` 路径）
+
 ```json
 [
-  {
-    "name": "谷歌",
-    "url": "https://www.google.com/search?q=",
-    "icon": "fab fa-google"
-  },
-  {
-    "name": "Github",
-    "url": "https://github.com/search?q=",
-    "icon": "fab fa-github"
-  }
+    {
+        "name": "站内",
+        "url": "/search",
+        "icon": "fas fa-search-location"
+    },
+    {
+        "name": "谷歌",
+        "url": "https://www.google.com/search?q=",
+        "icon": "fab fa-google"
+    },
+    {
+        "name": "Github",
+        "url": "https://github.com/search?q=",
+        "icon": "fab fa-github"
+    }
 ]
 
 ```
@@ -139,7 +149,13 @@ docker compose up -d
     "background": "#1ba784"
   }
 ]
-```  
+```
+
+#### 时间线配置
+
+请在后台 `管理` > `独立页面` > `新增`，将其模板设置为 `目录/时间线`，文章类型设置为 站内文章
+
+（时间线页面显示的文章数量，取决于 `设置` > `阅读` > `每页文章数目`）
 
 ---
 
