@@ -1554,3 +1554,27 @@ img {
         margin:2rem 0 0
     }
 }
+.nav .nav-link {
+    color: var(--color-muted);
+    position: relative;
+}
+.nav .nav-link:after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    width: 0;
+    height: 2px;
+    border-radius: 10px;
+    background: var(--color-primary);
+    transition: all 0.3s ease;
+    transform: translateX(-50%);
+}
+.nav .nav-link.active:after,
+.nav .nav-link:hover:after {
+    width: 30%;
+}
+.nav .nav-link.active,
+.nav .nav-link:hover {
+    color: var(--base-color);
+}

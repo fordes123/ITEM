@@ -380,7 +380,7 @@ class Utils
     {
         $db = Typecho_Db::get();
         $keyword = empty($keyword) ? null : '%' . str_replace('%', '\%', $keyword) . '%';
-        
+
         $totalPosts = $db->fetchObject($db->select(array('COUNT(cid)' => 'num'))
             ->from('table.contents')
             ->where('type = ?', 'post')
@@ -420,6 +420,125 @@ class Utils
             'totalPages' => 0,
             'total' => 0
         );
+    }
+
+    /**
+     * 获取分类下的导航文章列表
+     * @param object $source 请求源对象
+     * @return void 直接输出JSON响应
+     */
+    public static function category($source)
+    {
+        $mid = $source->request->mid;
+        $posts = Typecho_Widget::widget("Widget_Archive@category-" . $mid, "type=category", "mid=" . $mid);
+
+        $result = array();
+        while ($posts->next()) {
+            if (!is_null($posts->fields->navigation)) {
+                $result[] = array(
+                    'cid' => $posts->cid,
+                    'title' => $posts->title,
+                    'permalink' => $posts->permalink,
+                    'url' => $posts->fields->navigation == '1' ? $posts->fields->url : $posts->permalink,
+                    'text' => $posts->fields->text,
+                    'logo' => self::favicon($posts)
+                );
+            }
+        }
+
+        $source->response->throwJson(array(
+            'status' => 'success',
+            'data' => $result
+        ));
+    }
+
+    /**
+     * 输出分类导航卡片
+     * @param array $p 分类信息数组
+     * @param object $posts 文章列表对象
+     * @param bool $collapse 是否可折叠显示子分类，默认为false
+     * @return void 直接输出HTML
+     */
+    public static function indexCard($p, $posts, $collapse = false)
+    {
+        $options = Helper::options();
+?>
+        <div class="col-12">
+            <div class="card" id="<?php echo $p['slug']; ?>">
+                <div class="card-header">
+                    <div class="d-flex align-items-center gap-2">
+                        <div class="h4"> <i class="fas fa-sm fa-<?php echo $p['slug']; ?>"></i> <?php echo $p['name']; ?></div>
+                        <?php if ($collapse): ?>
+                            <ul class="card-tab nav text-sm">
+                                <?php $i = 0;
+                                $first = null;
+                                foreach ($p['children'] as $c): ?>
+                                    <li class="nav-item">
+                                        <?php $first = $i === 0 ? $c : $first; ?>
+                                        <span data-mid="<?php echo $c['mid']; ?>" class="nav-link<?php echo $i === 0 ? ' active' : ''; ?>"><i class="fas fa-<?php echo $c['slug']; ?>"></i> <?php echo $c['name']; ?></span>
+                                    </li>
+                                <?php $i++;
+                                endforeach; ?>
+                            </ul>
+                        <?php endif; ?>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="row g-2 g-md-3 list-grid list-grid-padding">
+                        <?php $mid = $collapse ? $first['mid'] : $p['mid'];
+                        Typecho_Widget::widget("Widget_Archive@category-" . $mid, "type=category", "mid=" . $mid)->to($posts);
+                        while ($posts->next()) :
+                            if (!is_null($posts->fields->navigation)) : ?>
+                                <div class="col-6 col-lg-3">
+                                    <div class="list-item block">
+                                        <div href="<?php $posts->permalink() ?>" class="media w-36 rounded-circle">
+                                            <img src="<?php $options->themeUrl('/assets/image/default.gif'); ?>"
+                                                data-src="<?php echo Utils::favicon($posts); ?>"
+                                                class="media-content lazyload" />
+                                        </div>
+                                        <div href="<?php $posts->fields->navigation == '1' ? $posts->fields->url() : $posts->permalink(); ?>" target="_blank" cid="<?php $posts->cid(); ?>" title="<?php $posts->fields->text(); ?>" class="list-content">
+                                            <div class="list-body">
+                                                <div class="list-title text-md h-1x">
+                                                    <?php $posts->title(); ?>
+                                                </div>
+                                                <div class="list-desc text-xx text-muted mt-1">
+                                                    <div class="h-1x"><?php $posts->fields->text(); ?></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                        <?php endif;
+                        endwhile; ?>
+                    </div>
+                </div>
+            </div>
+        </div>
+<?php
+    }
+
+    /**
+     * 处理 API 请求
+     * @param object $source 请求源对象
+     * @return void
+     */
+    public static function api($source)
+    {
+        switch ($source->request->event) {
+            case 'category':
+                self::category($source);
+                break;
+            case 'agree':
+                Utils::updateAgree($source->request->cid);
+                exit;
+                break;
+            case 'views':
+                Utils::views($source->request->cid, false, false);
+                break;
+            default:
+                header('HTTP/1.1 404 Not Found');
+                exit;
+        }
     }
 }
 

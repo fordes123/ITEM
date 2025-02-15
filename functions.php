@@ -10,15 +10,12 @@ require_once('libs/Utils.php');
  */
 function themeInit($source)
 {
+
+    if ($source->request->isPost()) {
+        Utils::api($source);
+    }
+
     Utils::init();
-
-    if ($source->request->agree) {
-        return Utils::updateAgree($source->request->agree);
-    }
-
-    if ($source->request->views) {
-        Utils::views($source->request->views, false, false);
-    }
 }
 
 /**
@@ -113,7 +110,13 @@ function themeConfig($form)
         new Typecho_Widget_Helper_Form_Element_Text('icp', NULL, NULL, _t('备案号'), _t('有就填没有就不填不要乱填'))
     );
 
-
+    //子分类的展示方式
+    $form->addInput(
+        new Typecho_Widget_Helper_Form_Element_Radio('subCategoryType', array(
+            '0' => '平铺',
+            '1' => '收纳',
+        ), '0', _t('子分类的展示方式'), _t('如果文章较多推荐使用收纳，可减少首页数据查询从而提高加载速度'))
+    );
 }
 
 /**
