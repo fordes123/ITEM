@@ -1,6 +1,6 @@
 <?php if (!defined('__TYPECHO_ROOT_DIR__')) exit;
 
-if ($this->fields->url) ?>
+if ($this->fields->url) : ?>
 <!DOCTYPE html>
 <html>
 
@@ -13,8 +13,7 @@ if ($this->fields->url) ?>
 </head>
 
 </html>
-<?php exit(); ?>
-<?php
+<?php exit(); endif;
 $this->need('header.php');
 $this->need('sidebar.php');
 $this->need('topbar.php');
