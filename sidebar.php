@@ -31,17 +31,14 @@
                     $subMenu = $this->options->subCategoryType != 1;
                     if (!$subMenu || empty($p['children'])): ?>
                         <li class="menu-item menu-item-type-taxonomy menu-item-object-category">
-                            <?php $onclick = $this->is('index') ?
-                                "document.getElementById('" . $p['slug'] . "').scrollIntoView({behavior: 'smooth', block: 'center'})" :
-                                "window.location.href = '/'"; ?>
-                            <a onclick="<?php echo $onclick; ?>" aria-current="page">
+                            <a role="button" data-target="<?php echo $p['slug']; ?>" data-index="<?php echo $this->is('index'); ?>" aria-current="page">
                                 <span class="menu-icon"><i class="fas fa-<?php echo $p['slug']; ?> fa-sm"></i></span>
                                 <span class="menu-text"><?php echo $p['name'] ?></span>
                             </a>
                         </li>
                     <?php else: ?>
                         <li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children">
-                            <a>
+                            <a role="button">
                                 <span class="menu-icon"><i class="fas fa-<?php echo $p['slug']; ?> fa-sm"></i></span>
                                 <span class="menu-text"><?php echo $p['name'] ?></span>
                                 <span class="menu-sign fas fa-arrow-right fa-sm"></span>
@@ -49,10 +46,7 @@
                             <ul class="sub-menu" role="menu">
                                 <?php foreach ($p['children'] as $c): ?>
                                     <li class="menu-item menu-item-type-taxonomy menu-item-object-category">
-                                        <?php $onclick = $this->is('index') ?
-                                            "document.getElementById('" . $c['slug'] . "').scrollIntoView({behavior: 'smooth', block: 'center'})" :
-                                            "window.location.href = '/'"; ?>
-                                        <a onclick="<?php echo $onclick; ?>" aria-current="page">
+                                        <a role="button" data-target="<?php echo $c['slug']; ?>" data-index="<?php echo $this->is('index'); ?>" aria-current="page">
                                             <span class="menu-text"><?php echo $c['name'] ?></span>
                                         </a>
                                     </li>

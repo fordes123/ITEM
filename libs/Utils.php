@@ -491,12 +491,12 @@ class Utils
                             if (!is_null($posts->fields->navigation)) : ?>
                                 <div class="col-6 col-lg-3">
                                     <div class="list-item block">
-                                        <div href="<?php $posts->permalink() ?>" class="media w-36 rounded-circle">
+                                        <div role="button" href="<?php $posts->permalink() ?>" title="点击查看详情" class="media w-36 rounded-circle">
                                             <img src="<?php $options->themeUrl('/assets/image/default.gif'); ?>"
                                                 data-src="<?php echo Utils::favicon($posts); ?>"
                                                 class="media-content lazyload" />
                                         </div>
-                                        <div href="<?php $posts->fields->navigation == '1' ? $posts->fields->url() : $posts->permalink(); ?>" target="_blank" cid="<?php $posts->cid(); ?>" title="<?php $posts->fields->text(); ?>" class="list-content">
+                                        <div role="button" href="<?php $posts->fields->navigation == '1' ? $posts->fields->url() : $posts->permalink(); ?>" target="_blank" cid="<?php $posts->cid(); ?>" title="<?php $posts->fields->text(); ?>" class="list-content">
                                             <div class="list-body">
                                                 <div class="list-title text-md h-1x">
                                                     <?php $posts->title(); ?>
