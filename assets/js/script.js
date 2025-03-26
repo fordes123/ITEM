@@ -104,7 +104,7 @@
                         type: "post",
                         success: function (r) {
                             let data = r.status !== 'success' ? [] : r.data;
-                            const html = data.map(item => `<div class="col-6 col-lg-3"><div class="list-item block"><div href="${item.permalink}"class="media w-36 rounded-circle"><img src="/usr/themes/ITEM/assets/image/default.gif"data-src="${item.logo}"alt="${item.title}"class="media-content lazyload"/></div><div href="${item.url}"target="_blank"cid="${item.cid}"title="${item.text}"class="list-content"><div class="list-body"><div class="list-title text-md h-1x">${item.title}</div><div class="list-desc text-xx text-muted mt-1"><div class="h-1x">${item.text}</div></div></div></div></div></div>`).join('');
+                            const html = data.map(item => `<div class="col-6 col-lg-3"><div class="list-item block"><div role="button" href="${item.permalink}"class="media w-36 rounded-circle"><img src="/usr/themes/ITEM/assets/image/default.gif"data-src="${item.logo}"alt="${item.title}"class="media-content lazyload"/></div><div role="button" href="${item.url}"target="_blank"cid="${item.cid}"title="${item.text}"class="list-content"><div class="list-body"><div class="list-title text-md h-1x">${item.title}</div><div class="list-desc text-xx text-muted mt-1"><div class="h-1x">${item.text}</div></div></div></div></div></div>`).join('');
                             $row.html(html);
                             func.lazyload($row);
                             func.div_href($row);
@@ -170,8 +170,28 @@
                     },
                 })
             })
-        },
+        }, menuItemAnchor: function () {
+            let anchor = sessionStorage.getItem('anchor');
+            if (anchor) {
+                document.getElementById(anchor).scrollIntoView({behavior: 'smooth', block: 'center'});
+                sessionStorage.removeItem('anchor');
+            }
+            $('.menu-item a').click(function (e) {
+                let target = $(this).attr('data-target');
+                if (target) {
+                    let isIndex = $(this).attr('data-index');
+                    if (!isIndex) {
+                        sessionStorage.setItem('anchor', target);
+                        window.location.href = '/';
+                        e.preventDefault();
+                    }
+
+                    document.getElementById(target).scrollIntoView({behavior: 'smooth', block: 'center'});
+                    e.preventDefault();
+                }
+            });
+        }
     };
     $(document).ready(() => func.initialize());
-    $(window).on("load", () => func.mobileMenu())
+    $(window).on("load", () => func.mobileMenu(), func.menuItemAnchor());
 }(jQuery);

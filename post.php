@@ -110,12 +110,12 @@ if ($this->fields->navigation == 2): ?>
                                             <?php while ($item->next()) : ?>
                                                 <div class="col-12 col-md-6">
                                                     <div class="list-item block">
-                                                        <div href="<?php $item->permalink(); ?>" title="点击查看详情" class="media w-36 rounded-circle">
+                                                        <div role="button" href="<?php $item->permalink(); ?>" title="点击查看详情" class="media w-36 rounded-circle">
                                                             <img src="<?php $this->options->themeUrl('/assets/image/default.gif'); ?>"
                                                                 data-src="<?php echo Utils::favicon($item); ?>"
                                                                 class="media-content lazyload" />
                                                         </div>
-                                                        <div href="<?php echo empty($item->fields->url()) ? $item->permalink : $item->fields->url; ?>" cid="<?php $item->cid(); ?>" class="list-content" title="<?php $item->fields->text(); ?>">
+                                                        <div role="button" href="<?php echo empty($item->fields->url()) ? $item->permalink : $item->fields->url; ?>" cid="<?php $item->cid(); ?>" class="list-content" title="<?php $item->fields->text(); ?>">
                                                             <div class="list-body">
                                                                 <div class="list-title text-md h-1x"><?php $item->title(); ?></div>
                                                                 <div class="list-desc text-xx text-muted mt-1">
