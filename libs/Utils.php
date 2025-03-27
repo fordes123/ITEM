@@ -2,7 +2,7 @@
 if (!defined('__TYPECHO_ROOT_DIR__')) exit;
 class Utils
 {
-    const THEME_VERSION = '1.1.2';
+    const THEME_VERSION = '1.1.3';
     const VERSION_OPTION = 'theme:ITEM::version';
     const RANKED_ITEM_TEMPLATE = <<<HTML
     <div class="list-item">
