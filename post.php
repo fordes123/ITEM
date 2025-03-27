@@ -2,6 +2,14 @@
 $this->need('header.php');
 $this->need('sidebar.php');
 $this->need('topbar.php');
+
+$hidden = $this->hidden;
+$hasPassword = !empty($this->password);
+if ($hidden && $hasPassword) {
+    $password = Typecho_Cookie::get('protectPassword_' . $this->cid);
+    $hasPassword = empty($password) || $password != $this->password;
+}
+
 if ($this->fields->navigation == 2): ?>
     <div class="modal fade" id="openWxModal" tabindex="-1" aria-labelledby="openWxModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
@@ -45,55 +53,79 @@ if ($this->fields->navigation == 2): ?>
                             </div>
                         </div>
                         <div class="card-body">
-                            <div class="post-tags">
-                                <?php foreach ($this->tags as $tag) : ?>
-                                    <a><?php echo ($tag['name']); ?></a>
-                                <?php endforeach; ?>
-                            </div>
-                            <div class="post-content">
-                                <div class="post-excerpt">
-                                    <?php if ($this->fields->text): ?>
-                                        <i class="excerpt-icon"></i>
-                                        <h4><?php echo $this->fields->text; ?></h4>
-                                    <?php endif; ?>
-                                </div>
-                                <div class="text-wrap text-break fs-6 mx-3">
-                                    <?php $this->content(); ?>
-                                </div>
-                            </div>
-                            <div class="post-actions row g-2 mt-4">
-                                <div class="col">
-                                    <a href="#" class="btn btn-icon btn-block btn-lg disabled">
-                                        <span><i class="far fa-eye"></i></span>
-                                        <b class="num"><?php Utils::views($this->cid) ?></b>
-                                    </a>
-                                </div>
-                                <div class="col">
-                                    <a type="button" class="btn btn-icon btn-block btn-lg <?php echo Utils::agreed($this->cid); ?>"
-                                        id="agree-btn" data-cid="<?php echo $this->cid; ?>">
-                                        <span><i class="far fa-thumbs-up"></i></span>
-                                        <b class="num"><?php Utils::agree($this->cid) ?></b>
-                                    </a>
-                                </div>
-                                <div class="col">
-                                    <a href="#" class="btn-share-toggler btn btn-icon btn-block btn-lg disabled">
-                                        <span><i class="far fa-star"></i></span>
-                                    </a>
-                                </div>
-                                <?php if ($this->fields->navigation === '2'): ?>
-                                    <div class="col-12 col-md-7">
-                                        <button type="button" class="btn btn-primary btn-lg btn-block btn-goto" data-bs-toggle="modal" data-bs-target="#openWxModal">
-                                            进入小程序
-                                        </button>
+                            <?php if ($hidden): ?>
+
+                                <div class="password-form-container text-left mx-5">
+                                    <div class="password-form py-4 mx-auto">
+
+                                        <h4 class="mb-3"><i class=" fas fa-lock"></i>&nbsp;<?php echo $hasPassword ? '此内容受密码保护' : '此内容已隐藏' ?></h4>
+                                        <p class="text-muted mb-4"><?php echo $hasPassword ? '请输入密码以查看内容' : '如有疑问请站点联系管理员' ?></p>
+
+                                        <?php if ($hasPassword): ?>
+                                            <form method="post" action="<?php echo $this->security->getTokenUrl($this->permalink) ?>">
+                                                <div class="input-group mb-3">
+                                                    <input type="password" name="protectPassword" class="form-control text" placeholder="请输入密码" required>
+                                                    <input type="hidden" name="protectCID" value="<?php echo $this->cid; ?>">
+                                                    <button type="submit" class="submit btn btn-primary">提交</button>
+                                                </div>
+
+                                            </form>
+                                        <?php endif; ?>
                                     </div>
-                                <?php elseif ($this->fields->navigation === '1'): ?>
-                                    <div class="col-12 col-md-7">
-                                        <a href="<?php echo $this->fields->url(); ?>" target="_blank" title="<?php $this->title(); ?>" class="btn btn-primary btn-lg btn-block btn-goto">
-                                            访问网站
-                                        </a>
+                                </div>
+                            <?php else: ?>
+                                <div class="post-tags">
+                                    <?php foreach ($this->tags as $tag) : ?>
+                                        <a><?php echo ($tag['name']); ?></a>
+                                    <?php endforeach; ?>
+                                </div>
+
+                                <div class="post-content">
+                                    <div class="post-excerpt">
+                                        <?php if ($this->fields->text): ?>
+                                            <i class="excerpt-icon"></i>
+                                            <h4><?php echo $this->fields->text; ?></h4>
+                                        <?php endif; ?>
                                     </div>
-                                <?php endif; ?>
-                            </div>
+                                    <div class="text-wrap text-break fs-6 mx-3">
+                                        <?php $this->content(); ?>
+                                    </div>
+
+                                    <div class="post-actions row g-2 mt-4">
+                                        <div class="col">
+                                            <a href="#" class="btn btn-icon btn-block btn-lg disabled">
+                                                <span><i class="far fa-eye"></i></span>
+                                                <b class="num"><?php Utils::views($this->cid); ?></b>
+                                            </a>
+                                        </div>
+                                        <div class="col">
+                                            <a type="button" class="btn btn-icon btn-block btn-lg <?php echo Utils::agreed($this->cid); ?>"
+                                                id="agree-btn" data-cid="<?php echo $this->cid; ?>">
+                                                <span><i class="far fa-thumbs-up"></i></span>
+                                                <b class="num"><?php Utils::agree($this->cid) ?></b>
+                                            </a>
+                                        </div>
+                                        <div class="col">
+                                            <a href="#" class="btn-share-toggler btn btn-icon btn-block btn-lg disabled">
+                                                <span><i class="far fa-star"></i></span>
+                                            </a>
+                                        </div>
+                                        <?php if ($this->fields->navigation === '2'): ?>
+                                            <div class="col-12 col-md-7">
+                                                <button type="button" class="btn btn-primary btn-lg btn-block btn-goto" data-bs-toggle="modal" data-bs-target="#openWxModal">
+                                                    进入小程序
+                                                </button>
+                                            </div>
+                                        <?php elseif ($this->fields->navigation === '1'): ?>
+                                            <div class="col-12 col-md-7">
+                                                <a href="<?php echo $this->fields->url(); ?>" target="_blank" title="<?php $this->title(); ?>" class="btn btn-primary btn-lg btn-block btn-goto">
+                                                    访问网站
+                                                </a>
+                                            </div>
+                                        <?php endif; ?>
+                                    </div>
+                                </div>
+                            <?php endif; ?>
                         </div>
                         <?php if ($this->is('post')) : ?>
                             <?php $this->related(6, count($this->tags) > 0 ? 'tag' : 'author')->to($item); ?>
