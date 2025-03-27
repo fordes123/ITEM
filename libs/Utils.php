@@ -14,6 +14,9 @@ class Utils
         <a href="%s" target="_blank" cid="%d" title="%s" class="list-goto nav-item"></a>
     </div>
     HTML;
+    const CONTENT_CACHE_PREFIX = 'content_';
+    const USER_AGREED_CACHE_KEY = 'agreed';
+    const MOST_VIEWED_CACHE_KEY = 'mostViewed';
 
     public static function init()
     {
@@ -65,7 +68,7 @@ class Utils
      */
     public static function getCache($cid)
     {
-        $data = Typecho_Cookie::get($cid);
+        $data = Typecho_Cookie::get(self::CONTENT_CACHE_PREFIX . $cid);
         return $data ? unserialize($data) : new Cache(null, null);
     }
 
@@ -76,7 +79,7 @@ class Utils
      */
     public static function putCache($cid, $cache)
     {
-        Typecho_Cookie::set($cid, serialize($cache), time() + 600);
+        Typecho_Cookie::set(self::CONTENT_CACHE_PREFIX . $cid, serialize($cache), time() + 600);
     }
 
     /**
@@ -122,9 +125,9 @@ class Utils
      */
     public static function agreed($cid)
     {
-        $agreed = Typecho_Cookie::get('agreed');
+        $agreed = Typecho_Cookie::get(self::USER_AGREED_CACHE_KEY);
         if (empty($agreed)) {
-            Typecho_Cookie::set('agreed', json_encode(array()));
+            Typecho_Cookie::set(self::USER_AGREED_CACHE_KEY, json_encode(array()));
         } else {
             $agreed = json_decode($agreed);
             if (in_array($cid, $agreed)) {
@@ -193,10 +196,10 @@ class Utils
         self::putCache($cid, $cache);
 
         // 记录点赞状态
-        $agreed = Typecho_Cookie::get('agreed');
+        $agreed = Typecho_Cookie::get(self::USER_AGREED_CACHE_KEY);
         $agreed = json_decode($agreed);
         array_push($agreed, $cid);
-        Typecho_Cookie::set('agreed', json_encode($agreed));
+        Typecho_Cookie::set(self::USER_AGREED_CACHE_KEY, json_encode($agreed));
         return $cache->agree;
     }
 
@@ -207,11 +210,10 @@ class Utils
      */
     public static function ranked($limit = 5, $cacheTime = 3600)
     {
-        $cacheKey = 'mostViewed';
         $limit = max(1, min(20, intval($limit))); // 限制范围在1-20之间
 
         // 尝试获取缓存
-        $cachedData = Typecho_Cookie::get($cacheKey);
+        $cachedData = Typecho_Cookie::get(self::MOST_VIEWED_CACHE_KEY);
         if ($cachedData) {
             self::printRankedPosts(explode('.', $cachedData));
             return;
@@ -229,7 +231,7 @@ class Utils
         $cids = $posts ? array_column($posts, 'cid') : [];
         if (!empty($cids)) {
             self::printRankedPosts($cids);
-            Typecho_Cookie::set($cacheKey, implode('.', $cids), time() + $cacheTime);
+            Typecho_Cookie::set(self::MOST_VIEWED_CACHE_KEY, implode('.', $cids), time() + $cacheTime);
         }
     }
 
@@ -496,13 +498,14 @@ class Utils
                                                 data-src="<?php echo Utils::favicon($posts); ?>"
                                                 class="media-content lazyload" />
                                         </div>
-                                        <div role="button" href="<?php $posts->fields->navigation == '1' ? $posts->fields->url() : $posts->permalink(); ?>" target="_blank" cid="<?php $posts->cid(); ?>" title="<?php $posts->fields->text(); ?>" class="list-content">
+                                        <?php $encrypt = $posts->hidden ?>
+                                        <div role="button" href="<?php ($posts->fields->navigation == '1' && !$encrypt) ? $posts->fields->url() : $posts->permalink(); ?>" target="_blank" cid="<?php $posts->cid(); ?>" title="<?php $posts->fields->text(); ?>" class="list-content">
                                             <div class="list-body">
                                                 <div class="list-title text-md h-1x">
                                                     <?php $posts->title(); ?>
                                                 </div>
                                                 <div class="list-desc text-xx text-muted mt-1">
-                                                    <div class="h-1x"><?php $posts->fields->text(); ?></div>
+                                                    <div class="h-1x"><?php echo $encrypt ? '验证后可查看内容' : $posts->fields->text; ?></div>
                                                 </div>
                                             </div>
                                         </div>
@@ -529,15 +532,14 @@ class Utils
                 self::category($source);
                 break;
             case 'agree':
-                Utils::updateAgree($source->request->cid);
+                self::updateAgree($source->request->cid);
                 exit;
                 break;
             case 'views':
-                Utils::views($source->request->cid, false, false);
+                self::views($source->request->cid, false, false);
                 break;
             default:
-                header('HTTP/1.1 404 Not Found');
-                exit;
+                break;
         }
     }
 }

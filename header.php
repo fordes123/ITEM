@@ -28,7 +28,7 @@
   <meta charset="<?php $this->options->charset(); ?>">
   <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1">
   <meta name="author" content="fordes123" />
-  <meta name="referrer" content="origin">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title><?php $this->archiveTitle(array(
             'category'  =>  _t('分类 %s 下的文章'),
