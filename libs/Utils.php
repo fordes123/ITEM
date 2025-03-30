@@ -3,6 +3,7 @@ if (!defined('__TYPECHO_ROOT_DIR__')) exit;
 class Utils
 {
     const THEME_VERSION = '1.1.3';
+    const DEFAULT_FAVICON_API = 'https://favicon.im/';
     const VERSION_OPTION = 'theme:ITEM::version';
     const RANKED_ITEM_TEMPLATE = <<<HTML
     <div class="list-item">
@@ -288,7 +289,10 @@ class Utils
         $logo = $posts->fields->logo;
         $url = $posts->fields->url;
         if (empty($logo) && $url) {
-            $logo = 'https://favicon.im/' . parse_url($url, PHP_URL_HOST);
+            $options = Helper::options();
+            $apiSelect = $options->faviconApiSelect;
+            $faviconApi = $apiSelect === 'custom' ? $options->faviconApi : ($apiSelect ?: self::DEFAULT_FAVICON_API);
+            $logo = $faviconApi . parse_url($url, PHP_URL_HOST);
         }
         return $logo;
     }
