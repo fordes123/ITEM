@@ -31,6 +31,35 @@ function themeConfig($form)
         new Typecho_Widget_Helper_Form_Element_Text('favicon', NULL, $options->themeUrl . '/assets/image/favicon.ico', _t('网站图标'), _t('建议使用CDN'))
     );
 
+    //Favicon API选择
+    $faviconApiSelect = new Typecho_Widget_Helper_Form_Element_Select(
+        'faviconApiSelect',
+        array(
+            'https://favicon.im/' => 'favicon.im',
+            'https://favicon.yandex.net/favicon/' => 'Yandex Favicon',
+            'https://toolb.cn/favicon/' => 'Toolb Favicon',
+            'https://api.xinac.net/icon/?url=' => 'Xinac Icon',
+            'https://tools.ly522.com/ico/favicon.php?url=' => 'Ly522 Favicon',
+            'https://api.qqsuu.cn/api/dm-get?url=' => 'QQsuu API',
+            'custom' => '自定义API'
+        ),
+        'https://favicon.yandex.net/favicon/',
+        _t('Favicon API 服务'),
+        _t('选择获取网站图标的API服务')
+    );
+    $form->addInput($faviconApiSelect);
+
+    //自定义Favicon API地址
+    $form->addInput(
+        new Typecho_Widget_Helper_Form_Element_Text(
+            'faviconApi',
+            NULL,
+            '',
+            _t('自定义Favicon API地址'),
+            _t('当选择"自定义API"时，在此处填写自定义的Favicon API地址')
+        )
+    );
+
     //首页大logo
     $form->addInput(
         new Typecho_Widget_Helper_Form_Element_Text('biglogo', NULL, $options->themeUrl . '/assets/image/head.png', _t('首页大logo'), _t('侧边展开时的图标，建议使用CDN或图床'))
@@ -48,7 +77,7 @@ function themeConfig($form)
         '[
             {
                 "name": "站内搜索",
-                "url": "https://localhost/search/",
+                "url": "'.$options->siteUrl.'search/",
                 "icon": "fas fa-search-location"
             },
             {

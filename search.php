@@ -21,7 +21,6 @@ $this->need("topbar.php");
                             <?php
                             $keywords = mb_substr($this->request->keywords, 0, 20, 'UTF-8');
                             $ellipsis = (mb_strlen($keywords, 'UTF-8') > 10) ? mb_substr($keywords, 0, 10, 'UTF-8') . '...' : $keywords;
-
                             $pageSize = $this->options->pageSize;
                             $currentPage = isset($_GET['page']) ? intval($_GET['page']) : 1;
                             $result = Utils::page($pageSize, $currentPage, $keywords);
@@ -40,8 +39,8 @@ $this->need("topbar.php");
                                     <div class="col-12 col-md-6">
                                         <div class="list-item block">
                                             <?php $encrypt = false;
-                                            if(!empty($item->password)) {
-                                                $password = Typecho_Cookie::get('protectPassword_'. $cid);
+                                            if (!empty($item->password)) {
+                                                $password = Typecho_Cookie::get('protectPassword_' . $cid);
                                                 $encrypt = empty($password) || $password != $item->password;
                                             } ?>
                                             <div role="button" href="<?php $item->permalink(); ?>" title="点击查看详情" class="media w-36 rounded-circle">
