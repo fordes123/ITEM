@@ -1,5 +1,5 @@
 {
-  "pr_template": "- #{{TITLE}} by #{{CONTRIBUTORS}} in ##{{NUMBER}}",
+  "pr_template": "- #{{TITLE}} by @#{{AUTHOR}} in ##{{NUMBER}}",
   "categories": [
     {
       "title": "## 🚀 Features",
