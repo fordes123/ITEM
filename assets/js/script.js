@@ -69,6 +69,9 @@
             };
             const setTheme = (theme, $button) => {
                 localStorage.setItem("data-bs-theme", theme);
+                if (theme === 'default') {
+                    theme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+                }
                 document.documentElement.setAttribute("data-bs-theme", theme);
                 $("#theme-toggle").html($button.find("i").prop('outerHTML'));
                 $(".dropdown-item").removeClass('active');
@@ -78,6 +81,8 @@
             setTheme(savedTheme, themeButtons[savedTheme]);
             $(".dropdown-item").on('click', function () {
                 setTheme($(this).attr('id'), $(this))
+                $('.dropdown-menu[aria-labelledby="theme-toggle"]').removeClass('show')
+                $('#theme-toggle').attr('aria-expanded', 'false').removeClass('show')
             })
         }, ajax_load_category: function () {
             $(".container .card").each(function () {
