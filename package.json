@@ -1,0 +1,42 @@
+{
+  "name": "ITEM",
+  "version": "1.1.4",
+  "description": "",
+  "repository": "https://github.com/fordes123/ITEM",
+  "author": "fordes123 <github@fordes123.dev>",
+  "license": "GPL-3.0",
+  "packageManager": "yarn@4.6.0",
+  "scripts": {
+    "build": "webpack",
+    "watch": "webpack --watch"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.26.10",
+    "@babel/preset-env": "^7.26.9",
+    "autoprefixer": "^10.4.21",
+    "babel-loader": "^10.0.0",
+    "copy-webpack-plugin": "^13.0.0",
+    "css-loader": "^7.1.2",
+    "css-minimizer-webpack-plugin": "^7.0.2",
+    "mini-css-extract-plugin": "^2.9.2",
+    "postcss": "^8.5.3",
+    "postcss-loader": "^8.1.1",
+    "postcss-preset-env": "^10.1.5",
+    "sass": "^1.86.2",
+    "sass-loader": "^16.0.5",
+    "style-loader": "^4.0.0",
+    "terser-webpack-plugin": "^5.3.14",
+    "webpack": "^5.98.0",
+    "webpack-cli": "^6.0.1",
+    "webpack-merge": "^6.0.1"
+  },
+  "dependencies": {
+    "@fortawesome/fontawesome-free": "^5.15.4",
+    "@popperjs/core": "^2.11.8",
+    "bootstrap": "^5.3.5",
+    "jquery": "^3.7.1",
+    "lazyload": "^2.0.0-rc.2",
+    "prismjs": "^1.30.0",
+    "vanilla-lazyload": "^19.1.3"
+  }
+}

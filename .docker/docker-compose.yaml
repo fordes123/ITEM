@@ -13,6 +13,8 @@ services:
     restart: always
     volumes:
       - ./mysql:/docker-entrypoint-initdb.d/
+    ports:
+      - 3306:3306
     environment:
       TZ: Asia/Shanghai
       MYSQL_DATABASE: typecho
@@ -33,7 +35,7 @@ services:
       TZ: Asia/Shanghai
     volumes:
       - ./caddy/Caddyfile:/etc/caddy/Caddyfile
-      - ../:/var/www/html/typecho/usr/themes/ITEM
+      - ../theme:/var/www/html/typecho/usr/themes/ITEM
       - typecho:/var/www/html/typecho:copy
     ports:
       - 80:80
@@ -49,7 +51,7 @@ services:
     environment:
       TZ: Asia/Shanghai
     volumes:
-      - ../:/var/www/html/typecho/usr/themes/ITEM
+      - ../theme:/var/www/html/typecho/usr/themes/ITEM
       - typecho:/var/www/html/typecho:rw
     networks:
       - default
