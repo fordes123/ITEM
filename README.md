@@ -12,7 +12,7 @@
 <br />
 <div align="center">
   <a href="https://github.com/fordes123/ITEM">
-    <img src="./assets/image/apple-touch-icon.png" alt="Logo" width="80" height="80">
+    <img src="https://github.com/user-attachments/assets/56136bb1-fc1d-4dee-a3db-6fb8f5c64aa6" alt="Logo" width="80" height="80">
   </a>
 
 <h3 align="center">ITEM</h3>

@@ -33,7 +33,7 @@ $this->need('topbar.php');
                                     style="display: none" alt="">
                                 <template id="audio-resources">
                                     <audio id="offline-sound-press" src="<?php $this->options->themeUrl('/assets/audio/dino-press.mp3'); ?>"></audio>
-                                    <audio id="offline-sound-hit" src="<?php $this->options->themeUrl('/assets/audio/dino-hit.png'); ?>"></audio>
+                                    <audio id="offline-sound-hit" src="<?php $this->options->themeUrl('/assets/audio/dino-hit.mp3'); ?>"></audio>
                                     <audio id="offline-sound-reached" src="<?php $this->options->themeUrl('/assets/audio/dino-reached.mp3'); ?>"></audio>
                                 </template>
                             </div>
