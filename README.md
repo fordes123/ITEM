@@ -1,103 +1,96 @@
 <!-- This README Template See: https://github.com/othneildrew/Best-README-Template -->
-<a name="readme-top"></a>
-
-<!-- PROJECT SHIELDS -->
-[![Contributors][contributors-shield]][contributors-url]
-[![Forks][forks-shield]][forks-url]
-[![Stargazers][stars-shield]][stars-url]
-[![Issues][issues-shield]][issues-url]
-[![MIT License][license-shield]][license-url]
-
-<!-- PROJECT LOGO -->
-<br />
 <div align="center">
-  <a href="https://github.com/fordes123/ITEM">
-    <img src="https://github.com/user-attachments/assets/56136bb1-fc1d-4dee-a3db-6fb8f5c64aa6" alt="Logo" width="80" height="80">
-  </a>
-
-<h3 align="center">ITEM</h3>
-
-  <p align="center">
-    网址导航型的 Typecho 主题
-    <br /><br />
-    <a href="https://item-typecho.vercel.app"><strong>演示站点 »</strong></a>
-    <br />
-    <br />
-    <a href="#1">项目说明</a>
-    ·
-    <a href="#2">快速开始</a>
-    ·
-    <a href="#3">问题反馈</a>
-  </p>
+  <p>
+    <a href="https://github.com/fordes123/ITEM">
+      <img src="https://github.com/user-attachments/assets/56136bb1-fc1d-4dee-a3db-6fb8f5c64aa6" alt="Logo" width="80" height="80"></a>
+    <h3 align="center">ITEM</h3></p>
+  <p>网址导航仪表盘型的 Typecho 主题</p>
+  <p>
+    <img src="https://img.shields.io/github/v/release/fordes123/ITEM?style=flat-square" alt="last releases" />
+    <img src="https://img.shields.io/github/actions/workflow/status/fordes123/ITEM/build.yaml?style=flat-square" alt="build status" />
+    <img src="https://img.shields.io/github/license/fordes123/ITEM?style=flat-square" alt="license" />
+    <img src="https://img.shields.io/github/contributors/fordes123/ITEM.svg?style=flat-square" alt="contributors" />
+    <img src="https://img.shields.io/github/forks/fordes123/ITEM?style=flat-square" alt="forks" />
+    <img src="https://img.shields.io/github/stars/fordes123/ITEM?style=flat-square" alt="stars" />
+    <img src="https://img.shields.io/github/issues/fordes123/ITEM?style=flat-square" alt="open issues" /></p>
+  <h4>
+    <a href="#a">项目说明</a>
+    <span>·</span>
+    <a href="#b">快速开始</a>
+    <span>·</span>
+    <a href="#c">配置说明</a>
+    <span>·</span>
+    <a href="#d">交流反馈</a></h4>
 </div>
 
+<h2 id='a'>🎉 项目说明</h2>
 
-<!-- ABOUT THE PROJECT -->
+![screenshot][screenshot]
 
-<h2 id='1'>🎉 项目说明</h2>
-
-![screenshot](https://github.com/user-attachments/assets/aa9dd5d5-1a19-478f-b147-d346d19d1df4)
-
-> ✨ Hugo 版现已推出：[hugo-theme-item](https://github.com/fordes123/hugo-theme-item/)
+> ✨ Hugo 版现已推出：[hugo-theme-item][hugo-theme-item]
 
 在编程语言中，"item" 这个单词常用来代表一个元素、一个选项  
 希望这个主题能够承载更多的 "item"，链接每一个选项~
 
 ---
 
-<!-- GETTING STARTED -->
-
-<h2 id='2'>🛠️ 快速开始</h2>
-
-<a href="https://vercel.com/new/clone?project-name=ITEM-vercel&repository-name=ITEM-vercel&repository-url=https://github.com/fordes123/ITEM-vercel&from=templates&integration-ids=oac_coKBVWCXNjJnCEth1zzKoF1j"><img src="https://vercel.com/button"></a>
-> 通过 Vercel 托管需要添加一个 MySQL 集成，如 [TiDB](https://tidbcloud.com/)、[PlanetScale](https://planetscale.com/)，参考: [Vercel 托管 Typecho](https://www.fordes.dev/posts/tutorials/typecho-vercel/)
+<h2 id='b'>🛠️ 快速开始</h2>
 
 ### 本地部署
 
-这是一个 Typecho 主题，因此你必须要先安装 Typecho 才能使用它，同时还需要满足以下条件:
-
-- php 7.4+
-- MySQL 8+
-
-1. 获取主题文件
-   克隆仓库源码或下载最新 [Releases](https://github.com/fordes123/ITEM/releases)，
-   ```shell
-   git clone https://github.com/fordes123/ITEM.git
-   ```
+1. 下载 [正式版][last-releases] 或者实时构建的 [开发版][snapshot]
 2. 将主题文件重名为 <code>ITEM</code> 并移动至 Typecho 根目录<code>usr/themes</code> 文件夹中
 3. 在 Typecho 管理面板中选择更换外观并启用主题
 
+> [!WARNING]
+> 必须使用 MySQL，不支持 SQLite 以及 PostgreSQL  
+> 推荐 `Typecho 1.2+`、 `PHP 7.4+`、 `MySQL 8+` 低于这些版本不保证兼容性
+
+### Vercel 部署
+
+<a href="https://vercel.com/new/clone?project-name=ITEM-vercel&repository-name=ITEM-vercel&repository-url=https://github.com/fordes123/ITEM-vercel&from=templates&integration-ids=oac_coKBVWCXNjJnCEth1zzKoF1j"><img src="https://vercel.com/button"></a>
+
+点击上方 `Deploy` 按钮 或者 Fork [ITEM-vercel][item-vercel] 仓库并手动导入 Vercel。
+
+> [!TIP]
+> 通过 Vercel 托管需要添加一个 MySQL 集成，如 [TiDB][tidb]、[PlanetScale][planetscale]，参考: [Vercel 托管 Typecho][typecho-vercel-post]
+
 ### 本地开发
 
-安装 Docker 以及 Docker Compose 后，在项目根目录下执行以下命令：  
-```shell
-cd .docker
-docker compose up -d
-```
-打开浏览器即可访问 `http://localhost:80`，账号: `dev`，密码: `12345678`  
+1. 安装 Docker 以及 Docker Compose 后，在项目根目录下执行以下命令：
+   ```shell
+   cd .docker
+   docker compose up -d
+   ```
+2. 在项目根目录执行以下命令：
+   ```shell
+   yarn
+   yarn watch
+   ```
 
-(该配置仅用于开发和测试，请勿直接用于生产环境)
+完成以上步骤后，浏览器打开 `http://localhost:80` 即可查看前台页面（账号: `dev`，密码: `12345678`）  
+此时对源码的任何修改都将实时生效
 
 ---
 
-### 配置说明
+<h2 id='c'>📄️ 配置说明</h2>
 
-#### 文章配置
+### 文章
 
-在本主题中，我们将文章分为以下3类
+在本主题中，我们将文章分为以下 3 类
 
-  -  **网址导航**（默认）：点击图标前往文章详情页，点击其他位置直接跳转至对应url
-  -  **站内文章**：顾名思义，与网址导航对应，点击会直接前往文章详情页
-  -  **微信小程序**：作为网址导航的分支，点击会直接前往文章详情页
+- **网址导航**（默认）：点击图标前往文章详情页，点击其他位置直接跳转至对应 url
+- **站内文章**：顾名思义，与网址导航对应，点击会直接前往文章详情页
+- **微信小程序**：作为网址导航的分支，点击会直接前往文章详情页
 
-#### 分类配置
+### 分类
 
-分类略缩名表示对应图标名称，可用图标可在 [FontAwesome 5](https://fontawesome.com/v5/search?o=r&m=free) 图标库中浏览；  
+分类略缩名表示对应图标名称，可用图标可在 [FontAwesome 5][fontawesome-free] 图标库中浏览；  
 (例: FontAwesome 图标类名为 `<i class="fas fa-vihara"></i>` 那么对应略缩名应为 `vihara`)
 
-#### 搜索引擎配置
+### 搜索引擎
 
-配置格式为 JSON，其中 icon 为 [FontAwesome 5](https://fontawesome.com/v5/search?o=r&m=free) 图标， 需要使用 **完整类名**。
+配置格式为 JSON，其中 icon 为 [FontAwesome 5][fontawesome-free] 图标， 需要使用 **完整类名**。
 示例如下：
 
 （站内搜索 url 请指向站点 `/search` 路径）
@@ -120,10 +113,9 @@ docker compose up -d
         "icon": "fab fa-github"
     }
 ]
-
 ```
 
-#### 工具直达配置
+### 工具直达
 
 配置格式为 JSON，结构类似 搜索引擎配置，增加了 `background` 控制背景色，填写 css 格式的颜色值即可。
 示例如下：
@@ -151,46 +143,33 @@ docker compose up -d
 ]
 ```
 
-#### 时间线配置
+### 时间线
 
 请在后台 `管理` > `独立页面` > `新增`，将其模板设置为 `目录/时间线`，文章类型设置为 站内文章
 
-（时间线页面显示的文章数量，取决于 `设置` > `阅读` > `每页文章数目`）
+---
+
+<h2 id='d'>💬 交流反馈</h2>
+
+请在 [issues][issues] 和 [discussions][discussions] 发表和交换意见，同时也欢迎贡献代码帮助我们完善项目
 
 ---
 
-<!-- CONTACT -->
-<h2 id='3'>💬 问题反馈</h2>
+<h2 id='4'>📃 开源许可</h2>
 
-Issues - [https://github.com/fordes123/ITEM/issues](https://github.com/fordes123/ITEM/issues)
-
-博客 - [https://fordes.dev](https://fordes.dev)
-
----
-
-<!-- LICENSE -->
-<h2>📃 开源许可</h2>
-
-基于 GNU General Public License v3.0 协议开源.
+基于 [GNU General Public License v3.0][license-url] 协议开源.
 
 <!-- MARKDOWN LINKS & IMAGES -->
-
-[contributors-shield]:https://img.shields.io/github/contributors/fordes123/ITEM.svg?style=for-the-badge
-
-[contributors-url]:https://github.com/fordes123/ITEM/graphs/contributors
-
-[forks-shield]:https://img.shields.io/github/forks/fordes123/ITEM.svg?style=for-the-badge
-
-[forks-url]:https://github.com/fordes123/ITEM/network/members
-
-[stars-shield]:https://img.shields.io/github/stars/fordes123/ITEM.svg?style=for-the-badge
-
-[stars-url]:https://github.com/fordes123/ITEM/stargazers
-
-[issues-shield]:https://img.shields.io/github/issues/fordes123/ITEM.svg?style=for-the-badge
-
-[issues-url]:https://github.com/fordes123/ITEM/issues
-
-[license-shield]:https://img.shields.io/github/license/fordes123/ITEM.svg?style=for-the-badge
-
-[license-url]:https://github.com/fordes123/ITEM/blob/master/LICENSE.txt
+[screenshot]: https://github.com/user-attachments/assets/aa9dd5d5-1a19-478f-b147-d346d19d1df4
+[hugo-theme-item]: https://github.com/fordes123/hugo-theme-item/
+[last-releases]: https://github.com/fordes123/ITEM/releases/latest/download/ITEM.zip
+[snapshot]: https://github.com/fordes123/ITEM/archive/refs/heads/snapshot.zip
+[item-vercel]: https://github.com/fordes123/ITEM-vercel
+[tidb]: https://tidbcloud.com/
+[planetscale]: https://planetscale.com/
+[typecho-vercel-post]: https://www.fordes.dev/posts/tutorials/typecho-vercel/
+[fontawesome-free]: https://fontawesome.com/v5/search?o=r&m=free
+[issues]: https://github.com/fordes123/ITEM/issues
+[discussions]: https://github.com/fordes123/ITEM/discussions
+[issues-url]: https://github.com/fordes123/ITEM/issues
+[license-url]: https://github.com/fordes123/ITEM/blob/master/LICENSE.txt
