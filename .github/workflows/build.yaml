@@ -9,7 +9,6 @@ on:
       - 'README.md'
       - '.gitignore'
       - '.docker/**'
-      - '.github/workflows/**'
       - '.devcontainer/**'
 
 env:
@@ -37,6 +36,12 @@ jobs:
       - name: Build
         run: yarn build
 
+      - name: Clean up
+        run: |
+          find . -maxdepth 1 ! -name 'theme' ! -name '.' ! -name '.git' -exec rm -rf {} +
+          mv theme/* .
+          rm -rf theme
+
       - name: Commit Snapshot
         if: ${{ github.ref == 'refs/heads/main' }}
         uses: stefanzweifel/git-auto-commit-action@v5
@@ -50,11 +55,10 @@ jobs:
           skip_checkout: true
           commit_options: '--allow-empty'
 
-      - name: Package
-        run: zip -r ITEM.zip .
-
       - name: Archive artifacts
         uses: actions/upload-artifact@v4
         with:
           name: ITEM
-          path: ITEM.zip
+          path: |
+            **/*
+            !.git/**
