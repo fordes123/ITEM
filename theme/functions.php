@@ -164,6 +164,17 @@ function themeConfig($form)
             '1' => '收纳',
         ), '0', _t('子分类的展示方式'), _t('如果文章较多推荐使用收纳，可减少首页数据查询从而提高加载速度'))
     );
+
+    //时间线分页页大小
+    $form->addInput(
+        new Typecho_Widget_Helper_Form_Element_Text(
+            'timelinePageSize',
+            NULL,
+            5,
+            _t('时间线每页文章数'),
+            _t('默认 5，应为有效正整数且不宜过大')
+        )
+    );
 }
 
 /**

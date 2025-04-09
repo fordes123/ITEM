@@ -26,7 +26,8 @@ $this->need("topbar.php");
                         <div class="card-body">
                             <div class="post-content">
                                 <?php
-                                $pageSize = $this->options->pageSize;
+                                $timelinePageSize = $this->options->timelinePageSize;
+                                $pageSize = (isset($timelinePageSize) && is_numeric($timelinePageSize) && intval($timelinePageSize) > 0) ? intval($timelinePageSize) : 5;
                                 $currentPage = isset($_GET['page']) ? intval($_GET['page']) : 1;
                                 $result = Utils::page($pageSize, $currentPage);
                                 ?>
