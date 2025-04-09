@@ -2,28 +2,52 @@ name: Release
 
 on:
   push:
-    branches: [ main ]
+    branches:
+      - main
     tags:
-      - "v*"
+      - v*
+    paths-ignore:
+      - 'LICENSE'
+      - 'README.md'
+      - '.gitignore'
+      - '.docker/**'
+      - '.github/workflows/**'
+      - '.devcontainer/**'
+
+env:
+  NODE_VERSION: "22.14.0"
+
+permissions:
+  contents: write
+  discussions: write
+  pull-requests: read
 
 jobs:
-  build:
+  release:
+
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
-      discussions: write
-      pull-requests: read
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Build
-        run: zip -r ITEM.zip . -x ".github/*" ".git/*" "*.docker/*" ".gitignore"
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'yarn'
 
+      - name: Install npm dependencies
+        run: yarn
+
+      - name: Build
+        run: yarn build
+
+      - name: Package
+        run: zip -r ITEM.zip ./theme/*
+      
       - name: Build Changelog
         id: changelog
         uses: mikepenz/release-changelog-builder-action@v5
-        if: startsWith(github.ref, 'refs/tags/')
         with:
           configuration: ".github/configuration.json"
         env:
@@ -31,7 +55,6 @@ jobs:
 
       - name: Release
         uses: softprops/action-gh-release@v2
-        if: startsWith(github.ref, 'refs/tags/')
         with:
           body: ${{steps.changelog.outputs.changelog}}
           files: ITEM.zip
