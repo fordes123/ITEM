@@ -82,11 +82,7 @@ module.exports = {
         {
           from: path.resolve(__dirname, 'src/image'),
           to: 'image',
-        },
-        {
-          from: path.resolve(__dirname, 'src/audio'),
-          to: 'audio',
-        },
+        }
       ],
     }),
     new webpack.ProvidePlugin({
