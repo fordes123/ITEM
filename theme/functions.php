@@ -21,75 +21,61 @@ function themeInit($source)
 /**
  * 添加主题设置项
  */
-function themeConfig($form)
+function themeConfig(Typecho_Widget_Helper_Form $form)
 {
-
+    require_once('libs/Badge.php');
     $options = Helper::options();
 
+    $baseSetting = new Typecho_Widget_Helper_Layout();
+    $baseSetting->html(_t('<h3>基础设置</h3>'));
+    $form->addItem($baseSetting);
+
     //网站图标
-    $form->addInput(
-        new Typecho_Widget_Helper_Form_Element_Text(
-            'favicon',
-            NULL,
-            $options->themeUrl . '/assets/image/favicon.ico',
-            _t('网站图标'),
-            _t('应为 ico 格式，建议使用 CDN 链接 (亦可将此项留空，直接将自定义图标文件替换到主题 assets/image 路径下)')
-        )
+    $favicon = new Typecho_Widget_Helper_Form_Element_Text(
+        'favicon',
+        NULL,
+        $options->themeUrl . '/assets/image/favicon.ico',
+        _t('网站图标'),
+        _t('应为 ico 格式，建议使用 CDN 链接</br>亦可将此项留空，直接将图标文件替换到主题 <b>assets/image</b> 路径下')
     );
+    $form->addInput($favicon->addRule('url', _t('请填入一个有效的URL')));
 
     //首页小logo
-    $form->addInput(
-        new Typecho_Widget_Helper_Form_Element_Text(
-            'smalllogo',
-            NULL,
-            $options->themeUrl . '/assets/image/favicon.ico',
-            _t('侧边图标'),
-            _t('侧边栏收缩时的图标，建议使用CDN或图床 (建议和网站图标保持一致)')
-        )
+    $smalllogo = new Typecho_Widget_Helper_Form_Element_Text(
+        'smalllogo',
+        NULL,
+        $options->themeUrl . '/assets/image/favicon.ico',
+        _t('侧边图标'),
+        _t('侧边栏收缩时的图标，建议使用CDN或图床 (建议和网站图标保持一致)')
     );
+    $form->addInput($smalllogo->addRule('url', _t('请填入一个有效的URL')));
 
     //首页大logo
-    $form->addInput(
-        new Typecho_Widget_Helper_Form_Element_Text(
-            'biglogo',
-            NULL,
-            $options->themeUrl . '/assets/image/head.png',
-            _t('横幅图标'),
-            _t('侧边展开时的图标，建议使用CDN或图床 (推荐尺寸: 824x200)')
-        )
+    $biglogo = new Typecho_Widget_Helper_Form_Element_Text(
+        'biglogo',
+        NULL,
+        $options->themeUrl . '/assets/image/head.png',
+        _t('横幅图标'),
+        _t('侧边展开时的图标，建议使用CDN或图床 (推荐尺寸: 824x200)')
     );
+    $form->addInput($biglogo->addRule('url', _t('请填入一个有效的URL')));
 
-    //Favicon API选择
-    $faviconApiSelect = new Typecho_Widget_Helper_Form_Element_Select(
-        'faviconApiSelect',
-        array(
-            'https://favicon.im/' => 'favicon.im',
-            'https://favicon.yandex.net/favicon/' => 'Yandex Favicon',
-            'https://toolb.cn/favicon/' => 'Toolb Favicon',
-            'https://api.xinac.net/icon/?url=' => 'Xinac Icon',
-            'https://tools.ly522.com/ico/favicon.php?url=' => 'Ly522 Favicon',
-            'https://api.qqsuu.cn/api/dm-get?url=' => 'QQsuu API',
-            'custom' => '自定义API'
-        ),
-        'https://favicon.yandex.net/favicon/',
-        _t('Favicon API 服务'),
-        _t('选择获取网站图标的API服务')
+    //备案号
+    $icp = new Typecho_Widget_Helper_Form_Element_Text(
+        'icp',
+        NULL,
+        NULL,
+        _t('备案号'),
+        _t('有就填没有就不填不要乱填')
     );
-    $form->addInput($faviconApiSelect);
+    $form->addInput($icp);
 
-    //自定义Favicon API地址
-    $form->addInput(
-        new Typecho_Widget_Helper_Form_Element_Text(
-            'faviconApi',
-            NULL,
-            '',
-            _t('自定义Favicon API地址'),
-            _t('当选择"自定义API"时，在此处填写自定义的Favicon API地址')
-        )
-    );
+    $advancedSetting = new Typecho_Widget_Helper_Layout();
+    $advancedSetting->html(_t('<hr color="#ECECEC"/><h3>进阶设置</h3>'));
+    $form->addItem($advancedSetting);
 
-
-    $form->addInput(new Typecho_Widget_Helper_Form_Element_Textarea(
+    // 搜索引擎
+    $searchConfig = new Typecho_Widget_Helper_Form_Element_Textarea(
         'searchConfig',
         NULL,
         '[
@@ -116,9 +102,11 @@ function themeConfig($form)
         ]',
         _t('搜索引擎配置'),
         _t('首页搜索引擎配置信息')
-    ));
+    );
+    $form->addInput($searchConfig);
 
-    $form->addInput(new Typecho_Widget_Helper_Form_Element_Textarea(
+    // 工具直达
+    $toolConfig = new Typecho_Widget_Helper_Form_Element_Textarea(
         'toolConfig',
         NULL,
         '[
@@ -149,32 +137,59 @@ function themeConfig($form)
         ]',
         _t('工具直达配置'),
         _t('首页工具直达配置信息')
-    ));
-
-
-    //备案号
-    $form->addInput(
-        new Typecho_Widget_Helper_Form_Element_Text('icp', NULL, NULL, _t('备案号'), _t('有就填没有就不填不要乱填'))
     );
+    $form->addInput($toolConfig);
 
     //子分类的展示方式
-    $form->addInput(
-        new Typecho_Widget_Helper_Form_Element_Radio('subCategoryType', array(
+    $subCategoryType = new Typecho_Widget_Helper_Form_Element_Radio(
+        'subCategoryType',
+        array(
             '0' => '平铺',
             '1' => '收纳',
-        ), '0', _t('子分类的展示方式'), _t('如果文章较多推荐使用收纳，可减少首页数据查询从而提高加载速度'))
+        ),
+        '0',
+        _t('子分类的展示方式'),
+        _t('默认为 <b>平铺</b>，如果文章较多推荐使用 <b>收纳</b>，可减少首页数据查询从而提高加载速度')
     );
+    $form->addInput($subCategoryType->addRule('required', _t('')));
 
     //时间线分页页大小
-    $form->addInput(
-        new Typecho_Widget_Helper_Form_Element_Text(
-            'timelinePageSize',
-            NULL,
-            5,
-            _t('时间线每页文章数'),
-            _t('默认 5，应为有效正整数且不宜过大')
-        )
+    $timelinePageSize = new Typecho_Widget_Helper_Form_Element_Text(
+        'timelinePageSize',
+        NULL,
+        5,
+        _t('时间线每页文章数'),
+        _t('默认 5，应为有效正整数且不宜过大')
     );
+    $form->addInput($timelinePageSize->addRule('isInteger', _t('请填入一个数字')));
+
+    //Favicon API选择
+    $faviconApiSelect = new Typecho_Widget_Helper_Form_Element_Select(
+        'faviconApiSelect',
+        array(
+            'https://favicon.im/' => ' Favicon.im (默认) ',
+            'https://favicon.yandex.net/favicon/' => ' Yandex Favicon ',
+            'https://toolb.cn/favicon/' => ' Toolb Favicon ',
+            'https://api.xinac.net/icon/?url=' => ' Xinac Icon ',
+            'https://tools.ly522.com/ico/favicon.php?url=' => ' Ly522 Favicon ',
+            'https://api.qqsuu.cn/api/dm-get?url=' =>  'QQsuu API ',
+            'custom' => '自定义'
+        ),
+        Utils::DEFAULT_FAVICON_API,
+        _t('导航图标来源'),
+        _t('当文章类型为 <b>网址导航</b> 且 <b>图标URL</b> 为空时将通过此API自动获取图标</br>选择“自定义”后，需在下方填写自定义值')
+    );
+    $form->addInput($faviconApiSelect->multiMode());
+
+    //自定义Favicon API地址
+    $faviconApi = new Typecho_Widget_Helper_Form_Element_Text(
+        'faviconApi',
+        NULL,
+        '',
+        _t('自定义图标 API'),
+        _t('仅在上方选择“自定义”时需填写，否则无效')
+    );
+    $form->addInput($faviconApi->addRule('url', _t('请填入一个有效的URL')));
 }
 
 /**
@@ -203,7 +218,7 @@ function themeFields($layout)
         new Typecho_Widget_Helper_Form_Element_Text('text', NULL, NULL, _t('简单介绍'), _t('简短描述即可，将展示于首页和详情页开头<br/>(其他内容应记录在正文中)'))
     );
     $layout->addItem(
-        new Typecho_Widget_Helper_Form_Element_Text('logo', NULL, NULL, _t('图标URL'), _t('文章/网站/小程序的图标链接<br/>留空则自动从 <a href="https://favicon.im/" target="_blank">favicon.im</a> 获取(不支持小程序)'))
+        new Typecho_Widget_Helper_Form_Element_Text('logo', NULL, NULL, _t('图标URL'), _t('文章/网站/小程序的图标链接<br/>留空则自动从通过API自动获取(不支持小程序)'))
     );
     $layout->addItem(
         new Typecho_Widget_Helper_Form_Element_Text('score', NULL, NULL, _t('评分'), _t('请输入评分，1.0～5.0分'))
