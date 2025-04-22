@@ -33,13 +33,13 @@ class Utils
                 error_log('检测到主题更新, 重新初始化数据库...');
 
                 // 浏览量字段
-                if (!array_key_exists('views', $db->fetchRow($db->select()->from('table.contents')->limit(1)))) {
-                    $db->query('ALTER TABLE `' . $prefix . 'contents` ADD `views` INT(10) NOT NULL DEFAULT 0;');
+                if (empty($db->fetchAll($db->query('SHOW COLUMNS FROM `' . $prefix . 'contents` LIKE "views";')))) {
+                    $db->query('ALTER TABLE `' . $prefix . 'contents` ADD `views` INT UNSIGNED NOT NULL DEFAULT 0;');
                 }
 
                 // 点赞字段
-                if (!array_key_exists('agree', $db->fetchRow($db->select()->from('table.contents')->limit(1)))) {
-                    $db->query('ALTER TABLE `' . $prefix . 'contents` ADD `agree` INT(10) NOT NULL DEFAULT 0;');
+                if (empty($db->fetchAll($db->query('SHOW COLUMNS FROM `' . $prefix . 'contents` LIKE "agree";')))) {
+                    $db->query('ALTER TABLE `' . $prefix . 'contents` ADD `agree` INT UNSIGNED NOT NULL DEFAULT 0;');
                 }
 
                 // 写入版本信息
