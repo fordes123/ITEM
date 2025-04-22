@@ -79,7 +79,11 @@ import LazyLoad from "vanilla-lazyload";
 
       $search.find('form').on('submit', e => {
         e.preventDefault();
-        window.open($search.find('.search-tab a.active').data('url') + $search.find('input').val());
+        const keyword = $search.find('input').val().trim();
+        if (!keyword) {
+          return;
+        }
+        window.open($search.find('.search-tab a.active').data('url') + keyword);
       });
     }
 
