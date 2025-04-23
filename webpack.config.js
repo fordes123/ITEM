@@ -11,6 +11,7 @@ module.exports = {
     prismjs: ['prismjs', 'prismjs/themes/prism.css'],
     main: ['./src/js/main.js', './src/scss/main.scss'],
     dino: ['./src/js/dino.js'],
+    'backend-ui': ['./src/scss/backend-ui.scss', "./src/js/backend-ui.js"],
   },
   output: {
     path: path.resolve(__dirname, 'theme/assets'),
