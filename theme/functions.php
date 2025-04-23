@@ -151,7 +151,7 @@ function themeConfig(Typecho_Widget_Helper_Form $form)
         _t('子分类的展示方式'),
         _t('默认为 <b>平铺</b>，如果文章较多推荐使用 <b>收纳</b>，可减少首页数据查询从而提高加载速度')
     );
-    $form->addInput($subCategoryType->addRule('required', _t('')));
+    $form->addInput($subCategoryType);
 
     //时间线分页页大小
     $timelinePageSize = new Typecho_Widget_Helper_Form_Element_Text(
