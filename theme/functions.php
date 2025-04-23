@@ -163,6 +163,16 @@ function themeConfig(Typecho_Widget_Helper_Form $form)
     );
     $form->addInput($timelinePageSize->addRule('isInteger', _t('请填入一个数字')));
 
+    //分类导航卡片显示数量
+    $categoryPageSize = new Typecho_Widget_Helper_Form_Element_Text(
+        'categoryPageSize',
+        NULL,
+        '12',
+        _t('分类导航卡片数'),
+        _t('默认 12，应为有效正整数且不宜过大')
+    );
+    $form->addInput($categoryPageSize->addRule('isInteger', _t('请填入一个数字')));
+
     //Favicon API选择
     $faviconApiSelect = new Typecho_Widget_Helper_Form_Element_Select(
         'faviconApiSelect',

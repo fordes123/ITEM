@@ -492,7 +492,8 @@ class Utils
                 <div class="card-body">
                     <div class="row g-2 g-md-3 list-grid list-grid-padding">
                         <?php $mid = $collapse ? $first['mid'] : $p['mid'];
-                        Typecho_Widget::widget("Widget_Archive@category-" . $mid, "type=category", "mid=" . $mid)->to($posts);
+                        $pageSize = $options->categoryPageSize ?? 12;
+                        Typecho_Widget::widget("Widget_Archive@category-" . $mid, "type=category&pageSize=" . $pageSize, "mid=" . $mid)->to($posts);
                         while ($posts->next()) :
                             if (!is_null($posts->fields->navigation)) : ?>
                                 <div class="col-6 col-lg-3">
