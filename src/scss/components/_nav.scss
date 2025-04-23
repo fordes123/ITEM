@@ -2,6 +2,7 @@
     .nav-link {
         color: var(--color-muted);
         position: relative;
+        cursor: pointer;
         
         &:after {
             content: '';
