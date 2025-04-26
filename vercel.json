@@ -10,5 +10,8 @@
       "src": "/(.*)",
       "dest": "/api/index.php"
     }
-  ]
+  ],
+  "git": {
+    "branch": "vercel"
+  }
 }
