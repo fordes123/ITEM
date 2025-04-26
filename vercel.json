@@ -2,7 +2,7 @@
   "functions": {
     "api/index.php": {
       "runtime": "vercel-php@0.7.3",
-      "maxDuration": 10
+      "maxDuration": 60
     }
   },
   "routes": [
@@ -10,8 +10,5 @@
       "src": "/(.*)",
       "dest": "/api/index.php"
     }
-  ],
-  "git": {
-    "branch": "vercel"
-  }
+  ]
 }
