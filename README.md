@@ -38,8 +38,8 @@
 
 ### 本地部署
 
-1. 下载 [正式版][last-releases] 或者实时构建的 [开发版][snapshot]
-2. 将主题文件重名为 <code>ITEM</code> 并移动至 Typecho 根目录<code>usr/themes</code> 文件夹中
+1. 下载 [正式版][last-releases] 或者从工作流中获取即时构建的 [开发版][build]
+2. 将解压后的主题文件重名为 <code>ITEM</code> 并移动至 Typecho 根目录<code>usr/themes</code> 文件夹中
 3. 在 Typecho 管理面板中选择更换外观并启用主题
 
 > [!WARNING]
@@ -48,9 +48,9 @@
 
 ### Vercel 部署
 
-<a href="https://vercel.com/new/clone?project-name=ITEM-vercel&repository-name=ITEM-vercel&repository-url=https://github.com/fordes123/ITEM-vercel&from=templates&integration-ids=oac_coKBVWCXNjJnCEth1zzKoF1j"><img src="https://vercel.com/button"></a>
+<a href="https://vercel.com/new/clone?project-name=ITEM&repository-name=ITEM&repository-url=https://github.com/fordes123/ITEM/tree/vercel&from=templates&integration-ids=oac_coKBVWCXNjJnCEth1zzKoF1j"><img src="https://vercel.com/button"></a>
 
-点击上方 `Deploy` 按钮 或者 Fork [ITEM-vercel][item-vercel] 仓库并手动导入 Vercel。
+点击上方 `Deploy` 按钮 或者 Fork 本仓库 [vercel][item-vercel] 分支并手动导入 Vercel。
 
 > [!TIP]
 > 通过 Vercel 托管需要添加一个 MySQL 集成，如 [TiDB][tidb]、[PlanetScale][planetscale]，参考: [Vercel 托管 Typecho][typecho-vercel-post]
@@ -163,8 +163,8 @@
 [screenshot]: https://github.com/user-attachments/assets/aa9dd5d5-1a19-478f-b147-d346d19d1df4
 [hugo-theme-item]: https://github.com/fordes123/hugo-theme-item/
 [last-releases]: https://github.com/fordes123/ITEM/releases/latest/download/ITEM.zip
-[snapshot]: https://github.com/fordes123/ITEM/archive/refs/heads/snapshot.zip
-[item-vercel]: https://github.com/fordes123/ITEM-vercel
+[build]: https://github.com/fordes123/ITEM/actions/workflows/build.yaml
+[item-vercel]: https://github.com/fordes123/ITEM/tree/vercel
 [tidb]: https://tidbcloud.com/
 [planetscale]: https://planetscale.com/
 [typecho-vercel-post]: https://www.fordes.dev/posts/tutorials/typecho-vercel/
