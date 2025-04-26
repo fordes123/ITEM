@@ -65,7 +65,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: ITEM
-          path: usr/themes
+          path: usr/themes/ITEM
 
       - name: Commit Snapshot
         uses: stefanzweifel/git-auto-commit-action@v5
