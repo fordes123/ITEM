@@ -3,7 +3,7 @@ name: Build
 on:
   push:
     branches-ignore:
-      - snapshot
+      - vercel
     paths-ignore:
       - 'LICENSE'
       - 'README.md'
@@ -18,7 +18,6 @@ jobs:
   build:
     runs-on: ubuntu-latest
     permissions:
-      contents: write
       actions: write
     steps:
       - name: Checkout
@@ -39,29 +38,43 @@ jobs:
       - name: Build
         run: yarn build
 
+      - name: Archive artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: ITEM
+          path: |
+            usr/themes/ITEM
+
+  deploy:
+    if: ${{ github.ref == 'refs/heads/main' }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    needs: build
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: vercel
+
       - name: Clean up
         run: |
-          find . -maxdepth 1 ! -name 'theme' ! -name '.' ! -name '.git' -exec rm -rf {} +
-          mv theme/* .
-          rm -rf theme
+          rm -rf usr/themes/ITEM
+
+      - name: Download artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: ITEM
+          path: usr/themes
 
       - name: Commit Snapshot
-        if: ${{ github.ref == 'refs/heads/main' }}
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
-          commit_message: snapshot with ${{ github.sha }}
-          branch: snapshot
+          commit_message: build with ${{ github.sha }}
+          branch: vercel
           skip_dirty_check: true
           push_options: '--force'
           create_branch: true
           skip_fetch: true
           skip_checkout: true
           commit_options: '--allow-empty'
-
-      - name: Archive artifacts
-        uses: actions/upload-artifact@v4
-        with:
-          name: ITEM
-          path: |
-            **/*
-            !.git/**
