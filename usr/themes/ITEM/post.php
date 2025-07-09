@@ -36,7 +36,14 @@ if ($this->fields->navigation == 2): ?>
                 <div class="post card card-md mb-3 mb-md-4">
                     <div class="post-other-style">
                         <div class="post-heading text-center pt-5 pt-md-5 pb-3 pb-xl-4">
-                            <h1 class="post-title"> <?php $this->title(); ?></h1>
+                            <div class="d-flex justify-content-center align-items-center">
+                                <div class="d-flex align-items-center">
+                                    <img src="<?php $this->options->themeUrl('/assets/image/default.gif'); ?>"
+                                        data-src="<?php echo Utils::favicon($this); ?>"
+                                        class="rounded w-auto lazy" style="height: 2.5rem;" />
+                                    <h1 class="post-title m-0 ms-2"> <?php $this->title(); ?></h1>
+                                </div>
+                            </div>
                             <div class="post-meta d-flex flex-fill justify-content-center align-items-center text-base mt-3 mt-md-3">
                                 <a href="<?php $this->author->url(); ?>" class="d-flex align-items-center text-muted">
                                     <div class="flex-avatar w-16 me-2">
