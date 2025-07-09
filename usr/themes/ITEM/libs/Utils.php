@@ -497,7 +497,7 @@ class Utils
                             if (!is_null($posts->fields->navigation)) : ?>
                                 <div class="col-6 col-lg-3">
                                     <div class="list-item block">
-                                        <div role="button" href="<?php $posts->permalink() ?>" title="点击查看详情" class="media w-36 rounded-circle">
+                                        <div role="button" href="<?php $posts->permalink() ?>" title="点击查看详情" class="media w-36 rounded">
                                             <img src="<?php $options->themeUrl('/assets/image/default.gif'); ?>"
                                                 data-src="<?php echo Utils::favicon($posts); ?>"
                                                 class="media-content lazy" />
