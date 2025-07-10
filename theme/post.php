@@ -149,7 +149,7 @@ if ($this->fields->navigation == 2): ?>
                                             <?php while ($item->next()) : ?>
                                                 <div class="col-12 col-md-6">
                                                     <div class="list-item block">
-                                                        <div role="button" href="<?php $item->permalink(); ?>" title="点击查看详情" class="media w-36 rounded-circle">
+                                                        <div role="button" href="<?php $item->permalink(); ?>" title="点击查看详情" class="media w-36 rounded">
                                                             <img src="<?php $this->options->themeUrl('/assets/image/default.gif'); ?>"
                                                                 data-src="<?php echo Utils::favicon($item); ?>"
                                                                 class="media-content lazy" />

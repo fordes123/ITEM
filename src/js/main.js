@@ -158,7 +158,7 @@ import LazyLoad from "vanilla-lazyload";
     }
 
     generateCategoryItems(items) {
-      return items.map(item => `<div class="col-6 col-lg-3"><div class="list-item block"><div class="media w-36 rounded-circle"role="button"href="${item.permalink}"><img src="/usr/themes/ITEM/assets/image/default.gif"data-src="${item.logo}"alt="${item.title}"class="media-content lazy"></div><div class="list-content"role="button"href="${item.url}"target="_blank"cid="${item.cid}"title="${item.text}"><div class="list-body"><div class="list-title text-md h-1x">${item.title}</div><div class="list-desc text-xx text-muted mt-1"><div class="h-1x">${item.text}</div></div></div></div></div></div>`).join('');
+      return items.map(item => `<div class="col-6 col-lg-3"><div class="list-item block"><div class="media w-36 rounded"role="button"href="${item.permalink}"><img src="/usr/themes/ITEM/assets/image/default.gif"data-src="${item.logo}"alt="${item.title}"class="media-content lazy"></div><div class="list-content"role="button"href="${item.url}"target="_blank"cid="${item.cid}"title="${item.text}"><div class="list-body"><div class="list-title text-md h-1x">${item.title}</div><div class="list-desc text-xx text-muted mt-1"><div class="h-1x">${item.text}</div></div></div></div></div></div>`).join('');
     }
 
     setupAgreementSystem() {
