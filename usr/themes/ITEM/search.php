@@ -43,7 +43,7 @@ $this->need("topbar.php");
                                                 $password = Typecho_Cookie::get('protectPassword_' . $cid);
                                                 $encrypt = empty($password) || $password != $item->password;
                                             } ?>
-                                            <div role="button" href="<?php $item->permalink(); ?>" title="点击查看详情" class="media w-36 rounded-circle">
+                                            <div role="button" href="<?php $item->permalink(); ?>" title="点击查看详情" class="media w-36 rounded">
                                                 <img src="<?php $this->options->themeUrl('/assets/image/default.gif'); ?>"
                                                     data-src="<?php echo Utils::favicon($item); ?>"
                                                     class="media-content lazy" />
