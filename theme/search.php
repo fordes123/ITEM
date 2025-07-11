@@ -66,7 +66,7 @@ $this->need("topbar.php");
             </div>
             <?php
             $pageLink = $this->permalink . '?page=';
-            echo Utils::pagination($pageLink, $result['currentPage'], $$result['totalPages']); ?>
+            echo Utils::pagination($pageLink, $result['currentPage'], $result['totalPages']); ?>
         </div>
     </div>
 </main>

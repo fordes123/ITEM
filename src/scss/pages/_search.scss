@@ -7,11 +7,13 @@
         -ms-flex-wrap: wrap;
         -webkit-flex-wrap: wrap;
         flex-wrap: wrap;
-        
+
         a {
             margin: 0 0.5rem 0.5rem 0;
-            
-            &.btn-link:active:focus, &.btn-link:focus, &.btn-link.active {
+
+            &.btn-link:active:focus,
+            &.btn-link:focus,
+            &.btn-link.active {
                 background-color: var(--color-primary);
                 border-color: var(--border-color);
                 color: #fff !important;
@@ -25,22 +27,24 @@
         position: relative;
         overflow-x: auto;
         -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+        -ms-overflow-style: none;
         -ms-flex-wrap: nowrap;
         -webkit-flex-wrap: nowrap;
         flex-wrap: nowrap;
         margin: 0 0 0.375rem;
-        
+
         &::-webkit-scrollbar {
             display: none;
         }
-        
+
         a {
             -ms-flex-negative: 0;
             -webkit-flex-shrink: 0;
             flex-shrink: 0;
-            font-size: 0.6875rem;
+            font-size: .75rem;
             margin: 0 0.25rem 0.25rem 0;
             padding: 0.25rem 0.75rem;
         }
     }
-} 
+}

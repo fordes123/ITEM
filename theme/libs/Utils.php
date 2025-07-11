@@ -470,24 +470,22 @@ class Utils
         $options = Helper::options();
 ?>
         <div class="col-12">
-            <div class="card" id="<?php echo $p['slug']; ?>">
-                <div class="card-header">
-                    <div class="d-flex align-items-center gap-2">
-                        <div class="h4"> <i class="fas fa-sm fa-<?php echo $p['slug']; ?>"></i> <?php echo $p['name']; ?></div>
-                        <?php if ($collapse): ?>
-                            <ul class="card-tab nav text-sm">
-                                <?php $i = 0;
-                                $first = null;
-                                foreach ($p['children'] as $c): ?>
-                                    <li class="nav-item">
-                                        <?php $first = $i === 0 ? $c : $first; ?>
-                                        <span data-mid="<?php echo $c['mid']; ?>" class="nav-link<?php echo $i === 0 ? ' active' : ''; ?>"><i class="fas fa-<?php echo $c['slug']; ?>"></i> <?php echo $c['name']; ?></span>
-                                    </li>
-                                <?php $i++;
-                                endforeach; ?>
-                            </ul>
-                        <?php endif; ?>
-                    </div>
+            <div class="card card-xl" id="<?php echo $p['slug']; ?>">
+                <div class="card-header d-flex flex-nowrap text-nowrap gap-2 align-items-center">
+                    <div class="h4"> <i class="fas fa-sm fa-<?php echo $p['slug']; ?>"></i> <?php echo $p['name']; ?></div>
+                    <?php if ($collapse): ?>
+                        <ul class="card-tab d-flex flex-nowrap nav text-sm overflow-x-auto">
+                            <?php $i = 0;
+                            $first = null;
+                            foreach ($p['children'] as $c): ?>
+                                <li class="nav-item">
+                                    <?php $first = $i === 0 ? $c : $first; ?>
+                                    <span data-mid="<?php echo $c['mid']; ?>" class="nav-link<?php echo $i === 0 ? ' active' : ''; ?>"><i class="fas fa-<?php echo $c['slug']; ?>"></i> <?php echo $c['name']; ?></span>
+                                </li>
+                            <?php $i++;
+                            endforeach; ?>
+                        </ul>
+                    <?php endif; ?>
                 </div>
                 <div class="card-body">
                     <div class="row g-2 g-md-3 list-grid list-grid-padding">
