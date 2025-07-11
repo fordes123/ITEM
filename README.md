@@ -30,7 +30,7 @@
 > ✨ Hugo 版现已推出：[hugo-theme-item][hugo-theme-item]
 
 在编程语言中，"item" 这个单词常用来代表一个元素、一个选项  
-希望这个主题能够承载更多的 "item"，链接每一个选项~
+所以我们以此来命名这个网址导航主题，希望它能够承载更多的 "item"，链接每一个选项~
 
 ---
 
@@ -93,13 +93,13 @@
 配置格式为 JSON，其中 icon 为 [FontAwesome 5][fontawesome-free] 图标， 需要使用 **完整类名**。
 示例如下：
 
-（站内搜索 url 请指向站点 `/search` 路径）
+（站内搜索 url 请指向站点 `/search/` 路径）
 
 ```json
 [
     {
         "name": "站内",
-        "url": "/search",
+        "url": "/search/",
         "icon": "fas fa-search-location"
     },
     {
