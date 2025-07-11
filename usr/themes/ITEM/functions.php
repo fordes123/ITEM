@@ -81,7 +81,7 @@ function themeConfig(Typecho_Widget_Helper_Form $form)
         '[
             {
                 "name": "站内搜索",
-                "url": "' . $options->siteUrl . 'search/",
+                "url": "/search/",
                 "icon": "fas fa-search-location"
             },
             {
