@@ -21,10 +21,8 @@ $this->need('topbar.php'); ?>
     <div class="row g-3 g-xl-4">
       <div class="col-12 col-lg-4 d-lg-flex hot-rank">
         <div class="card card-xl flex-fill">
-          <div class="card-header">
-            <div class="d-flex align-items-center"><i class="fas fa-sm fa-flag"></i>
-              <div class="h4">热门站点</div>
-            </div>
+          <div class="card-header d-flex flex-nowrap text-nowrap gap-2 align-items-center">
+            <div class="h4"> <i class="fas fa-sm fa-flag"></i> 热门站点</div>
           </div>
           <div class="card-body">
             <div class="list-number list-row list-bordered"><?php Utils::ranked(6) ?></div>
@@ -33,10 +31,8 @@ $this->need('topbar.php'); ?>
       </div>
       <div class="col-12 col-lg-8 d-lg-flex tool-direct">
         <div class="card card-xl flex-fill">
-          <div class="card-header">
-            <div class="d-flex align-items-center"> <i class="fas fa-sm fa-paperclip"></i>
-              <div class="h4">工具直达</div>
-            </div>
+          <div class="card-header d-flex flex-nowrap text-nowrap gap-2 align-items-center">
+            <div class="h4"> <i class="fas fa-sm fa-paperclip"></i> 工具直达</div>
           </div>
           <div class="card-body">
             <div class="index-sudoku row list text-center g-2 g-md-3 g-lg-4">

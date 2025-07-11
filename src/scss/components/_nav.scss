@@ -1,28 +1,41 @@
 .nav {
-    .nav-link {
-        color: var(--color-muted);
-        position: relative;
-        cursor: pointer;
-        
-        &:after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 50%;
-            width: 0;
-            height: 2px;
-            border-radius: 10px;
-            background: var(--color-primary);
-            transition: all 0.3s ease;
-            transform: translateX(-50%);
-        }
-        
-        &.active, &:hover {
-            color: var(--base-color);
-            
-            &:after {
-                width: 30%;
-            }
-        }
+  .nav-link {
+    color: var(--color-muted);
+    position: relative;
+    cursor: pointer;
+
+    &:after {
+      content: "";
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      width: 0;
+      height: 2px;
+      border-radius: 10px;
+      background: var(--color-primary);
+      transition: all 0.3s ease;
+      transform: translateX(-50%);
     }
+
+    &.active,
+    &:hover {
+      color: var(--base-color);
+
+      &:after {
+        width: 30%;
+      }
+    }
+  }
+}
+
+@media (max-width: 767.98px) {
+  .nav {
+    .nav-item {
+      .nav-link {
+        padding-left: 0.5rem;
+        padding-right: 0.5rem;
+        font-size: 0.75rem;
+      }
+    }
+  }
 }
