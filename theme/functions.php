@@ -129,6 +129,12 @@ function themeConfig(Typecho_Widget_Helper_Form $form)
                 "background": "#1ba784"
             },
             {
+                "name": "TempMail4U",
+                "url": "http://tempmail4u.com/",
+                "icon": "fas fa-envelope",
+                "background": "linear-gradient(45deg, #667eea, #764ba2)"
+            },
+            {
                 "name": "Font Awesome",
                 "url": "https://fontawesome.com/v5/search?o=r&m=free",
                 "icon": "fab fa-font-awesome-flag",
