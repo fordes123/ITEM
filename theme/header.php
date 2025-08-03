@@ -57,6 +57,7 @@
 
   <!-- 通过自有函数输出HTML头部信息 -->
   <?php $this->header(); ?>
+  <?php themeHeader(); ?>
 </head>
 
 <body class="home blog">
