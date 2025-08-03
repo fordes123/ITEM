@@ -20,6 +20,7 @@
     <link rel="stylesheet" href="<?php $this->options->themeUrl('./assets/css/prismjs.min.css'); ?>">
     <script defer src="<?php $this->options->themeUrl('./assets/js/prismjs.min.js'); ?>"></script>
 <?php endif; ?>
+<?php themeFooter(); ?>
 </body>
 
 </html>
