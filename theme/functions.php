@@ -190,6 +190,41 @@ function themeConfig(Typecho_Widget_Helper_Form $form)
         _t('仅在上方选择“自定义”时需填写，否则无效')
     );
     $form->addInput($faviconApi->addRule('url', _t('请填入一个有效的URL')));
+
+    /******************** 新增自定义CSS和JS设置 ********************/
+    $customCodeSetting = new Typecho_Widget_Helper_Layout();
+    $customCodeSetting->html(_t('<hr color="#ECECEC"/><h3>自定义代码</h3>'));
+    $form->addItem($customCodeSetting);
+
+    // 自定义CSS
+    $customCSS = new Typecho_Widget_Helper_Form_Element_Textarea(
+        'customCSS',
+        NULL,
+        NULL,
+        _t('自定义CSS'),
+        _t('在此处添加自定义CSS代码，不需要 style 标签，示例：<code>.post-title { color: #ff0000; }</code>')
+    );
+    $form->addInput($customCSS);
+
+    // 头部JS
+    $customHeadJS = new Typecho_Widget_Helper_Form_Element_Textarea(
+        'customHeadJS',
+        NULL,
+        NULL,
+        _t('头部JavaScript'),
+        _t('在页面头部加载的JS代码，不需要 script 标签，适用于统计代码、字体加载等')
+    );
+    $form->addInput($customHeadJS);
+
+    // 底部JS
+    $customFooterJS = new Typecho_Widget_Helper_Form_Element_Textarea(
+        'customFooterJS',
+        NULL,
+        NULL,
+        _t('底部JavaScript'),
+        _t('在页面底部加载的JS代码，不需要 script 标签，适用于第三方组件、分析工具等')
+    );
+    $form->addInput($customFooterJS);
 }
 
 /**
@@ -223,4 +258,30 @@ function themeFields($layout)
     $layout->addItem(
         new Typecho_Widget_Helper_Form_Element_Text('score', NULL, NULL, _t('评分'), _t('请输入评分，1.0～5.0分'))
     );
+}
+
+/******************** 新增：在页面中输出自定义代码 ********************/
+function themeHeader()
+{
+    $options = Helper::options();
+    
+    // 输出自定义CSS
+    if ($options->customCSS) {
+        echo '<style type="text/css">' . $options->customCSS . '</style>';
+    }
+    
+    // 输出头部JS
+    if ($options->customHeadJS) {
+        echo '<script type="text/javascript">' . $options->customHeadJS . '</script>';
+    }
+}
+
+function themeFooter()
+{
+    $options = Helper::options();
+    
+    // 输出底部JS
+    if ($options->customFooterJS) {
+        echo '<script type="text/javascript">' . $options->customFooterJS . '</script>';
+    }
 }
