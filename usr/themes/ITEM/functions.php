@@ -190,6 +190,29 @@ function themeConfig(Typecho_Widget_Helper_Form $form)
         _t('仅在上方选择“自定义”时需填写，否则无效')
     );
     $form->addInput($faviconApi->addRule('url', _t('请填入一个有效的URL')));
+
+    // 自定义Header
+    $customHeader = new Typecho_Widget_Helper_Form_Element_Textarea(
+        'customHeader',
+        NULL,
+        NULL,
+        _t('自定义头部代码'),
+        _t('代码将以<b>原样</b>追加在页面头部，通常用来在添加自定义CSS样式或是标签<br>
+        <b style="color: #f17666;">此操作存在风险，切勿轻信任何未知来源的代码!</b>')
+    );
+
+    $form->addInput($customHeader);
+
+    // 底部JS
+    $customFooter = new Typecho_Widget_Helper_Form_Element_Textarea(
+        'customFooter',
+        NULL,
+        NULL,
+        _t('自定义底部代码'),
+        _t('代码将以<b>原样</b>追加在页面尾部，通常用来在添加自定义JS，统计、分析工具等<br>
+        <b style="color: #f17666;">此操作存在风险，切勿轻信任何未知来源的代码!</b>')
+    );
+    $form->addInput($customFooter);
 }
 
 /**
