@@ -191,40 +191,28 @@ function themeConfig(Typecho_Widget_Helper_Form $form)
     );
     $form->addInput($faviconApi->addRule('url', _t('请填入一个有效的URL')));
 
-    /******************** 新增自定义CSS和JS设置 ********************/
-    $customCodeSetting = new Typecho_Widget_Helper_Layout();
-    $customCodeSetting->html(_t('<hr color="#ECECEC"/><h3>自定义代码</h3>'));
-    $form->addItem($customCodeSetting);
-
-    // 自定义CSS
-    $customCSS = new Typecho_Widget_Helper_Form_Element_Textarea(
-        'customCSS',
+    // 自定义Header
+    $customHeader = new Typecho_Widget_Helper_Form_Element_Textarea(
+        'customHeader',
         NULL,
         NULL,
-        _t('自定义CSS'),
-        _t('在此处添加自定义CSS代码，不需要 style 标签，示例：<code>.post-title { color: #ff0000; }</code>')
+        _t('自定义头部代码'),
+        _t('代码将以<b>原样</b>追加在页面头部，通常用来在添加自定义CSS样式或是标签<br>
+        <b style="color: #f17666;">此操作存在风险，切勿轻信任何未知来源的代码!</b>')
     );
-    $form->addInput($customCSS);
 
-    // 头部JS
-    $customHeadJS = new Typecho_Widget_Helper_Form_Element_Textarea(
-        'customHeadJS',
-        NULL,
-        NULL,
-        _t('头部JavaScript'),
-        _t('在页面头部加载的JS代码，不需要 script 标签，适用于统计代码、字体加载等')
-    );
-    $form->addInput($customHeadJS);
+    $form->addInput($customHeader);
 
     // 底部JS
-    $customFooterJS = new Typecho_Widget_Helper_Form_Element_Textarea(
-        'customFooterJS',
+    $customFooter = new Typecho_Widget_Helper_Form_Element_Textarea(
+        'customFooter',
         NULL,
         NULL,
-        _t('底部JavaScript'),
-        _t('在页面底部加载的JS代码，不需要 script 标签，适用于第三方组件、分析工具等')
+        _t('自定义底部代码'),
+        _t('代码将以<b>原样</b>追加在页面尾部，通常用来在添加自定义JS，统计、分析工具等<br>
+        <b style="color: #f17666;">此操作存在风险，切勿轻信任何未知来源的代码!</b>')
     );
-    $form->addInput($customFooterJS);
+    $form->addInput($customFooter);
 }
 
 /**
@@ -258,30 +246,4 @@ function themeFields($layout)
     $layout->addItem(
         new Typecho_Widget_Helper_Form_Element_Text('score', NULL, NULL, _t('评分'), _t('请输入评分，1.0～5.0分'))
     );
-}
-
-/******************** 新增：在页面中输出自定义代码 ********************/
-function themeHeader()
-{
-    $options = Helper::options();
-    
-    // 输出自定义CSS
-    if ($options->customCSS) {
-        echo '<style type="text/css">' . $options->customCSS . '</style>';
-    }
-    
-    // 输出头部JS
-    if ($options->customHeadJS) {
-        echo '<script type="text/javascript">' . $options->customHeadJS . '</script>';
-    }
-}
-
-function themeFooter()
-{
-    $options = Helper::options();
-    
-    // 输出底部JS
-    if ($options->customFooterJS) {
-        echo '<script type="text/javascript">' . $options->customFooterJS . '</script>';
-    }
 }
