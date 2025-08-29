@@ -623,7 +623,6 @@ __metadata:
     css-loader: "npm:^7.1.2"
     css-minimizer-webpack-plugin: "npm:^7.0.2"
     jquery: "npm:^3.7.1"
-    lazyload: "npm:^2.0.0-rc.2"
     mini-css-extract-plugin: "npm:^2.9.2"
     postcss: "npm:^8.5.3"
     postcss-loader: "npm:^8.1.1"
@@ -1824,13 +1823,6 @@ __metadata:
   version: 6.0.3
   resolution: "kind-of@npm:6.0.3"
   checksum: 10c0/61cdff9623dabf3568b6445e93e31376bee1cdb93f8ba7033d86022c2a9b1791a1d9510e026e6465ebd701a6dd2f7b0808483ad8838341ac52f003f512e0b4c4
-  languageName: node
-  linkType: hard
-
-"lazyload@npm:^2.0.0-rc.2":
-  version: 2.0.0-rc.2
-  resolution: "lazyload@npm:2.0.0-rc.2"
-  checksum: 10c0/cae466aa017dd1c840c5caa77e35b131a0f083771b0f8a7d6f3210ec38faf112ef43ed546db38b07f7faec848d2b6b17ef228c62d575fbd605a2f2d2a2c3f02d
   languageName: node
   linkType: hard
 

@@ -29,7 +29,6 @@
     "@popperjs/core": "^2.11.8",
     "bootstrap": "^5.3.5",
     "jquery": "^3.7.1",
-    "lazyload": "^2.0.0-rc.2",
     "prismjs": "^1.30.0",
     "vanilla-lazyload": "^19.1.3"
   }
