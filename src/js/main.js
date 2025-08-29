@@ -127,7 +127,7 @@ import LazyLoad from "vanilla-lazyload";
         $card.find('.nav-link').on('click', async ({ currentTarget }) => {
           const $link = $(currentTarget);
           const $row = $card.find('.card-body .row');
-          if ($row.hasClass('d-none')) return;
+          if ($link.hasClass('active') || $row.hasClass('d-none')) return;
 
           $card.find('.nav-link').removeClass('active');
           $link.addClass('active');
@@ -150,7 +150,7 @@ import LazyLoad from "vanilla-lazyload";
 
     async fetchCategoryData(mid) {
       const response = await $.ajax({
-        url: '/',
+        url: $('.aside-wrapper > a:first-child').attr('href'),
         method: 'POST',
         data: { event: 'category', mid }
       });
@@ -166,7 +166,7 @@ import LazyLoad from "vanilla-lazyload";
         const $btn = $(this);
         $.ajax({
           type: 'POST',
-          url: '/',
+          url: $('.aside-wrapper > a:first-child').attr('href'),
           data: { event: 'agree', cid: $btn.data('cid') },
           success: () => {
             $btn.prop('disabled', true)
@@ -181,7 +181,7 @@ import LazyLoad from "vanilla-lazyload";
       target.find('div[href]').each((_, el) => {
         const $el = $(el);
         $el.on('click', () => {
-          $.post('/', { event: 'views', cid: $el.attr('cid') });
+          $.post($('.aside-wrapper > a:first-child').attr('href'), { event: 'views', cid: $el.attr('cid') });
           window.open($el.attr('href'), $el.attr('target') || '_self');
         });
       });
@@ -222,7 +222,7 @@ import LazyLoad from "vanilla-lazyload";
         const $link = $(e.currentTarget);
         if (!$link.data('index')) {
           sessionStorage.setItem('anchor', $link.data('target'));
-          window.location.href = '/';
+          window.location.href = $('.aside-wrapper > a:first-child').attr('href');
           e.preventDefault();
         }
         document.getElementById($link.data('target'))?.scrollIntoView({ behavior: 'smooth', block: 'center' });
