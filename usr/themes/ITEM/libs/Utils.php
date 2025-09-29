@@ -216,7 +216,7 @@ class Utils
         // 尝试获取缓存
         $cachedData = Typecho_Cookie::get(self::MOST_VIEWED_CACHE_KEY);
         if ($cachedData) {
-            self::printRankedPosts(explode('.', $cachedData));
+            self::printRankedPosts(explode('.', $cachedData), $limit);
             return;
         }
 
@@ -231,7 +231,7 @@ class Utils
         // 提取文章ID并处理
         $cids = $posts ? array_column($posts, 'cid') : [];
         if (!empty($cids)) {
-            self::printRankedPosts($cids);
+            self::printRankedPosts($cids, $limit);
             Typecho_Cookie::set(self::MOST_VIEWED_CACHE_KEY, implode('.', $cids), time() + $cacheTime);
         }
     }
@@ -241,27 +241,40 @@ class Utils
      * @param array $cids 文章ID数组
      * @return void
      */
-    private static function printRankedPosts($cids)
+    private static function printRankedPosts($cids, $limit = 6)
     {
-        if (empty($cids)) {
-            return;
-        }
-
+        $cids = array_slice((array)$cids, 0, $limit);
+        $outputCount = 0;
+    
         foreach ($cids as $cid) {
             $item = Typecho_Widget::widget("Widget_Archive@post-$cid", "pageSize=1&type=post", "cid=$cid");
+            
             if ($item->have()) {
                 $url = $item->fields->url ?: $item->permalink;
-                $title = $item->title;
                 $subtitle = $item->fields->text ? ' - ' . $item->fields->text : '';
-
+    
                 echo sprintf(
                     self::RANKED_ITEM_TEMPLATE,
-                    $title . $subtitle,
+                    $item->title . $subtitle,
                     $url,
                     $cid,
                     $item->fields->text
                 );
+    
+                if (++$outputCount >= $limit) {
+                    break;
+                }
             }
+        }
+    
+        for (; $outputCount < $limit; $outputCount++) {
+            echo sprintf(
+                self::RANKED_ITEM_TEMPLATE,
+                '暂无数据',
+                '',
+                0,
+                ''
+            );
         }
     }
 
@@ -472,7 +485,7 @@ class Utils
         <div class="col-12">
             <div class="card card-xl" id="<?php echo $p['slug']; ?>">
                 <div class="card-header d-flex flex-nowrap text-nowrap gap-2 align-items-center">
-                    <div class="h4"> <i class="fas fa-sm fa-<?php echo $p['slug']; ?>"></i> <?php echo $p['name']; ?></div>
+                    <div class="h4"> <i class="fas fa-sm fa-<?php echo $p['slug']; ?>"></i>&nbsp;<?php echo $p['name']; ?></div>
                     <?php if ($collapse): ?>
                         <ul class="card-tab d-flex flex-nowrap nav text-sm overflow-x-auto">
                             <?php $i = 0;
@@ -493,7 +506,7 @@ class Utils
                         Typecho_Widget::widget("Widget_Archive@category-" . $mid, "type=category", "mid=" . $mid)->to($posts);
                         while ($posts->next()) :
                             if (!is_null($posts->fields->navigation)) : ?>
-                                <div class="col-6 col-lg-3">
+                                <div class="col-6 col-md-4 col-lg-3 col-xxl-2">
                                     <div class="list-item block">
                                         <div role="button" href="<?php $posts->permalink() ?>" title="点击查看详情" class="media w-36 rounded">
                                             <img src="<?php $options->themeUrl('/assets/image/default.gif'); ?>"
