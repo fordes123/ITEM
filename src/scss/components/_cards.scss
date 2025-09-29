@@ -34,11 +34,8 @@
 }
 
 .card-body {
-    padding: 1.25rem;
-
-    .index-sudoku {
-        overflow-x: hidden;
-    }
+    margin: 1.25rem;
+    padding: 0 !important;
 }
 
 .card-xl {
@@ -48,8 +45,12 @@
     }
 
     .card-body {
-        padding: 1.75rem;
+        margin: 1.75rem;
     }
+}
+
+.index-sudoku {
+    height: 14.5rem;
 }
 
 @media (max-width: 767.98px) {
@@ -59,7 +60,7 @@
     }
 
     .card-body {
-        padding: 1rem;
+        margin: 1rem;
     }
 
     .card-xl {
@@ -69,7 +70,7 @@
         }
 
         .card-body {
-            padding: 1.125rem;
+            margin: 1.125rem;
         }
     }
 }
@@ -92,7 +93,7 @@
     }
 
     .card-body {
-        padding: 1.25rem;
+        margin: 1.25rem;
     }
 
     .card-xl {
@@ -102,7 +103,7 @@
         }
 
         .card-body {
-            padding: 1.25rem;
+            margin: 1.25rem;
         }
     }
 }
@@ -114,7 +115,7 @@
     }
 
     .card-body {
-        padding: 1.375rem;
+        margin: 1.375rem;
     }
 
     .card-xl {
@@ -124,7 +125,7 @@
         }
 
         .card-body {
-            padding: 1.125rem;
+            margin: 1.125rem;
         }
     }
 }

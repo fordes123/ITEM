@@ -18,39 +18,46 @@ $this->need('sidebar.php');
 $this->need('topbar.php'); ?>
 <main class="site-main">
   <div class="container">
-    <div class="row g-3 g-xl-4">
-      <div class="col-12 col-lg-4 d-lg-flex hot-rank">
+    <div class="row g-3 g-xl-4 d-flex">
+      <div class="d-none d-md-block col-12 col-lg-4 col-xl-7 col-xxl-6 d-flex">
         <div class="card card-xl flex-fill">
           <div class="card-header d-flex flex-nowrap text-nowrap gap-2 align-items-center">
-            <div class="h4"> <i class="fas fa-sm fa-flag"></i> 热门站点</div>
+            <div class="h4"> <i class="fas fa-sm fa-flag"></i>&nbsp;热门站点</div>
           </div>
           <div class="card-body">
-            <div class="list-number list-row list-bordered"><?php Utils::ranked(6) ?></div>
+            <div class='row g-2'>
+              <div class="col list-number list-row list-bordered "><?php Utils::ranked(5) ?></div>
+              <div id='card__weather' class="col d-none d-md-block d-lg-none d-xl-block border-start border-md-start-0 border-lg-start">
+                <div class="d-flex justify-content-center align-items-center w-100 h-100">
+                  <div class="spinner-grow" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
-      <div class="col-12 col-lg-8 d-lg-flex tool-direct">
+      <div class="col-12 col-lg-8 col-xl-5 col-xxl-6 d-flex">
         <div class="card card-xl flex-fill">
           <div class="card-header d-flex flex-nowrap text-nowrap gap-2 align-items-center">
-            <div class="h4"> <i class="fas fa-sm fa-paperclip"></i> 工具直达</div>
+            <div class="h4"><i class="fas fa-sm fa-paperclip"></i>&nbsp;工具直达</div>
           </div>
-          <div class="card-body">
-            <div class="index-sudoku row list text-center g-2 g-md-3 g-lg-4">
-              <?php $tool = json_decode($this->options->toolConfig, true);
-              if (is_array($tool)) :
-                foreach ($tool as $item) : ?>
-                  <div class='col-4 col-md-3 col-md-2 col-lg-2'>
-                    <div class='list-item'>
-                      <div style='background: <?php echo $item['background'] ?>' class='btn btn-link btn-icon btn-md btn-rounded mx-auto mb-2'>
-                        <span><i class='<?php echo $item['icon'] ?>'></i></span>
-                      </div>
-                      <div class='text-sm text-muted'><?php echo $item['name'] ?></div>
-                      <a href='<?php echo $item['url'] ?>' target='_blank' class='list-goto'></a>
+          <div class="card-body index-sudoku row list text-center g-2 g-md-3 g-lg-4 g-xl-2 g-xxl-4 overflow-y-scroll scrollable">
+            <?php $tool = json_decode($this->options->toolConfig, true);
+            if (is_array($tool)) :
+              foreach ($tool as $item) : ?>
+                <div class='col-4 col-md-3 col-lg-2 col-xl-4 col-xxl-2'>
+                  <div class='list-item'>
+                    <div style='background: <?php echo $item['background'] ?>' class='btn btn-link btn-icon btn-md btn-rounded mx-auto mb-2'>
+                      <span><i class='<?php echo $item['icon'] ?>'></i></span>
                     </div>
+                    <div class='text-sm text-muted'><?php echo $item['name'] ?></div>
+                    <a href='<?php echo $item['url'] ?>' target='_blank' class='list-goto'></a>
                   </div>
-              <?php endforeach;
-              endif; ?>
-            </div>
+                </div>
+            <?php endforeach;
+            endif; ?>
           </div>
         </div>
       </div>
