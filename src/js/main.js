@@ -1,4 +1,4 @@
-import { Modal, Tooltip, Dropdown } from 'bootstrap';
+import { Modal, Tooltip, Dropdown, } from 'bootstrap';
 import LazyLoad from "vanilla-lazyload";
 
 (function ($) {
@@ -26,6 +26,7 @@ import LazyLoad from "vanilla-lazyload";
     initialize() {
       this.setupCoreModules();
       this.initThemeSystem();
+      this.setupWeatherCard();
     }
 
     setupCoreModules() {
@@ -227,6 +228,99 @@ import LazyLoad from "vanilla-lazyload";
         }
         document.getElementById($link.data('target'))?.scrollIntoView({ behavior: 'smooth', block: 'center' });
       });
+    }
+
+    setupWeatherCard() {
+      const $container = $('#card__weather');
+      if (!$container.length || !$container.is(':visible')) return;
+
+      const CACHE_KEY = 'weather_cache';
+      const CACHE_TIME = 10 * 60 * 1000;
+
+      const getCache = () => {
+        const cache = JSON.parse(sessionStorage.getItem(CACHE_KEY) || 'null');
+        return (cache && Date.now() - cache.time < CACHE_TIME) ? cache.data : null;
+      };
+
+      const setCache = (data) => {
+        sessionStorage.setItem(CACHE_KEY, JSON.stringify({ data, time: Date.now() }));
+      };
+
+      const renderError = () => {
+        $container.html(`
+      <div class="py-4 text-center">
+        <div class="d-inline-block">
+          <div class="mb-3 position-relative d-inline-block">
+            <i class="fas fa-cloud-sun text-muted opacity-25 fs-1"></i>
+            <i class="fas fa-exclamation-circle text-warning position-absolute top-50 start-100 translate-middle fs-5"></i>
+          </div>
+          <p class="text-muted mb-3 fw-light">无法获取天气信息，请稍后重试</p>
+          <button type="button" class="btn btn-outline-primary btn-sm px-4" id="weather-retry">
+            <i class="fas fa-sync-alt me-2"></i>重试
+          </button>
+        </div>
+      </div>
+    `);
+        $('#weather-retry').one('click', fetchWeather);
+      };
+
+      const renderWeather = (weather) => {
+        const cur = weather.current || {};
+        const units = weather.units || {};
+        const loc = weather.location || {};
+
+        const iconHtml = cur.urlIcon
+          ? `<img src="${cur.urlIcon}" alt="weather" class="me-3 align-self-start object-fit-contain" style="width:64px;height:64px;">`
+          : `<div class="me-3 align-self-start position-relative d-inline-block">
+           <i class="fas fa-cloud-sun text-muted opacity-25 display-3"></i>
+           <i class="fas fa-exclamation-circle text-warning position-absolute top-50 start-100 translate-middle fs-5"></i>
+         </div>`;
+
+        $container.html(`
+      <div class="px-2">
+        <div class="text-muted text-center">
+          <i class="fas fa-map-marker-alt me-1"></i>${loc.displayName || '未知地区'}
+        </div>
+        <div class="d-flex align-items-center justify-content-center my-3">
+          ${iconHtml}
+          <div class="d-flex flex-column align-items-start">
+            <div class="fw-bold text-primary display-3 lh-1">${cur.temp || 'N/A'}<span class="fs-5 ms-1">${units.temperature || '°C'}</span></div>
+            <div class="text-muted ms-2">${cur.pvdrCap || cur.cap || '无法获取'}</div>
+          </div>
+        </div>
+        <div class="d-flex justify-content-center flex-wrap gap-2 mb-2">
+          <span class="badge text-bg-primary">紫外线${cur.uvDesc || 'N/A'}</span>
+          <span class="badge text-bg-primary">${cur.aqiSeverity || '空气质量未知'}</span>
+        </div>
+        <div class="text-muted">
+          <div class="d-flex justify-content-center flex-wrap gap-2 text-center mb-1">
+            <span><i class="fas fa-thermometer-half me-1"></i>体感 ${cur.feels || 'N/A'}${units.temperature || '°C'}</span>
+            <span><i class="fas fa-tint me-1"></i>湿度 ${cur.rh || 'N/A'}%</span>
+            <span><i class="fas fa-wind me-1"></i>风 ${cur.windDir || 'N/A'}°, ${cur.windSpd || 'N/A'} ${units.speed || 'km/h'}</span>
+          </div>
+        </div>
+      </div>
+    `);
+      };
+
+      const fetchWeather = async () => {
+        const cached = getCache();
+        if (cached) {
+          renderWeather(cached);
+          return;
+        }
+
+        try {
+          const res = await fetch('https://api.fordes.dev/api/weather/current?locale=zh-cn');
+          const data = await res.json();
+          setCache(data);
+          renderWeather(data);
+        } catch {
+          renderError();
+        }
+      };
+
+      fetchWeather().then();
     }
   }
 
