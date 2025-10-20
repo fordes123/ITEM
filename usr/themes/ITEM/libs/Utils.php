@@ -3,7 +3,7 @@ if (!defined('__TYPECHO_ROOT_DIR__')) exit;
 class Utils
 {
     const THEME_VERSION = '1.2.4';
-    const DEFAULT_FAVICON_API = 'https://favicon.im/';
+    const DEFAULT_FAVICON_API = 'https://favicon.im/{hostname}?larger=true';
     const VERSION_OPTION = 'theme:ITEM::version';
     const RANKED_ITEM_TEMPLATE = <<<HTML
     <div class="list-item">
