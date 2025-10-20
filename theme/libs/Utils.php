@@ -3,7 +3,7 @@ if (!defined('__TYPECHO_ROOT_DIR__')) exit;
 class Utils
 {
     const THEME_VERSION = '1.2.4';
-    const DEFAULT_FAVICON_API = 'https://favicon.im/';
+    const DEFAULT_FAVICON_API = 'https://favicon.im/{hostname}?larger=true';
     const VERSION_OPTION = 'theme:ITEM::version';
     const RANKED_ITEM_TEMPLATE = <<<HTML
     <div class="list-item">
@@ -300,14 +300,23 @@ class Utils
     public static function favicon($posts)
     {
         $logo = $posts->fields->logo;
-        $url = $posts->fields->url;
-        if (empty($logo) && $url) {
-            $options = Helper::options();
-            $apiSelect = $options->faviconApiSelect;
-            $faviconApi = $apiSelect === 'custom' ? $options->faviconApi : ($apiSelect ?: self::DEFAULT_FAVICON_API);
-            $logo = $faviconApi . parse_url($url, PHP_URL_HOST);
+        if ($logo) {
+            return $logo;
         }
-        return $logo;
+
+        $url = $posts->fields->url;
+        $hostname = $url ? parse_url($url, PHP_URL_HOST) : null;
+
+        $options = Helper::options();
+        if (!$hostname) {
+            return '';
+        }
+
+        $template = $options->faviconApiSelect === 'custom'
+            ? $options->faviconApi
+            : $options->faviconApiSelect;
+
+        return $template ? strtr($template, ['{hostname}' => urlencode($hostname)]) : '';
     }
 
     public static function printStars($score)

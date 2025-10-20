@@ -167,12 +167,11 @@ function themeConfig(Typecho_Widget_Helper_Form $form)
     $faviconApiSelect = new Typecho_Widget_Helper_Form_Element_Select(
         'faviconApiSelect',
         array(
-            'https://favicon.im/' => ' Favicon.im (默认) ',
-            'https://favicon.yandex.net/favicon/' => ' Yandex Favicon ',
-            'https://toolb.cn/favicon/' => ' Toolb Favicon ',
-            'https://api.xinac.net/icon/?url=' => ' Xinac Icon ',
-            'https://tools.ly522.com/ico/favicon.php?url=' => ' Ly522 Favicon ',
-            'https://api.qqsuu.cn/api/dm-get?url=' =>  'QQsuu API ',
+            'https://favicon.im/{hostname}?larger=true' => ' Favicon.im (默认) ',
+            'https://favicon.yandex.net/favicon/{hostname}?size=32' => ' Yandex Favicon ',
+            'https://api.xinac.net/icon/?url={hostname}' => ' Xinac Icon ',
+            'https://www.google.com/s2/favicons?sz=32&domain_url={hostname}' =>  'Google API ',
+            'https://f1.allesedv.com/32/{hostname}' =>  'Allese API ',
             'custom' => '自定义'
         ),
         Utils::DEFAULT_FAVICON_API,
@@ -187,7 +186,7 @@ function themeConfig(Typecho_Widget_Helper_Form $form)
         NULL,
         '',
         _t('自定义图标 API'),
-        _t('仅在上方选择“自定义”时需填写，否则无效')
+        _t('仅在<b>导航图标来源<b>为<b>自定义</b>时有效<br>必须包含占位符<b>{hostname}</b>来表示目标域名，示例：https://example.org/{hostname}')
     );
     $form->addInput($faviconApi->addRule('url', _t('请填入一个有效的URL')));
 
