@@ -164,7 +164,7 @@ function themeConfig(Typecho_Widget_Helper_Form $form)
     $faviconApiSelect = new Typecho_Widget_Helper_Form_Element_Select(
         'faviconApiSelect',
         array(
-            'https://favicon.im/zh/{hostname}?larger=true' => ' Favicon.im (默认) ',
+            'https://favicon.im/{hostname}?larger=true' => ' Favicon.im (默认) ',
             'https://favicon.yandex.net/favicon/{hostname}?size=32' => ' Yandex Favicon ',
             'https://api.xinac.net/icon/?url={hostname}' => ' Xinac Icon ',
             'https://www.google.com/s2/favicons?sz=32&domain_url={hostname}' => 'Google API ',
