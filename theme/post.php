@@ -1,4 +1,5 @@
-<?php if (!defined('__TYPECHO_ROOT_DIR__')) exit;
+<?php if (!defined('__TYPECHO_ROOT_DIR__'))
+    exit;
 $this->need('header.php');
 $this->need('sidebar.php');
 $this->need('topbar.php');
@@ -21,7 +22,8 @@ if ($this->fields->navigation == 2): ?>
                         <img src="<?php $this->fields->logo(); ?>" alt="logo" class="img-fluid mt-3">
                     <?php endif; ?>
                     <p class="modal-title mb-3 fs-5"><?php echo $this->title(); ?></p>
-                    <p class="text-muted">Tips: 长按识别二维码, 或者去微信搜索：<b class="text-success"><?php echo $this->title(); ?></b></p>
+                    <p class="text-muted">Tips: 长按识别二维码, 或者去微信搜索: <b class="text-success"><?php echo $this->title(); ?></b>
+                    </p>
                     <a class="btn btn-primary" href="weixin://" role="button">前往微信</a>
                 </div>
             </div>
@@ -36,18 +38,32 @@ if ($this->fields->navigation == 2): ?>
                 <div class="post card card-md mb-3 mb-md-4">
                     <div class="post-other-style">
                         <div class="post-heading text-center pt-5 pt-md-5 pb-3 pb-xl-4">
-                            <div class="d-flex justify-content-center align-items-center">
+                            <div
+                                class="d-flex flex-column flex-md-row justify-content-center align-items-center position-relative">
                                 <div class="d-flex align-items-center">
                                     <img src="<?php $this->options->themeUrl('/assets/image/default.gif'); ?>"
-                                        data-src="<?php echo Utils::favicon($this); ?>"
-                                        class="rounded w-auto lazy" style="height: 2.5rem;" />
-                                    <h1 class="post-title m-0 ms-2"> <?php $this->title(); ?></h1>
+                                        data-src="<?php echo Utils::favicon($this); ?>" class="rounded w-auto lazy"
+                                        style="height: 2.5rem;" />
+                                    <h1 class="post-title m-0 ms-2 text-truncate"> <?php $this->title(); ?></h1>
                                 </div>
+
+                                <?php if ($this->user->hasLogin() && ($this->user->group == 'administrator' || $this->authorId == $this->user->uid)): ?>
+                                    <a href="<?php $this->options->adminUrl(); ?>write-post.php?cid=<?php echo $this->cid; ?>"
+                                        target="_blank"
+                                        class="btn btn-sm btn-outline-primary border-0 position-md-absolute end-0 text-muted"
+                                        title="编辑文章">
+                                        <i class="far fa-edit"></i> <span>编辑</span>
+                                    </a>
+                                <?php endif; ?>
                             </div>
-                            <div class="post-meta d-flex flex-fill justify-content-center align-items-center text-base mt-3 mt-md-3">
+                            <div
+                                class="post-meta d-flex flex-fill justify-content-center align-items-center text-base mt-3 mt-md-3">
                                 <a href="<?php $this->author->url(); ?>" class="d-flex align-items-center text-muted">
                                     <div class="flex-avatar w-16 me-2">
-                                        <img alt="" src="<?php $this->options->themeUrl('/assets/image/default.gif'); ?>" data-src="https://cravatar.cn/avatar/<?php echo md5($this->author->mail); ?>?s=16" width="16" height="16" class="lazy" />
+                                        <img alt=""
+                                            src="<?php $this->options->themeUrl('/assets/image/default.gif'); ?>"
+                                            data-src="https://cravatar.cn/avatar/<?php echo md5($this->author->mail); ?>?s=16"
+                                            width="16" height="16" class="lazy" />
                                     </div>
                                     <?php $this->author(); ?>
                                 </a>
@@ -55,7 +71,7 @@ if ($this->fields->navigation == 2): ?>
                                 <span class="date text-muted"><?php echo Utils::timeago($this->modified); ?></span>
                                 <?php if ($this->fields->score): ?>
                                     <i class="text-light mx-2">•</i>
-                                    <span><?php Utils::printStars($this->fields->score) ?>（<?php echo $this->fields->score ?>）</span>
+                                    <span><?php Utils::printStars($this->fields->score) ?>(<?php echo $this->fields->score ?>)</span>
                                 <?php endif; ?>
                             </div>
                         </div>
@@ -65,13 +81,19 @@ if ($this->fields->navigation == 2): ?>
                                 <div class="password-form-container text-left mx-5">
                                     <div class="password-form py-4 mx-auto">
 
-                                        <h4 class="mb-3"><i class=" fas fa-lock"></i>&nbsp;<?php echo $hasPassword ? '此内容受密码保护' : '此内容已隐藏' ?></h4>
-                                        <p class="text-muted mb-4"><?php echo $hasPassword ? '请输入密码以查看内容' : '如有疑问请站点联系管理员' ?></p>
+                                        <h4 class="mb-3"><i
+                                                class=" fas fa-lock"></i>&nbsp;<?php echo $hasPassword ? '此内容受密码保护' : '此内容已隐藏' ?>
+                                        </h4>
+                                        <p class="text-muted mb-4">
+                                            <?php echo $hasPassword ? '请输入密码以查看内容' : '如有疑问请站点联系管理员' ?>
+                                        </p>
 
                                         <?php if ($hasPassword): ?>
-                                            <form method="post" action="<?php echo $this->security->getTokenUrl($this->permalink) ?>">
+                                            <form method="post"
+                                                action="<?php echo $this->security->getTokenUrl($this->permalink) ?>">
                                                 <div class="input-group mb-3">
-                                                    <input type="password" name="protectPassword" class="form-control text" placeholder="请输入密码" required>
+                                                    <input type="password" name="protectPassword" class="form-control text"
+                                                        placeholder="请输入密码" required>
                                                     <input type="hidden" name="protectCID" value="<?php echo $this->cid; ?>">
                                                     <button type="submit" class="submit btn btn-primary">提交</button>
                                                 </div>
@@ -82,7 +104,7 @@ if ($this->fields->navigation == 2): ?>
                                 </div>
                             <?php else: ?>
                                 <div class="post-tags">
-                                    <?php foreach ($this->tags as $tag) : ?>
+                                    <?php foreach ($this->tags as $tag): ?>
                                         <a><?php echo ($tag['name']); ?></a>
                                     <?php endforeach; ?>
                                 </div>
@@ -106,7 +128,8 @@ if ($this->fields->navigation == 2): ?>
                                             </a>
                                         </div>
                                         <div class="col">
-                                            <a type="button" class="btn btn-icon btn-block btn-lg <?php echo Utils::agreed($this->cid); ?>"
+                                            <a type="button"
+                                                class="btn btn-icon btn-block btn-lg <?php echo Utils::agreed($this->cid); ?>"
                                                 id="agree-btn" data-cid="<?php echo $this->cid; ?>">
                                                 <span><i class="far fa-thumbs-up"></i></span>
                                                 <b class="num"><?php Utils::agree($this->cid) ?></b>
@@ -119,13 +142,16 @@ if ($this->fields->navigation == 2): ?>
                                         </div>
                                         <?php if ($this->fields->navigation === '2'): ?>
                                             <div class="col-12 col-md-7">
-                                                <button type="button" class="btn btn-primary btn-lg btn-block btn-goto" data-bs-toggle="modal" data-bs-target="#openWxModal">
+                                                <button type="button" class="btn btn-primary btn-lg btn-block btn-goto"
+                                                    data-bs-toggle="modal" data-bs-target="#openWxModal">
                                                     进入小程序
                                                 </button>
                                             </div>
                                         <?php elseif ($this->fields->navigation === '1'): ?>
                                             <div class="col-12 col-md-7">
-                                                <a href="<?php echo $this->fields->url(); ?>" target="_blank" title="<?php $this->title(); ?>" class="btn btn-primary btn-lg btn-block btn-goto">
+                                                <a href="<?php echo $this->fields->url(); ?>" target="_blank"
+                                                    title="<?php $this->title(); ?>"
+                                                    class="btn btn-primary btn-lg btn-block btn-goto">
                                                     访问网站
                                                 </a>
                                             </div>
@@ -134,9 +160,9 @@ if ($this->fields->navigation == 2): ?>
                                 </div>
                             <?php endif; ?>
                         </div>
-                        <?php if ($this->is('post')) : ?>
+                        <?php if ($this->is('post')): ?>
                             <?php $this->related(6, count($this->tags) > 0 ? 'tag' : 'author')->to($item); ?>
-                            <?php if ($item->have()) : ?>
+                            <?php if ($item->have()): ?>
                                 <div class="post-related card card-xl mt-4 ">
                                     <div class="card-header">
                                         <div class="related-header">
@@ -146,15 +172,19 @@ if ($this->fields->navigation == 2): ?>
                                     </div>
                                     <div class="card-body">
                                         <div class="row g-2 g-md-3 list-grid list-grid-padding">
-                                            <?php while ($item->next()) : ?>
+                                            <?php while ($item->next()): ?>
                                                 <div class="col-12 col-md-6">
                                                     <div class="list-item block">
-                                                        <div role="button" href="<?php $item->permalink(); ?>" title="点击查看详情" class="media w-36 rounded">
+                                                        <div role="button" href="<?php $item->permalink(); ?>" title="点击查看详情"
+                                                            class="media w-36 rounded">
                                                             <img src="<?php $this->options->themeUrl('/assets/image/default.gif'); ?>"
                                                                 data-src="<?php echo Utils::favicon($item); ?>"
                                                                 class="media-content lazy" />
                                                         </div>
-                                                        <div role="button" href="<?php echo empty($item->fields->url()) ? $item->permalink : $item->fields->url; ?>" cid="<?php $item->cid(); ?>" class="list-content" title="<?php $item->fields->text(); ?>">
+                                                        <div role="button"
+                                                            href="<?php echo empty($item->fields->url()) ? $item->permalink : $item->fields->url; ?>"
+                                                            cid="<?php $item->cid(); ?>" class="list-content"
+                                                            title="<?php $item->fields->text(); ?>">
                                                             <div class="list-body">
                                                                 <div class="list-title text-md h-1x"><?php $item->title(); ?></div>
                                                                 <div class="list-desc text-xx text-muted mt-1">
