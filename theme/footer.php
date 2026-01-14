@@ -1,29 +1,33 @@
-<?php if (!defined('__TYPECHO_ROOT_DIR__')) exit; ?>
+<?php if (!defined('__TYPECHO_ROOT_DIR__'))
+    exit; ?>
 <footer class="site-footer">
     <div class="container">
         <div class="copyright text-xs text-muted text-center">
             <span class="d-inline-block">© <?php echo date("Y"); ?></span>
-            <a class="text-muted" href="<?php $this->options->siteUrl(); ?>" rel="home"><?php $this->options->title(); ?></a>
-            <?php if (!empty($this->options->icp)) : ?>
+            <a class="text-muted" href="<?php $this->options->siteUrl(); ?>"
+                rel="home"><?php $this->options->title(); ?></a>
+            <?php if (!empty($this->options->icp)): ?>
                 <span class="d-inline-block">&nbsp;|&nbsp;</span>
-                <a href="https://beian.miit.gov.cn" target="_blank" rel="nofollow" class="text-muted"><?php $this->options->icp(); ?></a>
+                <a href="https://beian.miit.gov.cn" target="_blank" rel="nofollow"
+                    class="text-muted"><?php $this->options->icp(); ?></a>
             <?php endif; ?>
         </div>
     </div>
 </footer>
 </div>
 <ul class="site-fixedmenu">
-    <li id="scrollToTOP"> <a href="#" class="btn btn-start btn-icon btn-rounded"><span><i class="fas fa-arrow-up"></i></span></a></li>
+    <li id="scrollToTOP"> <a href="#" class="btn btn-start btn-icon btn-rounded"><span><i
+                    class="fas fa-arrow-up"></i></span></a></li>
 </ul>
 <script>
-window.config = {
-    siteUrl: "<?php $this->options->siteUrl(); ?>",
-    weatherApiKey: "<?php $this->options->weatherApiKey(); ?>",
-    weatherRegion: "<?php $this->options->weatherRegion(); ?>",
-}
+    window.config = {
+        siteUrl: "<?php $this->options->siteUrl(); ?>",
+        weatherApiKey: "<?php echo empty($this->options->weatherApiKey) ? '0QfOX3Vn51YCzitbLaRkTTBadtWpgTN8NZLW0C1SEM' : $this->options->weatherApiKey ?>",
+        weatherNode: "<?php $this->options->weatherNode(); ?>",
+    }
 </script>
 <script src="<?php $this->options->themeUrl('./assets/js/main.min.js'); ?>" type="text/javascript"></script>
-<?php if ($this->is('page') || $this->is('post')) : ?>
+<?php if ($this->is('page') || $this->is('post')): ?>
     <link rel="stylesheet" href="<?php $this->options->themeUrl('./assets/css/prismjs.min.css'); ?>">
     <script defer src="<?php $this->options->themeUrl('./assets/js/prismjs.min.js'); ?>"></script>
 <?php endif; ?>

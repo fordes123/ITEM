@@ -1,5 +1,6 @@
 <?php
-if (!defined('__TYPECHO_ROOT_DIR__')) exit;
+if (!defined('__TYPECHO_ROOT_DIR__'))
+    exit;
 
 error_reporting(0);
 require_once('libs/Utils.php');
@@ -166,8 +167,8 @@ function themeConfig(Typecho_Widget_Helper_Form $form)
             'https://favicon.im/zh/{hostname}?larger=true' => ' Favicon.im (默认) ',
             'https://favicon.yandex.net/favicon/{hostname}?size=32' => ' Yandex Favicon ',
             'https://api.xinac.net/icon/?url={hostname}' => ' Xinac Icon ',
-            'https://www.google.com/s2/favicons?sz=32&domain_url={hostname}' =>  'Google API ',
-            'https://f1.allesedv.com/32/{hostname}' =>  'Allese API ',
+            'https://www.google.com/s2/favicons?sz=32&domain_url={hostname}' => 'Google API ',
+            'https://f1.allesedv.com/32/{hostname}' => 'Allese API ',
             'custom' => '自定义'
         ),
         Utils::DEFAULT_FAVICON_API,
@@ -222,8 +223,8 @@ function themeConfig(Typecho_Widget_Helper_Form $form)
     $form->addInput($weatherApiKey);
 
     //天气API CDN区域
-    $weatherRegion = new Typecho_Widget_Helper_Form_Element_Radio(
-        'weatherRegion',
+    $weatherNode = new Typecho_Widget_Helper_Form_Element_Radio(
+        'weatherNode',
         array(
             '0' => '中国',
             '1' => '全球',
@@ -232,7 +233,7 @@ function themeConfig(Typecho_Widget_Helper_Form $form)
         _t('天气 API 节点'),
         _t('此选项可能会影响天气接口查询速度以及区域识别, 默认为 <b>中国</b>')
     );
-    $form->addInput($weatherRegion);
+    $form->addInput($weatherNode);
 }
 
 function addHtml(Typecho_Widget_Helper_Form $form, $content)
