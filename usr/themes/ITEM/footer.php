@@ -15,6 +15,13 @@
 <ul class="site-fixedmenu">
     <li id="scrollToTOP"> <a href="#" class="btn btn-start btn-icon btn-rounded"><span><i class="fas fa-arrow-up"></i></span></a></li>
 </ul>
+<script>
+window.config = {
+    siteUrl: "<?php $this->options->siteUrl(); ?>",
+    weatherApiKey: "<?php $this->options->weatherApiKey(); ?>",
+    weatherRegion: "<?php $this->options->weatherRegion(); ?>",
+}
+</script>
 <script src="<?php $this->options->themeUrl('./assets/js/main.min.js'); ?>" type="text/javascript"></script>
 <?php if ($this->is('page') || $this->is('post')) : ?>
     <link rel="stylesheet" href="<?php $this->options->themeUrl('./assets/css/prismjs.min.css'); ?>">
