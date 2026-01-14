@@ -26,9 +26,7 @@ function themeConfig(Typecho_Widget_Helper_Form $form)
     require_once('libs/Badge.php');
     $options = Helper::options();
 
-    $baseSetting = new Typecho_Widget_Helper_Layout();
-    $baseSetting->html(_t('<h3>基础设置</h3>'));
-    $form->addItem($baseSetting);
+    addHtml($form, '<h2>基础设置</h2>');
 
     //网站图标
     $favicon = new Typecho_Widget_Helper_Form_Element_Text(
@@ -70,9 +68,7 @@ function themeConfig(Typecho_Widget_Helper_Form $form)
     );
     $form->addInput($icp);
 
-    $advancedSetting = new Typecho_Widget_Helper_Layout();
-    $advancedSetting->html(_t('<hr color="#ECECEC"/><h3>进阶设置</h3>'));
-    $form->addItem($advancedSetting);
+    addHtml($form, '<hr color="#ECECEC"/><h2>进阶设置</h2>');
 
     // 搜索引擎
     $searchConfig = new Typecho_Widget_Helper_Form_Element_Textarea(
@@ -180,13 +176,15 @@ function themeConfig(Typecho_Widget_Helper_Form $form)
     );
     $form->addInput($faviconApiSelect->multiMode());
 
+    addHtml($form, '<hr color="#ECECEC"/><h2>高级设置</h2>');
+
     //自定义Favicon API地址
     $faviconApi = new Typecho_Widget_Helper_Form_Element_Text(
         'faviconApi',
         NULL,
         '',
         _t('自定义图标 API'),
-        _t('仅在<b>导航图标来源<b>为<b>自定义</b>时有效<br>必须包含占位符<b>{hostname}</b>来表示目标域名，示例：https://example.org/{hostname}')
+        _t('仅在<b>导航图标来源</b>为<b>自定义</b>时有效<br>必须包含占位符<b>{hostname}</b>来表示目标域名，示例：https://example.org/{hostname}')
     );
     $form->addInput($faviconApi->addRule('url', _t('请填入一个有效的URL')));
 
@@ -212,6 +210,37 @@ function themeConfig(Typecho_Widget_Helper_Form $form)
         <b style="color: #f17666;">此操作存在风险，切勿轻信任何未知来源的代码!</b>')
     );
     $form->addInput($customFooter);
+
+    // 天气API Key
+    $weatherApiKey = new Typecho_Widget_Helper_Form_Element_Text(
+        'weatherApiKey',
+        NULL,
+        _t('0QfOX3Vn51YCzitbLaRkTTBadtWpgTN8NZLW0C1SEM'),
+        _t('天气 API 密钥'),
+        _t('默认密钥收集自网络，请勿滥用')
+    );
+    $form->addInput($weatherApiKey);
+
+    //天气API CDN区域
+    $weatherRegion = new Typecho_Widget_Helper_Form_Element_Radio(
+        'weatherRegion',
+        array(
+            '0' => '中国',
+            '1' => '全球',
+        ),
+        '0',
+        _t('天气 API 节点'),
+        _t('此选项可能会影响天气接口查询速度以及区域识别, 默认为 <b>中国</b>')
+    );
+    $form->addInput($weatherRegion);
+}
+
+function addHtml(Typecho_Widget_Helper_Form $form, $content)
+{
+
+    $html = new Typecho_Widget_Helper_Layout();
+    $html->html(_t($content));
+    $form->addItem($html);
 }
 
 /**

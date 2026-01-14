@@ -151,7 +151,7 @@ import LazyLoad from "vanilla-lazyload";
 
     async fetchCategoryData(mid) {
       const response = await $.ajax({
-        url: $('.aside-wrapper > a:first-child').attr('href'),
+        url: window.config.siteUrl,
         method: 'POST',
         data: { event: 'category', mid }
       });
@@ -167,7 +167,7 @@ import LazyLoad from "vanilla-lazyload";
         const $btn = $(this);
         $.ajax({
           type: 'POST',
-          url: $('.aside-wrapper > a:first-child').attr('href'),
+          url: window.config.siteUrl,
           data: { event: 'agree', cid: $btn.data('cid') },
           success: () => {
             $btn.prop('disabled', true)
@@ -235,7 +235,7 @@ import LazyLoad from "vanilla-lazyload";
       if (!$container.length || !$container.is(':visible')) return;
 
       const CACHE_KEY = 'weather_cache';
-      const CACHE_TIME = 10 * 60 * 1000;
+      const CACHE_TIME = 15 * 60 * 1000;
 
       const getCache = () => {
         const cache = JSON.parse(sessionStorage.getItem(CACHE_KEY) || 'null');
@@ -248,74 +248,123 @@ import LazyLoad from "vanilla-lazyload";
 
       const renderError = () => {
         $container.html(`
-      <div class="py-4 text-center">
-        <div class="d-inline-block">
-          <div class="mb-3 position-relative d-inline-block">
-            <i class="fas fa-cloud-sun text-muted opacity-25 fs-1"></i>
-            <i class="fas fa-exclamation-circle text-warning position-absolute top-50 start-100 translate-middle fs-5"></i>
+          <div class="py-4 text-center">
+            <div class="d-inline-block">
+              <div class="mb-3 position-relative d-inline-block">
+                <i class="fas fa-cloud-sun text-muted opacity-25 fs-1"></i>
+                <i class="fas fa-exclamation-circle text-warning position-absolute top-50 start-100 translate-middle fs-5"></i>
+              </div>
+              <p class="text-muted mb-3 fw-light">无法获取天气信息,请稍后重试</p>
+              <button type="button" class="btn btn-outline-primary btn-sm px-4" id="weather-retry">
+                <i class="fas fa-sync-alt me-2"></i>重试
+              </button>
+            </div>
           </div>
-          <p class="text-muted mb-3 fw-light">无法获取天气信息，请稍后重试</p>
-          <button type="button" class="btn btn-outline-primary btn-sm px-4" id="weather-retry">
-            <i class="fas fa-sync-alt me-2"></i>重试
-          </button>
-        </div>
-      </div>
-    `);
+        `);
         $('#weather-retry').one('click', fetchWeather);
       };
 
-      const renderWeather = (weather) => {
-        const cur = weather.current || {};
-        const units = weather.units || {};
-        const loc = weather.location || {};
+      const renderWeather = (data) => {
+        const weather = data.responses?.[0]?.weather?.[0];
+        const cur = weather?.current || {};
+        const units = data.units || {};
+        const location = data.userProfile?.location || {};
+        const iconMap = weather?.iconMap || {};
 
-        const iconHtml = cur.urlIcon
-          ? `<img src="${cur.urlIcon}" alt="weather" class="me-3 align-self-start object-fit-contain" style="width:64px;height:64px;">`
-          : `<div class="me-3 align-self-start position-relative d-inline-block">
-           <i class="fas fa-cloud-sun text-muted opacity-25 display-3"></i>
-           <i class="fas fa-exclamation-circle text-warning position-absolute top-50 start-100 translate-middle fs-5"></i>
-         </div>`;
+        let iconUrl = '';
+        if (iconMap.iconBase && iconMap.symbolMap && cur.symbol) {
+          const symbolFile = iconMap.symbolMap[cur.symbol];
+          if (symbolFile) iconUrl = iconMap.iconBase + symbolFile;
+        }
+
+        const displayName = location.City || '未知地区';
+        const aqiBg = cur.aqLevel <= 1 ? 'success' : cur.aqLevel <= 2 ? 'warning' : 'danger';
 
         $container.html(`
-      <div class="px-2">
-        <div class="text-muted text-center">
-          <i class="fas fa-map-marker-alt me-1"></i>${loc.displayName || '未知地区'}
-        </div>
-        <div class="d-flex align-items-center justify-content-center my-3">
-          ${iconHtml}
-          <div class="d-flex flex-column align-items-start">
-            <div class="fw-bold text-primary display-3 lh-1">${cur.temp || 'N/A'}<span class="fs-5 ms-1">${units.temperature || '°C'}</span></div>
-            <div class="text-muted ms-2">${cur.pvdrCap || cur.cap || '无法获取'}</div>
-          </div>
-        </div>
-        <div class="d-flex justify-content-center flex-wrap gap-2 mb-2">
-          <span class="badge text-bg-primary">紫外线${cur.uvDesc || 'N/A'}</span>
-          <span class="badge text-bg-primary">${cur.aqiSeverity || '空气质量未知'}</span>
-        </div>
-        <div class="text-muted">
-          <div class="d-flex justify-content-center flex-wrap gap-2 text-center mb-1">
-            <span><i class="fas fa-thermometer-half me-1"></i>体感 ${cur.feels || 'N/A'}${units.temperature || '°C'}</span>
-            <span><i class="fas fa-tint me-1"></i>湿度 ${cur.rh || 'N/A'}%</span>
-            <span><i class="fas fa-wind me-1"></i>风 ${cur.windDir || 'N/A'}°, ${cur.windSpd || 'N/A'} ${units.speed || 'km/h'}</span>
-          </div>
-        </div>
-      </div>
-    `);
+            <div class="px-3">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div class="text-truncate me-2">
+                        <i class="fas fa-map-marker-alt text-primary me-1"></i>
+                        <span class="fw-bold text-dark-emphasis">${displayName}</span>
+                    </div>
+                    <span class="badge rounded-pill bg-${aqiBg} bg-opacity-10 text-${aqiBg} border border-${aqiBg} border-opacity-25 px-2">
+                        ${cur.aqiSeverity}
+                    </span>
+                </div>
+    
+                <div class="row align-items-center g-0 mb-3">
+                    <div class="col-7">
+                        <div class="d-flex align-items-baseline">
+                            <span class="display-3 fw-bold text-dark-emphasis">${cur.temp}</span>
+                            <span class="fs-4 text-secondary ms-1">${units.temperature || '°C'}</span>
+                        </div>
+                        <div class="px-2">
+                            <span class="badge bg-primary text-white mb-1">${cur.pvdrCap || cur.cap}</span>
+                            <div class="text-muted small">
+                                <i class="fas fa-thermometer-half me-1"></i>体感 ${cur.feels}${units.temperature || '°C'}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-5 text-end">
+                        <img src="${iconUrl}" alt="weather" class="img-fluid">
+                    </div>
+                </div>
+    
+                <div class="row g-2">
+                    <div class="col-3">
+                        <div class="rounded-3 p-2 text-center h-100" style="background-color: var(--bg-body);">
+                            <i class="fas fa-tint text-info mb-1"></i>
+                            <div class="small text-muted">湿度</div>
+                            <div class="fw-bold small text-truncate">${cur.rh}%</div>
+                        </div>
+                    </div>
+                    <div class="col-3">
+                        <div class="rounded-3 p-2 text-center h-100" style="background-color: var(--bg-body);">
+                            <i class="fas fa-wind text-secondary mb-1"></i>
+                            <div class="small text-muted">${cur.pvdrWindDir || '风向'}</div>
+                            <div class="fw-bold small text-truncate px-1">${cur.pvdrWindSpd || (cur.windSpd + 'km/h')}</div>
+                        </div>
+                    </div>
+                    <div class="col-3">
+                        <div class="rounded-3 p-2 text-center h-100" style="background-color: var(--bg-body);">
+                            <i class="fas fa-sun text-warning mb-1"></i>
+                            <div class="small text-muted">紫外线</div>
+                            <div class="fw-bold small text-truncate">${cur.uvDesc || 'N/A'}</div>
+                        </div>
+                    </div>
+                    <div class="col-3">
+                        <div class="rounded-3 p-2 text-center h-100" style="background-color: var(--bg-body);">
+                            <i class="fas fa-eye text-primary mb-1"></i>
+                            <div class="small text-muted">能见度</div>
+                            <div class="fw-bold small text-truncate">${cur.vis || 'N/A'} ${units.distance || 'km'}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `);
       };
 
       const fetchWeather = async () => {
-        const cached = getCache();
-        if (cached) {
-          renderWeather(cached);
-          return;
-        }
-
         try {
-          const res = await fetch('https://api.fordes.dev/api/weather/current?locale=zh-cn');
-          const data = await res.json();
-          setCache(data);
-          renderWeather(data);
-        } catch {
+
+          if (!window.config.weatherApiKey) {
+            throw new Error("Weather API Key is not set, please set it in the theme settings");
+          }
+          let weatherData = getCache();
+          if (!weatherData) {
+            const host = window.config.weatherRegion === '0' ? 'assets.msn.cn' : 'assets.msn.com';
+            const res = await fetch(`https://${host}/service/segments/recoitems/weather?apikey=${window.config.weatherApiKey}&cuthour=false&market=zh-cn&locale=zh-cn`);
+            const data = await res.json();
+            if (Array.isArray(data) && data[0]?.data) {
+              weatherData = JSON.parse(data[0].data);
+            } else {
+              throw new Error('Unexpected API response format');
+            }
+            setCache(weatherData);
+          }
+          renderWeather(weatherData);
+        } catch (error) {
+          console.error('Weather fetch failed:', error);
           renderError();
         }
       };
