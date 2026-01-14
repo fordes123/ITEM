@@ -311,28 +311,28 @@ import LazyLoad from "vanilla-lazyload";
                 </div>
     
                 <div class="row g-2">
-                    <div class="col-3">
+                    <div class="col-4 col-md-6 col-xl-4 col-xxl-3">
                         <div class="rounded-3 p-2 text-center h-100" style="background-color: var(--bg-body);">
                             <i class="fas fa-tint text-info mb-1"></i>
                             <div class="small text-muted">湿度</div>
                             <div class="fw-bold small text-truncate">${cur.rh}%</div>
                         </div>
                     </div>
-                    <div class="col-3">
+                    <div class="col-4 col-md-6 col-xl-4 col-xxl-3">
                         <div class="rounded-3 p-2 text-center h-100" style="background-color: var(--bg-body);">
                             <i class="fas fa-wind text-secondary mb-1"></i>
                             <div class="small text-muted">${cur.pvdrWindDir || '风向'}</div>
                             <div class="fw-bold small text-truncate px-1">${cur.pvdrWindSpd || (cur.windSpd + 'km/h')}</div>
                         </div>
                     </div>
-                    <div class="col-3">
+                    <div class="col-4 d-md-none d-xl-block d-lg-none d-xxl-block col-lg-4 col-xxl-3">
                         <div class="rounded-3 p-2 text-center h-100" style="background-color: var(--bg-body);">
                             <i class="fas fa-sun text-warning mb-1"></i>
                             <div class="small text-muted">紫外线</div>
                             <div class="fw-bold small text-truncate">${cur.uvDesc || 'N/A'}</div>
                         </div>
                     </div>
-                    <div class="col-3">
+                    <div class="d-none d-md-none d-xxl-block col-3">
                         <div class="rounded-3 p-2 text-center h-100" style="background-color: var(--bg-body);">
                             <i class="fas fa-eye text-primary mb-1"></i>
                             <div class="small text-muted">能见度</div>
@@ -352,7 +352,7 @@ import LazyLoad from "vanilla-lazyload";
           }
           let weatherData = getCache();
           if (!weatherData) {
-            const host = window.config.weatherRegion === '0' ? 'assets.msn.cn' : 'assets.msn.com';
+            const host = window.config.weatherNode === '1' ? 'assets.msn.com' : 'assets.msn.cn';
             const res = await fetch(`https://${host}/service/segments/recoitems/weather?apikey=${window.config.weatherApiKey}&cuthour=false&market=zh-cn&locale=zh-cn`);
             const data = await res.json();
             if (Array.isArray(data) && data[0]?.data) {

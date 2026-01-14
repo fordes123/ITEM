@@ -245,14 +245,14 @@ class Utils
     {
         $cids = array_slice((array)$cids, 0, $limit);
         $outputCount = 0;
-    
+
         foreach ($cids as $cid) {
             $item = Typecho_Widget::widget("Widget_Archive@post-$cid", "pageSize=1&type=post", "cid=$cid");
-            
+
             if ($item->have()) {
                 $url = $item->fields->url ?: $item->permalink;
                 $subtitle = $item->fields->text ? ' - ' . $item->fields->text : '';
-    
+
                 echo sprintf(
                     self::RANKED_ITEM_TEMPLATE,
                     $item->title . $subtitle,
@@ -260,13 +260,13 @@ class Utils
                     $cid,
                     $item->fields->text
                 );
-    
+
                 if (++$outputCount >= $limit) {
                     break;
                 }
             }
         }
-    
+
         for (; $outputCount < $limit; $outputCount++) {
             echo sprintf(
                 self::RANKED_ITEM_TEMPLATE,
@@ -515,7 +515,7 @@ class Utils
                         Typecho_Widget::widget("Widget_Archive@category-" . $mid, "type=category", "mid=" . $mid)->to($posts);
                         while ($posts->next()) :
                             if (!is_null($posts->fields->navigation)) : ?>
-                                <div class="col-6 col-md-4 col-lg-3 col-xxl-2">
+                                <div class="col-6 col-sm-4 col-md-4 col-lg-3 col-xxl-2">
                                     <div class="list-item block">
                                         <div role="button" href="<?php $posts->permalink() ?>" title="点击查看详情" class="media w-36 rounded">
                                             <img src="<?php $options->themeUrl('/assets/image/default.gif'); ?>"
