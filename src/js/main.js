@@ -236,7 +236,7 @@ import LazyLoad from "vanilla-lazyload";
       const clone = template.content.cloneNode(true);
       const $clone = $(clone);
       $clone.find('.loader-container').css('height', height + 'px');
-      return $clone;
+      return $clone.contents();
     }
 
     setupNavigationMenu() {
