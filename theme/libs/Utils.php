@@ -243,7 +243,7 @@ class Utils
      */
     private static function printRankedPosts($cids, $limit = 6)
     {
-        $cids = array_slice((array)$cids, 0, $limit);
+        $cids = array_slice((array) $cids, 0, $limit);
         $outputCount = 0;
 
         foreach ($cids as $cid) {
@@ -278,23 +278,36 @@ class Utils
         }
     }
 
-    public static function timeago($timestamp)
+    /**
+     * 时间友好化显示
+     * @param int $timestamp
+     * @return string
+     */
+    public static function timeago(int $timestamp): string
     {
         $diff = time() - $timestamp;
-        $units = array(
+
+        if ($diff < 60) {
+            return '刚刚';
+        }
+
+        $units = [
             '年前' => 31536000,
             '个月前' => 2592000,
             '天前' => 86400,
             '小时前' => 3600,
             '分钟前' => 60,
             '秒前' => 1,
-        );
+        ];
+
         foreach ($units as $unit => $value) {
             if ($diff >= $value) {
                 $time = floor($diff / $value);
                 return $time . $unit;
             }
         }
+
+        return '未知';
     }
 
     public static function favicon($posts)
@@ -319,34 +332,31 @@ class Utils
         return $template ? strtr($template, ['{hostname}' => urlencode($hostname)]) : '';
     }
 
-    public static function printStars($score)
+    /**
+     * 输出评价星级
+     * @param float|int $score
+     */
+    public static function printStars($score): void
     {
-        $score = max(0, min(5, $score));
+        $score = max(0, min(5, (float) $score));
 
         $fullStars = floor($score);
         $halfStars = ($score - $fullStars) >= 0.5 ? 1 : 0;
         $emptyStars = 5 - $fullStars - $halfStars;
 
-        $stars = '';
-        for ($i = 0; $i < $fullStars; $i++) {
-            $stars .= '<i class="fas fa-star" style="color: #FFD43B;"></i>';
-        }
-
+        $stars = str_repeat('<i class="fas fa-star" style="color: #FFD43B;"></i>', (int) $fullStars);
         if ($halfStars) {
             $stars .= '<i class="fas fa-star-half-alt" style="color: #FFD43B;"></i>';
         }
-
-        for ($i = 0; $i < $emptyStars; $i++) {
-            $stars .= '<i class="far fa-star" style="color: #FFD43B;"></i>';
-        }
+        $stars .= str_repeat('<i class="far fa-star" style="color: #FFD43B;"></i>', (int) $emptyStars);
 
         echo $stars;
     }
 
     /**
      * 格式化数字（大于1000转化为K，大于1000000转化为M）
-     * @param int $number 要格式化的数字
-     * @return string|int 格式化后的数字
+     * @param mixed $number 要格式化的数字
+     * @return string|int
      */
     public static function formatNumber($number)
     {
@@ -354,13 +364,16 @@ class Utils
             return $number;
         }
 
-        $number = intval($number);
+        $number = (float) $number;
         if ($number >= 1000000) {
             return round($number / 1000000, 1) . 'M';
-        } else if ($number >= 1000) {
+        }
+
+        if ($number >= 1000) {
             return round($number / 1000, 1) . 'K';
         }
-        return $number;
+
+        return (int) $number;
     }
 
     /**
@@ -490,7 +503,7 @@ class Utils
     public static function indexCard($p, $posts, $collapse = false)
     {
         $options = Helper::options();
-?>
+        ?>
         <div class="col-12">
             <div class="card card-xl" id="<?php echo $p['slug']; ?>">
                 <div class="card-header d-flex flex-nowrap text-nowrap gap-2 align-items-center">
@@ -502,9 +515,11 @@ class Utils
                             foreach ($p['children'] as $c): ?>
                                 <li class="nav-item">
                                     <?php $first = $i === 0 ? $c : $first; ?>
-                                    <span data-mid="<?php echo $c['mid']; ?>" class="nav-link<?php echo $i === 0 ? ' active' : ''; ?>"><i class="fas fa-<?php echo $c['slug']; ?>"></i> <?php echo $c['name']; ?></span>
+                                    <span data-mid="<?php echo $c['mid']; ?>"
+                                        class="nav-link<?php echo $i === 0 ? ' active' : ''; ?>"><i
+                                            class="fas fa-<?php echo $c['slug']; ?>"></i> <?php echo $c['name']; ?></span>
                                 </li>
-                            <?php $i++;
+                                <?php $i++;
                             endforeach; ?>
                         </ul>
                     <?php endif; ?>
@@ -513,17 +528,20 @@ class Utils
                     <div class="row g-2 g-md-3 list-grid list-grid-padding">
                         <?php $mid = $collapse ? $first['mid'] : $p['mid'];
                         Typecho_Widget::widget("Widget_Archive@category-" . $mid, "type=category", "mid=" . $mid)->to($posts);
-                        while ($posts->next()) :
-                            if (!is_null($posts->fields->navigation)) : ?>
+                        while ($posts->next()):
+                            if (!is_null($posts->fields->navigation)): ?>
                                 <div class="col-6 col-sm-4 col-md-4 col-lg-3 col-xxl-2">
                                     <div class="list-item block">
-                                        <div role="button" href="<?php $posts->permalink() ?>" title="点击查看详情" class="media w-36 rounded">
+                                        <div role="button" href="<?php $posts->permalink() ?>" title="点击查看详情"
+                                            class="media w-36 rounded">
                                             <img src="<?php $options->themeUrl('/assets/image/default.gif'); ?>"
-                                                data-src="<?php echo Utils::favicon($posts); ?>"
-                                                class="media-content lazy" />
+                                                data-src="<?php echo Utils::favicon($posts); ?>" class="media-content lazy" />
                                         </div>
                                         <?php $encrypt = $posts->hidden ?>
-                                        <div role="button" href="<?php ($posts->fields->navigation == '1' && !$encrypt) ? $posts->fields->url() : $posts->permalink(); ?>" target="_blank" cid="<?php $posts->cid(); ?>" title="<?php $posts->fields->text(); ?>" class="list-content">
+                                        <div role="button"
+                                            href="<?php ($posts->fields->navigation == '1' && !$encrypt) ? $posts->fields->url() : $posts->permalink(); ?>"
+                                            target="_blank" cid="<?php $posts->cid(); ?>" title="<?php $posts->fields->text(); ?>"
+                                            class="list-content">
                                             <div class="list-body">
                                                 <div class="list-title text-md h-1x">
                                                     <?php $posts->title(); ?>
@@ -535,13 +553,13 @@ class Utils
                                         </div>
                                     </div>
                                 </div>
-                        <?php endif;
+                            <?php endif;
                         endwhile; ?>
                     </div>
                 </div>
             </div>
         </div>
-<?php
+        <?php
     }
 
     /**
