@@ -6,12 +6,12 @@ include 'menu.php';
 $stat = \Widget\Stat::alloc();
 ?>
 
-<div class="main">
+<main class="main">
     <div class="body container">
         <?php include 'page-title.php'; ?>
         <div class="row typecho-page-main">
             <div class="col-mb-12 col-tb-3">
-                <p><a href="https://gravatar.com/emails/"
+                <p><a href="https://gravatar.com/"
                       title="<?php _e('在 Gravatar 上修改头像'); ?>"><?php echo '<img class="profile-avatar" src="' . \Typecho\Common::gravatarUrl($user->mail, 220, 'X', 'mm', $request->isSecure()) . '" alt="' . $user->screenName . '" />'; ?></a>
                 </p>
                 <h2><?php $user->screenName(); ?></h2>
@@ -51,12 +51,12 @@ $stat = \Widget\Stat::alloc();
             </div>
         </div>
     </div>
-</div>
+</main>
 
 <?php
 include 'copyright.php';
 include 'common-js.php';
 include 'form-js.php';
-\Typecho\Plugin::factory('admin/profile.php')->bottom();
+\Typecho\Plugin::factory('admin/profile.php')->call('bottom');
 include 'footer.php';
 ?>

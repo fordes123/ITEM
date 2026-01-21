@@ -40,12 +40,14 @@ class Config extends BaseOptions
     /**
      * 配置功能是否存在
      *
+     * @param string|null $theme
      * @return boolean
      */
-    public static function isExists(): bool
+    public static function isExists(?string $theme = null): bool
     {
         $options = Options::alloc();
-        $configFile = $options->themeFile($options->theme, 'functions.php');
+        $theme = $theme ?? $options->theme;
+        $configFile = $options->themeFile($theme, 'functions.php');
 
         if (!$options->missingTheme && file_exists($configFile)) {
             require_once $configFile;
@@ -65,13 +67,18 @@ class Config extends BaseOptions
      */
     public function config(): Form
     {
-        $form = new Form($this->security->getIndex('/action/themes-edit?config'), Form::POST_METHOD);
+        $form = new Form(
+            $this->security->getIndex('/action/themes-edit?config=' . Options::alloc()->theme),
+            Form::POST_METHOD
+        );
         themeConfig($form);
         $inputs = $form->getInputs();
 
         if (!empty($inputs)) {
             foreach ($inputs as $key => $val) {
-                $form->getInput($key)->value($this->options->{$key});
+                if (isset($this->options->{$key})) {
+                    $form->getInput($key)->value($this->options->{$key});
+                }
             }
         }
 

@@ -10,6 +10,7 @@ use Widget\Contents\Attachment\Edit as AttachmentEdit;
 use Widget\Contents\Post\Edit as PostEdit;
 use Widget\Contents\Page\Edit as PageEdit;
 use Widget\Contents\Post\Admin as PostAdmin;
+use Widget\Contents\Page\Admin as PageAdmin;
 use Widget\Comments\Admin as CommentsAdmin;
 use Widget\Metas\Category\Admin as CategoryAdmin;
 use Widget\Metas\Category\Edit as CategoryEdit;
@@ -30,41 +31,48 @@ class Menu extends Base
      * 当前菜单标题
      * @var string
      */
-    public $title;
+    public string $title;
 
     /**
      * 当前增加项目链接
-     * @var string
+     * @var string|null
      */
-    public $addLink;
+    public ?string $addLink;
 
     /**
      * 父菜单列表
      *
      * @var array
      */
-    private $menu = [];
+    private array $menu = [];
 
     /**
      * 当前父菜单
      *
      * @var integer
      */
-    private $currentParent = 1;
+    private int $currentParent = 1;
 
     /**
      * 当前子菜单
      *
      * @var integer
      */
-    private $currentChild = 0;
+    private int $currentChild = 0;
 
     /**
      * 当前页面
      *
      * @var string
      */
-    private $currentUrl;
+    private string $currentUrl;
+
+    /**
+     * 当前菜单URL
+     *
+     * @var string
+     */
+    private string $currentMenuUrl;
 
     /**
      * 执行函数,初始化菜单
@@ -95,11 +103,13 @@ class Menu extends Base
                 [[PostEdit::class, 'getMenuTitle'], [PostEdit::class, 'getMenuTitle'], 'write-post.php?cid=', 'contributor', true],
                 [_t('创建页面'), _t('创建新页面'), 'write-page.php', 'editor'],
                 [[PageEdit::class, 'getMenuTitle'], [PageEdit::class, 'getMenuTitle'], 'write-page.php?cid=', 'editor', true],
+                [[PageEdit::class, 'getMenuTitle'], [PageEdit::class, 'getMenuTitle'], 'write-page.php?parent=', 'editor', true],
             ],
             [
                 [_t('文章'), _t('管理文章'), 'manage-posts.php', 'contributor', false, 'write-post.php'],
                 [[PostAdmin::class, 'getMenuTitle'], [PostAdmin::class, 'getMenuTitle'], 'manage-posts.php?uid=', 'contributor', true],
                 [_t('独立页面'), _t('管理独立页面'), 'manage-pages.php', 'editor', false, 'write-page.php'],
+                [[PageAdmin::class, 'getMenuTitle'], [PageAdmin::class, 'getMenuTitle'], 'manage-pages.php?parent=', 'editor', true, [PageAdmin::class, 'getAddLink']],
                 [_t('评论'), _t('管理评论'), 'manage-comments.php', 'contributor'],
                 [[CommentsAdmin::class, 'getMenuTitle'], [CommentsAdmin::class, 'getMenuTitle'], 'manage-comments.php?cid=', 'contributor', true],
                 [_t('分类'), _t('管理分类'), 'manage-categories.php', 'editor', false, 'category.php'],
@@ -124,7 +134,7 @@ class Menu extends Base
         ];
 
         /** 获取扩展菜单 */
-        $panelTable = unserialize($this->options->panelTable);
+        $panelTable = $this->options->panelTable;
         $extendingParentMenu = empty($panelTable['parent']) ? [] : $panelTable['parent'];
         $extendingChildMenu = empty($panelTable['child']) ? [] : $panelTable['child'];
         $currentUrl = $this->request->getRequestUrl();
@@ -168,6 +178,7 @@ class Menu extends Base
                 $orgHidden = $hidden;
 
                 // parse url
+                $menuUrl = $url;
                 $url = Common::url($url, $adminUrl);
 
                 // compare url
@@ -238,6 +249,7 @@ class Menu extends Base
                     $this->currentChild = $inKey;
                     $this->title = $title;
                     $this->addLink = $addLink ? Common::url($addLink, $adminUrl) : null;
+                    $this->currentMenuUrl = $menuUrl;
                 }
 
                 $children[$inKey] = [
@@ -269,6 +281,16 @@ class Menu extends Base
     }
 
     /**
+     * 获取当前菜单URL
+     *
+     * @return string
+     */
+    public function getCurrentMenuUrl(): string
+    {
+        return $this->currentMenuUrl;
+    }
+
+    /**
      * 输出父级菜单
      */
     public function output($class = 'focus', $childClass = 'focus')
@@ -278,39 +300,28 @@ class Menu extends Base
                 continue;
             }
 
-            echo "<ul class=\"root" . ($key == $this->currentParent ? ' ' . $class : null)
-                . "\"><li class=\"parent\"><a href=\"{$node[2]}\">{$node[0]}</a>"
-                . "</li><ul class=\"child\">";
-
-            $last = 0;
-            foreach ($node[3] as $inKey => $inNode) {
-                if (!$inNode[4]) {
-                    $last = $inKey;
-                }
-            }
+            echo "<li" . ($key == $this->currentParent ? " class=\"{$class}\"" : '')
+                . "><a href=\"{$node[2]}\">{$node[0]}</a>"
+                . "<menu>";
 
             foreach ($node[3] as $inKey => $inNode) {
                 if ($inNode[4]) {
                     continue;
                 }
 
-                $classes = [];
+                $focus = false;
                 if ($key == $this->currentParent && $inKey == $this->currentChild) {
-                    $classes[] = $childClass;
+                    $focus = true;
                 } elseif ($inNode[6]) {
                     continue;
                 }
 
-                if ($inKey == $last) {
-                    $classes[] = 'last';
-                }
-
-                echo "<li" . (!empty($classes) ? ' class="' . implode(' ', $classes) . '"' : null) . "><a href=\""
+                echo "<li" . ($focus ? " class=\"{$childClass}\"" : '') . "><a href=\""
                     . ($key == $this->currentParent && $inKey == $this->currentChild ? $this->currentUrl : $inNode[2])
                     . "\">{$inNode[0]}</a></li>";
             }
 
-            echo "</ul></ul>";
+            echo '</menu></li>';
         }
     }
 }

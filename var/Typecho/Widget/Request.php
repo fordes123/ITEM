@@ -33,17 +33,17 @@ class Request
      * @access private
      * @var array
      */
-    private $filter = [];
+    private array $filter = [];
 
     /**
      * @var HttpRequest
      */
-    private $request;
+    private HttpRequest $request;
 
     /**
      * @var Config
      */
-    private $params;
+    private Config $params;
 
     /**
      * @param HttpRequest $request
@@ -105,6 +105,7 @@ class Request
     /**
      * 获取实际传递参数(magic)
      *
+     * @deprecated ^1.3.0
      * @param string $key 指定参数
      * @return mixed
      */
@@ -116,6 +117,7 @@ class Request
     /**
      * 判断参数是否存在
      *
+     * @deprecated ^1.3.0
      * @param string $key 指定参数
      * @return boolean
      */
@@ -152,6 +154,19 @@ class Request
     public function from(...$params): array
     {
         return $this->applyFilter(call_user_func_array([$this->request->proxy($this->params), 'from'], $params));
+    }
+
+    /**
+     * 判断输入是否满足要求
+     *
+     * @param mixed $query 条件
+     * @return boolean
+     */
+    public function is($query): bool
+    {
+        $result = $this->request->proxy($this->params)->is($query);
+        $this->request->endProxy();
+        return $result;
     }
 
     /**
@@ -214,13 +229,23 @@ class Request
     }
 
     /**
+     * 获取请求的内容类型
+     *
+     * @return string|null
+     */
+    public function getContentType(): ?string
+    {
+        return $this->request->getContentType();
+    }
+
+    /**
      * 获取环境变量
      *
      * @param string $name 获取环境变量名
      * @param string|null $default
      * @return string|null
      */
-    public function getServer(string $name, string $default = null): ?string
+    public function getServer(string $name, ?string $default = null): ?string
     {
         return $this->request->getServer($name, $default);
     }
@@ -318,14 +343,13 @@ class Request
     }
 
     /**
-     * 判断输入是否满足要求
+     * 判断是否为json
      *
-     * @param mixed $query 条件
      * @return boolean
      */
-    public function is($query): bool
+    public function isJson(): bool
     {
-        return $this->request->is($query);
+        return $this->request->isJson();
     }
 
     /**
@@ -346,6 +370,7 @@ class Request
             $this->filter = [];
         }
 
+        $this->request->endProxy();
         return $value;
     }
 

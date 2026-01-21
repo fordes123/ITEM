@@ -42,6 +42,10 @@ class Pgsql implements Adapter
         $dsn = "host={$config->host} port={$config->port}"
             . " dbname={$config->database} user={$config->user} password={$config->password}";
 
+        if ($config->sslVerify) {
+            $dsn .= ' sslmode=require';
+        }
+
         if ($config->charset) {
             $dsn .= " options='--client_encoding={$config->charset}'";
         }
@@ -106,16 +110,16 @@ class Pgsql implements Adapter
      * 将数据查询的其中一行作为对象取出,其中字段名对应对象属性
      *
      * @param resource $resource 查询的资源数据
-     * @return object|null
+     * @return \stdClass|null
      */
-    public function fetchObject($resource): ?object
+    public function fetchObject($resource): ?\stdClass
     {
         return pg_fetch_object($resource) ?: null;
     }
 
     /**
      * @param resource $resource
-     * @return array|null
+     * @return array
      */
     public function fetchAll($resource): array
     {
@@ -142,6 +146,6 @@ class Pgsql implements Adapter
      */
     public function quoteValue($string): string
     {
-        return '\'' . pg_escape_string($string) . '\'';
+        return '\'' . str_replace('\'', '\'\'', $string) . '\'';
     }
 }

@@ -61,14 +61,26 @@ class Mysql extends Pdo
             }
         }
 
+        $dsn = !empty($config->dsn)
+            ? $config->dsn
+            : (strpos($config->host, '/') !== false
+                ? "mysql:dbname={$config->database};unix_socket={$config->host}"
+                : "mysql:dbname={$config->database};host={$config->host};port={$config->port}");
+
         $pdo = new \PDO(
-            !empty($config->dsn)
-                ? $config->dsn : "mysql:dbname={$config->database};host={$config->host};port={$config->port}",
+            $dsn,
             $config->user,
             $config->password,
             $options
         );
-        $pdo->setAttribute(\PDO::MYSQL_ATTR_USE_BUFFERED_QUERY, true);
+
+        if (class_exists('\Pdo\Mysql')) {
+            // 新版本写法
+            $pdo->setAttribute(\Pdo\Mysql::ATTR_USE_BUFFERED_QUERY, true);
+        } else {
+            // 兼容旧版本
+            $pdo->setAttribute(\PDO::MYSQL_ATTR_USE_BUFFERED_QUERY, true);
+        }
 
         if ($config->charset) {
             $pdo->exec("SET NAMES '{$config->charset}'");

@@ -27,7 +27,7 @@ class Service extends BaseOptions implements ActionInterface
      *
      * @var array
      */
-    public $asyncRequests = [];
+    public array $asyncRequests = [];
 
     /**
      * 发送pingback实现
@@ -39,15 +39,17 @@ class Service extends BaseOptions implements ActionInterface
         /** 验证权限 */
         $data = $this->request->get('@json');
         $token = $data['token'] ?? '';
-        $permalink = $data['permalink'];
-        $title = $data['title'];
-        $excerpt = $data['excerpt'];
+        $permalink = $data['permalink'] ?? '';
+        $title = $data['title'] ?? '';
+        $excerpt = $data['excerpt'] ?? '';
 
         $response = ['trackback' => [], 'pingback' => []];
 
         if (!Common::timeTokenValidate($token, $this->options->secret, 3) || empty($permalink)) {
             throw new Exception(_t('禁止访问'), 403);
         }
+
+        $this->response->throwFinish();
 
         /** 忽略超时 */
         if (function_exists('ignore_user_abort')) {
@@ -75,7 +77,7 @@ class Service extends BaseOptions implements ActionInterface
                     $url = Common::buildUrl($urlPart);
                 }
 
-                if ($permalinkPart['host'] == $urlPart['host'] && $permalinkPart['path'] == $urlPart['path']) {
+                if ($permalinkPart['host'] == $urlPart['host']) {
                     continue;
                 }
 
@@ -224,7 +226,7 @@ class Service extends BaseOptions implements ActionInterface
      * @param $method
      * @param mixed $params
      */
-    public function requestService($method, $params = null)
+    public function requestService($method, ...$params)
     {
         static $called;
 
@@ -266,6 +268,8 @@ class Service extends BaseOptions implements ActionInterface
             throw new Exception(_t('禁止访问'), 403);
         }
 
+        $this->response->throwFinish();
+
         /** 忽略超时 */
         if (function_exists('ignore_user_abort')) {
             ignore_user_abort(true);
@@ -281,7 +285,7 @@ class Service extends BaseOptions implements ActionInterface
         if (!empty($requests)) {
             foreach ($requests as $request) {
                 [$method, $params] = $request;
-                $plugin->{$method}($params);
+                $plugin->call($method, ... $params);
             }
         }
     }

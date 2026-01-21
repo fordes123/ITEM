@@ -9,17 +9,19 @@ namespace IXR;
  */
 class Date
 {
-    private $year;
+    private string $year;
 
-    private $month;
+    private string $month;
 
-    private $day;
+    private string $day;
 
-    private $hour;
+    private string $hour;
 
-    private $minute;
+    private string $minute;
 
-    private $second;
+    private string $second;
+
+    private string $timezone;
 
     /**
      * @param int|string $time
@@ -39,12 +41,13 @@ class Date
      */
     private function parseTimestamp(int $timestamp)
     {
-        $this->year = date('Y', $timestamp);
-        $this->month = date('m', $timestamp);
-        $this->day = date('d', $timestamp);
-        $this->hour = date('H', $timestamp);
-        $this->minute = date('i', $timestamp);
-        $this->second = date('s', $timestamp);
+        $this->year = gmdate('Y', $timestamp);
+        $this->month = gmdate('m', $timestamp);
+        $this->day = gmdate('d', $timestamp);
+        $this->hour = gmdate('H', $timestamp);
+        $this->minute = gmdate('i', $timestamp);
+        $this->second = gmdate('s', $timestamp);
+        $this->timezone = '';
     }
 
     /**
@@ -58,6 +61,7 @@ class Date
         $this->hour = substr($iso, 9, 2);
         $this->minute = substr($iso, 12, 2);
         $this->second = substr($iso, 15, 2);
+        $this->timezone = substr($iso, 17);
     }
 
     /**
@@ -65,7 +69,7 @@ class Date
      */
     public function getIso(): string
     {
-        return $this->year . $this->month . $this->day . 'T' . $this->hour . ':' . $this->minute . ':' . $this->second;
+        return $this->year . $this->month . $this->day . 'T' . $this->hour . ':' . $this->minute . ':' . $this->second . $this->timezone;
     }
 
     /**
