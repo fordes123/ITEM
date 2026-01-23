@@ -142,7 +142,6 @@
     <script defer src="<?php $this->options->themeUrl('./assets/js/prismjs.min.js'); ?>"></script>
 <?php endif; ?>
 <?php $this->options->customFooter(); ?>
-
+<?php $this->footer(); ?>
 </body>
-
 </html>
