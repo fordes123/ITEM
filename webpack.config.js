@@ -14,7 +14,7 @@ module.exports = {
     'backend-ui': ['./src/scss/backend-ui.scss', "./src/js/backend-ui.js"],
   },
   output: {
-    path: path.resolve(__dirname, 'theme/assets'),
+    path: path.resolve(__dirname, 'php/assets'),
     filename: 'js/[name].min.js',
     clean: true
   },

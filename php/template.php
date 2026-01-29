@@ -1,28 +1,8 @@
 <?php if (!defined('__TYPECHO_ROOT_DIR__'))
-    exit; ?>
-<footer class="site-footer">
-    <div class="container">
-        <div class="copyright text-xs text-muted text-center">
-            <span class="d-inline-block">© <?php echo date("Y"); ?></span>
-            <a class="text-muted" href="<?php $this->options->siteUrl(); ?>"
-                rel="home"><?php $this->options->title(); ?></a>
-            <?php if (!empty($this->options->icp)): ?>
-                <span class="d-inline-block">&nbsp;|&nbsp;</span>
-                <a href="https://beian.miit.gov.cn" target="_blank" rel="nofollow"
-                    class="text-muted"><?php $this->options->icp(); ?></a>
-            <?php endif; ?>
-        </div>
-    </div>
-</footer>
-</div>
-<ul class="site-fixedmenu">
-    <li id="scrollToTOP"> <a href="#" class="btn btn-start btn-icon btn-rounded"><span><i
-                    class="fas fa-arrow-up"></i></span></a></li>
-</ul>
+    exit;
+if ($this->is('index')): ?>
 
-<?php if ($this->is('index')): ?>
-
-    <template id="tmpl-custom-loader">
+    <template id="tmpl-loading">
         <div class="d-flex justify-content-center align-items-center loader-container">
             <div class="spinner-border" role="status">
                 <span class="visually-hidden">加载中...</span>
@@ -30,11 +10,11 @@
         </div>
     </template>
 
-    <template id="tmpl-category-item">
+    <template id="tmpl-category">
         <div class="col-6 col-lg-3">
             <div class="list-item block">
                 <div class="media w-36 rounded" role="button">
-                    <img src="/usr/themes/ITEM/assets/image/default.gif" class="media-content lazy">
+                    <img src="<?php $this->options->themeUrl(ThemeConfig::DEFAULT_LOADING_ICON); ?>" class="media-content lazy">
                 </div>
                 <div class="list-content" role="button" target="_blank">
                     <div class="list-body">
@@ -73,7 +53,6 @@
                 </div>
                 <span class="badge rounded-pill bg-opacity-10 border border-opacity-25 px-2 weather-aqi"></span>
             </div>
-
             <div class="row align-items-center g-0 mb-3">
                 <div class="col-7">
                     <div class="d-flex align-items-baseline">
@@ -91,7 +70,6 @@
                     <img src="" alt="weather" class="img-fluid weather-icon">
                 </div>
             </div>
-
             <div class="row g-2">
                 <div class="col-4 col-md-6 col-xl-4 col-xxl-3">
                     <div class="rounded-3 p-2 text-center h-100" style="background-color: var(--bg-body);">
@@ -124,24 +102,15 @@
             </div>
         </div>
     </template>
-<?php endif; ?>
 
-<script>
-    window.config = {
-        siteUrl: "<?php $this->options->siteUrl(); ?>",
-        <?php if ($this->is('index')): ?>
-            weatherApiKey: "<?php echo empty($this->options->weatherApiKey) ? '0QfOX3Vn51YCzitbLaRkTTBadtWpgTN8NZLW0C1SEM' : $this->options->weatherApiKey ?>",
-            weatherNode: "<?php $this->options->weatherNode(); ?>",
-        <?php endif; ?>
-    }
-</script>
-
-<script src="<?php $this->options->themeUrl('./assets/js/main.min.js'); ?>" type="text/javascript"></script>
-<?php if ($this->is('page') || $this->is('post')): ?>
-    <link rel="stylesheet" href="<?php $this->options->themeUrl('./assets/css/prismjs.min.css'); ?>">
-    <script defer src="<?php $this->options->themeUrl('./assets/js/prismjs.min.js'); ?>"></script>
+    <template id="tmpl-popular-item">
+        <div class="list-item">
+            <div class="list-content">
+                <div class="list-body">
+                    <div class="list-title h-1x">暂无数据</div>
+                </div>
+            </div>
+            <a href="#" target="_self" cid="" title="" class="list-goto nav-item"></a>
+        </div>
+    </template>
 <?php endif; ?>
-<?php $this->options->customFooter(); ?>
-<?php $this->footer(); ?>
-</body>
-</html>

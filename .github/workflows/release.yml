@@ -45,7 +45,7 @@ jobs:
         run: yarn build
 
       - name: Package
-        run: zip -r ITEM.zip ./theme/*
+        run: zip -r ITEM.zip ./php/*
       
       - name: Build Changelog
         id: changelog
@@ -60,5 +60,6 @@ jobs:
         with:
           body: ${{steps.changelog.outputs.changelog}}
           files: ITEM.zip
+          draft: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
