@@ -4,9 +4,9 @@ $this->need('header.php');
 $this->need('sidebar.php');
 $this->need('topbar.php');
 
-$hidden = $this->hidden;
+$hidden = $this->status === 'hidden';
 $hasPassword = !empty($this->password);
-if ($hidden && $hasPassword) {
+if ($hasPassword) {
     $password = Typecho_Cookie::get('protectPassword_' . $this->cid);
     $hasPassword = empty($password) || $password != $this->password;
 }
@@ -41,12 +41,11 @@ if ($this->fields->navigation == 2): ?>
                             <div
                                 class="d-flex flex-column flex-md-row justify-content-center align-items-center position-relative">
                                 <div class="d-flex align-items-center">
-                                    <img src="<?php $this->options->themeUrl('/assets/image/default.gif'); ?>"
-                                        data-src="<?php echo Utils::favicon($this); ?>" class="rounded w-auto lazy"
-                                        style="height: 2.5rem;" />
+                                    <img src="<?php echo Theme_Utils::getLoadingIcon(); ?>"
+                                        data-src="<?php echo Theme_Utils::getFavicon($this); ?>"
+                                        class="rounded w-auto lazy" style="height: 2.5rem;" />
                                     <h1 class="post-title m-0 ms-2 text-truncate"> <?php $this->title(); ?></h1>
                                 </div>
-
                                 <?php if ($this->user->hasLogin() && ($this->user->group == 'administrator' || $this->authorId == $this->user->uid)): ?>
                                     <a href="<?php $this->options->adminUrl(); ?>write-post.php?cid=<?php echo $this->cid; ?>"
                                         target="_blank"
@@ -60,34 +59,32 @@ if ($this->fields->navigation == 2): ?>
                                 class="post-meta d-flex flex-fill justify-content-center align-items-center text-base mt-3 mt-md-3">
                                 <a href="<?php $this->author->url(); ?>" class="d-flex align-items-center text-muted">
                                     <div class="flex-avatar w-16 me-2">
-                                        <img alt=""
-                                            src="<?php $this->options->themeUrl('/assets/image/default.gif'); ?>"
-                                            data-src="https://cravatar.cn/avatar/<?php echo md5($this->author->mail); ?>?s=16"
+                                        <img alt="Avatar" src="<?php echo Theme_Utils::getLoadingIcon(); ?>"
+                                            data-src="<?php echo Theme_Utils::getAvatar($this->author->mail); ?>"
                                             width="16" height="16" class="lazy" />
                                     </div>
                                     <?php $this->author(); ?>
                                 </a>
                                 <i class="text-light mx-2">•</i>
-                                <span class="date text-muted"><?php echo Utils::timeago($this->modified); ?></span>
+                                <span
+                                    class="date text-muted"><?php echo Theme_Utils::timeago($this->modified); ?></span>
                                 <?php if ($this->fields->score): ?>
                                     <i class="text-light mx-2">•</i>
-                                    <span><?php Utils::printStars($this->fields->score) ?>(<?php echo $this->fields->score ?>)</span>
+                                    <span><?php Theme_Utils::renderStars($this->fields->score) ?>(<?php echo $this->fields->score ?>)</span>
                                 <?php endif; ?>
                             </div>
                         </div>
                         <div class="card-body">
-                            <?php if ($hidden): ?>
+                            <?php if ($hidden || $hasPassword): ?>
 
                                 <div class="password-form-container text-left mx-5">
                                     <div class="password-form py-4 mx-auto">
-
                                         <h4 class="mb-3"><i
-                                                class=" fas fa-lock"></i>&nbsp;<?php echo $hasPassword ? '此内容受密码保护' : '此内容已隐藏' ?>
+                                                class="fas fa-lock"></i>&nbsp;<?php echo $hasPassword ? '验证后可查看内容' : '此内容已隐藏' ?>
                                         </h4>
                                         <p class="text-muted mb-4">
-                                            <?php echo $hasPassword ? '请输入密码以查看内容' : '如有疑问请站点联系管理员' ?>
+                                            <?php echo ($hasPassword && trim($this->fields->encryptTip)) ?: Theme_Constants::DEFAULT_ENCRYPT_TIP; ?>
                                         </p>
-
                                         <?php if ($hasPassword): ?>
                                             <form method="post"
                                                 action="<?php echo $this->security->getTokenUrl($this->permalink) ?>">
@@ -97,7 +94,6 @@ if ($this->fields->navigation == 2): ?>
                                                     <input type="hidden" name="protectCID" value="<?php echo $this->cid; ?>">
                                                     <button type="submit" class="submit btn btn-primary">提交</button>
                                                 </div>
-
                                             </form>
                                         <?php endif; ?>
                                     </div>
@@ -121,18 +117,18 @@ if ($this->fields->navigation == 2): ?>
                                     </div>
 
                                     <div class="post-actions row g-2 mt-4">
+                                        <?php $metrics = Theme_Api::getArticleMetrics($this->cid); ?>
                                         <div class="col">
                                             <a href="#" class="btn btn-icon btn-block btn-lg disabled">
                                                 <span><i class="far fa-eye"></i></span>
-                                                <b class="num"><?php Utils::views($this->cid); ?></b>
+                                                <b class="num"><?php echo $metrics->views; ?></b>
                                             </a>
                                         </div>
                                         <div class="col">
-                                            <a type="button"
-                                                class="btn btn-icon btn-block btn-lg <?php echo Utils::agreed($this->cid); ?>"
-                                                id="agree-btn" data-cid="<?php echo $this->cid; ?>">
+                                            <a id="agree-btn" data-cid="<?php echo $this->cid; ?>" type="button"
+                                                class="btn btn-icon btn-block btn-lg disabled">
                                                 <span><i class="far fa-thumbs-up"></i></span>
-                                                <b class="num"><?php Utils::agree($this->cid) ?></b>
+                                                <b class="num"><?php echo $metrics->agree ?></b>
                                             </a>
                                         </div>
                                         <div class="col">
@@ -177,12 +173,9 @@ if ($this->fields->navigation == 2): ?>
                                                     <div class="list-item block">
                                                         <div role="button" href="<?php $item->permalink(); ?>" title="点击查看详情"
                                                             class="media w-36 rounded">
-                                                            <img src="<?php $this->options->themeUrl('/assets/image/default.gif'); ?>"
-                                                                data-src="<?php echo Utils::favicon($item); ?>"
-                                                                class="media-content lazy" />
+                                                            <?php Theme_Utils::favicon($item, 'media-content'); ?>
                                                         </div>
-                                                        <div role="button"
-                                                            href="<?php echo empty($item->fields->url()) ? $item->permalink : $item->fields->url; ?>"
+                                                        <div role="button" href="<?php $item->permalink(); ?>"
                                                             cid="<?php $item->cid(); ?>" class="list-content"
                                                             title="<?php $item->fields->text(); ?>">
                                                             <div class="list-body">

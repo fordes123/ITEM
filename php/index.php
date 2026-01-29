@@ -27,7 +27,9 @@ $this->need('topbar.php'); ?>
           </div>
           <div class="card-body">
             <div class='row g-2'>
-              <div class="col list-number list-row list-bordered d-none d-sm-block"><?php Utils::ranked(5) ?></div>
+              <div class="col list-number list-row list-bordered d-none d-sm-block">
+                <?php Theme_Api::renderTopArticlesByViews(5) ?>
+              </div>
               <div id='card__weather' class="col d-none d-sm-block">
                 <div class="d-flex justify-content-center align-items-center w-100 h-100">
                   <div class="spinner-grow" role="status">
@@ -54,7 +56,9 @@ $this->need('topbar.php'); ?>
                       class='btn btn-link btn-icon btn-md btn-rounded mx-auto mb-2'>
                       <span><i class='<?php echo $item['icon'] ?>'></i></span>
                     </div>
-                    <div class='text-sm text-muted text-truncate'><?php echo $item['name'] ?></div>
+                    <div class='text-sm text-muted text-truncate'>
+                      <?php echo $item['name'] ?>
+                    </div>
                     <a href='<?php echo $item['url'] ?>' target='_blank' class='list-goto'></a>
                   </div>
                 </div>
@@ -68,31 +72,34 @@ $this->need('topbar.php'); ?>
           <div class="card-body">
             <div class="search-tab">
               <?php $search = json_decode($this->options->searchConfig, true);
-              if (is_array($search) && count($search) > 0):
-                foreach ($search as $index => $item): ?>
-                  <a href='javascript:;' data-url='<?php echo $item['url']; ?>'
-                    class='btn btn-link btn-sm btn-rounded <?php echo $index === 0 ? 'active' : ''; ?>'><i
-                      class='<?php echo $item['icon']; ?>' aria-hidden='true'></i>&nbsp;<?php echo $item['name']; ?></a>
-                <?php endforeach;
-              else: ?>
-                <a href='javascript:;' data-url='https://www.google.com/search?q='
-                  class='btn btn-link btn-sm btn-rounded active'><i class='fab fa-google'></i>&nbsp;谷歌</a>
-              <?php endif; ?>
+              $search = is_array($search) && count($search) > 0 ? $search : ["name" => "谷歌", "url" => "https://www.google.com/search?q=", "icon" => "fab fa-google"];
+              foreach ($search as $index => $item): ?>
+                <a href='javascript:;' data-url='<?php echo $item['url']; ?>' class='btn btn-link btn-sm btn-rounded
+                <?php echo $index === 0 ? 'active' : ''; ?>'><i class='<?php echo $item['icon']; ?>'
+                    aria-hidden='true'></i>&nbsp;
+                  <?php echo $item['name']; ?>
+                </a>
+              <?php endforeach; ?>
             </div>
             <form> <input type="text" class="form-control" placeholder="请输入搜索关键词并按回车键…"></form>
           </div>
         </div>
       </div>
-      <?php global $tree;
-      foreach ($tree as $p):
-        if ($this->options->subCategoryType == 0 || empty($p['children'])):
-          !empty($p['children'])
-            ? array_map(fn($c) => Utils::indexCard($c, $posts), $p['children'])
-            : Utils::indexCard($p, $posts);
-        else: ?>
-          <?php Utils::indexCard($p, $posts, true); ?>
-        <?php endif; ?>
-      <?php endforeach; ?>
+      <?php
+      global $data;
+      $collapse = $this->options->subCategoryType === 1;
+      foreach ($data as $item) {
+        if ($collapse) {
+          Theme_Api::renderCategory($item, true);
+        } elseif (empty($item['children'])) {
+          Theme_Api::renderCategory($item);
+        } else {
+          foreach ($item['children'] as $child) {
+            Theme_Api::renderCategory($child);
+          }
+        }
+      }
+      ?>
     </div>
   </div>
 </main>

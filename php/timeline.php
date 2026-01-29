@@ -26,10 +26,11 @@ $this->need("topbar.php");
                         <div class="card-body">
                             <div class="post-content">
                                 <?php
-                                $timelinePageSize = $this->options->timelinePageSize;
-                                $pageSize = (isset($timelinePageSize) && is_numeric($timelinePageSize) && intval($timelinePageSize) > 0) ? intval($timelinePageSize) : 5;
-                                $currentPage = isset($_GET['page']) ? intval($_GET['page']) : 1;
-                                $result = Utils::page($pageSize, $currentPage);
+                                $pageSize = $this->options->pageSize;
+                                $pageSize = Theme_Utils::isPostiveInt($pageSize) ? $pageSize : 5;
+                                $currentPage = isset($_GET['page']) ? Theme_Utils::isPostiveInt($_GET['page']) : 1;
+                                $uid = $this->user->group == 'administrator' ? -1 : $this->user->uid;
+                                $result = Theme_Api::searchPage($pageSize, $currentPage, null, $uid);
                                 ?>
                                 <div class="timeline">
                                     <?php foreach ($result['data'] as $cid): ?>
@@ -38,16 +39,21 @@ $this->need("topbar.php");
                                             <div>
                                                 <span class="timeline-element-icon">
                                                     <i class="badge badge-dot">
-                                                        <img src="<?php $this->options->themeUrl('/assets/image/default.gif'); ?>" data-src="<?php echo Utils::favicon($post); ?>" class="media-content lazy" />
+                                                        <img src="<?php $this->options->themeUrl('/assets/image/default.gif'); ?>"
+                                                            data-src="<?php echo Theme_Utils::getFavicon($post); ?>"
+                                                            class="media-content lazy" />
                                                     </i>
                                                 </span>
                                                 <div class="timeline-element-content">
                                                     <h4 class="timeline-title">
                                                         <a href="<?php $post->permalink(); ?>"><?php $post->title(); ?></a>
                                                     </h4>
-                                                    <p><?php if ($post->fields->text) $post->fields->text();
-                                                        else $post->excerpt(80, '...'); ?></p>
-                                                    <span class="timeline-element-date"><?php echo date('m-d, Y', $post->modified); ?></span>
+                                                    <p><?php if ($post->fields->text)
+                                                        $post->fields->text();
+                                                    else
+                                                        $post->excerpt(80, '...'); ?></p>
+                                                    <span
+                                                        class="timeline-element-date"><?php echo date('m-d, Y', $post->modified); ?></span>
                                                 </div>
                                             </div>
                                         </div>
@@ -65,7 +71,7 @@ $this->need("topbar.php");
             $pageLink = $this->permalink . '?page=';
             $currentPage = $result['currentPage'];
             $totalPages = $result['totalPages'];
-            echo Utils::pagination($pageLink, $currentPage, $totalPages); ?>
+            echo Theme_Utils::renderPage($pageLink, $currentPage, $totalPages); ?>
         </div>
     </div>
 </main>

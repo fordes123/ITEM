@@ -23,12 +23,17 @@ $this->need("topbar.php");
                             $ellipsis = (mb_strlen($keywords, 'UTF-8') > 10) ? mb_substr($keywords, 0, 10, 'UTF-8') . '...' : $keywords;
                             $pageSize = $this->options->pageSize;
                             $currentPage = isset($_GET['page']) ? intval($_GET['page']) : 1;
-                            $result = Utils::page($pageSize, $currentPage, $keywords);
+                            $uid = $this->user->group == 'administrator' ? -1 : $this->user->uid;
+
+
+
+                            $result = Theme_Api::searchPage($pageSize, $currentPage, $keywords, $uid);
                             ?>
                             <h1 class="post-title">
                                 <?php echo '包含 "' . $ellipsis . '" 的文章'; ?>
                             </h1>
-                            <div class="post-meta d-flex flex-fill justify-content-center align-items-center text-base mt-3 mt-md-3">
+                            <div
+                                class="post-meta d-flex flex-fill justify-content-center align-items-center text-base mt-3 mt-md-3">
                                 <span class="text-muted">共 <?php echo $result['total']; ?> 条结果</span>
                             </div>
                         </div>
@@ -43,16 +48,22 @@ $this->need("topbar.php");
                                                 $password = Typecho_Cookie::get('protectPassword_' . $cid);
                                                 $encrypt = empty($password) || $password != $item->password;
                                             } ?>
-                                            <div role="button" href="<?php $item->permalink(); ?>" title="点击查看详情" class="media w-36 rounded">
+                                            <div role="button" href="<?php $item->permalink(); ?>" title="点击查看详情"
+                                                class="media w-36 rounded">
                                                 <img src="<?php $this->options->themeUrl('/assets/image/default.gif'); ?>"
-                                                    data-src="<?php echo Utils::favicon($item); ?>"
+                                                    data-src="<?php echo Theme_Utils::getFavicon($item); ?>"
                                                     class="media-content lazy" />
                                             </div>
-                                            <div role="button" href="<?php ($item->fields->navigation == '1' && !$encrypt) ? $item->fields->url() : $item->permalink(); ?>" cid="<?php $item->cid(); ?>" class="list-content" title="<?php $item->fields->text(); ?>">
+                                            <div role="button"
+                                                href="<?php ($item->fields->navigation == '1' && !$encrypt) ? $item->fields->url() : $item->permalink(); ?>"
+                                                cid="<?php $item->cid(); ?>" class="list-content"
+                                                title="<?php $item->fields->text(); ?>">
                                                 <div class="list-body">
                                                     <div class="list-title text-md h-1x"><?php $item->title(); ?></div>
                                                     <div class="list-desc text-xx text-muted mt-1">
-                                                        <div class="h-1x"><?php echo $encrypt ? '验证后可查看内容' : $item->fields->text ?></div>
+                                                        <div class="h-1x">
+                                                            <?php echo $encrypt ? '验证后可查看内容' : $item->fields->text ?>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
@@ -66,7 +77,7 @@ $this->need("topbar.php");
             </div>
             <?php
             $pageLink = $baseUrl = explode('?', $this->request->getRequestUrl())[0] . '?page=';
-            echo Utils::pagination($pageLink, $result['currentPage'], $result['totalPages']); ?>
+            Theme_Utils::renderPage($pageLink, $result['currentPage'], $result['totalPages']); ?>
         </div>
     </div>
 </main>

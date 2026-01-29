@@ -200,19 +200,22 @@ import LazyLoad from "vanilla-lazyload";
       return $(nodes);
     }
 
+
     setupAgreementSystem() {
-      $('#agree-btn').on('click', function () {
-        const $btn = $(this);
-        $.ajax({
-          type: 'POST',
-          url: window.config.siteUrl,
-          data: { event: 'agree', cid: $btn.data('cid') },
-          success: () => {
-            const currentCount = parseInt($btn.find('.num').text(), 10) || 0;
-            $btn.prop('disabled', true)
-              .addClass('disabled')
-              .find('.num').text(currentCount + 1);
-          }
+      const $btns = $('#agree-btn');
+      if (!$btns.length) return;
+      const likes = new Set(JSON.parse(localStorage.getItem('likes') || '[]'));
+      $btns.each((_, btn) => {
+        const $btn = $(btn);
+        const cid = $btn.data('cid');
+        if (likes.has(cid)) return;
+
+        $btn.removeClass('disabled').one('click', () => {
+          $.post(window.config.siteUrl, { action: 'likes', cid }, ({ data }) => {
+            $btn.addClass('disabled').find('.num').text(data);
+            likes.add(cid);
+            localStorage.setItem('likes', JSON.stringify([...likes]));
+          });
         });
       });
     }

@@ -16,8 +16,9 @@
 </footer>
 </div>
 <ul class="site-fixedmenu">
-    <li id="scrollToTOP"> <a href="#" class="btn btn-start btn-icon btn-rounded"><span><i
-                    class="fas fa-arrow-up"></i></span></a></li>
+    <li id="scrollToTOP"> <a href="#" class="btn btn-start btn-icon btn-rounded">
+            <span><i class="fas fa-arrow-up"></i></span></a>
+    </li>
 </ul>
 
 <?php if ($this->is('index')): ?>
@@ -34,7 +35,7 @@
         <div class="col-6 col-lg-3">
             <div class="list-item block">
                 <div class="media w-36 rounded" role="button">
-                    <img src="/usr/themes/ITEM/assets/image/default.gif" class="media-content lazy">
+                    <img src="<?php echo Theme_Utils::getLoadingIcon(); ?>" class="media-content lazy">
                 </div>
                 <div class="list-content" role="button" target="_blank">
                     <div class="list-body">
@@ -73,7 +74,6 @@
                 </div>
                 <span class="badge rounded-pill bg-opacity-10 border border-opacity-25 px-2 weather-aqi"></span>
             </div>
-
             <div class="row align-items-center g-0 mb-3">
                 <div class="col-7">
                     <div class="d-flex align-items-baseline">
@@ -91,7 +91,6 @@
                     <img src="" alt="weather" class="img-fluid weather-icon">
                 </div>
             </div>
-
             <div class="row g-2">
                 <div class="col-4 col-md-6 col-xl-4 col-xxl-3">
                     <div class="rounded-3 p-2 text-center h-100" style="background-color: var(--bg-body);">
@@ -130,7 +129,7 @@
     window.config = {
         siteUrl: "<?php $this->options->siteUrl(); ?>",
         <?php if ($this->is('index')): ?>
-            weatherApiKey: "<?php echo empty($this->options->weatherApiKey) ? '0QfOX3Vn51YCzitbLaRkTTBadtWpgTN8NZLW0C1SEM' : $this->options->weatherApiKey ?>",
+            weatherApiKey: "<?php $this->options->weatherApiKey(); ?>",
             weatherNode: "<?php $this->options->weatherNode(); ?>",
         <?php endif; ?>
     }
@@ -144,4 +143,5 @@
 <?php $this->options->customFooter(); ?>
 <?php $this->footer(); ?>
 </body>
+
 </html>
