@@ -8,7 +8,7 @@ if (!defined("__TYPECHO_ROOT_DIR__")) {
 }
 $this->need("header.php");
 $this->need("sidebar.php");
-$this->need("topbar.php");
+$this->need("navbar.php");
 ?>
 
 <main class="site-main">
@@ -19,44 +19,32 @@ $this->need("topbar.php");
                     <div class="post-other-style">
                         <div class="post-heading text-center pt-5 pt-md-5 pb-3 pb-xl-4">
                             <?php
-                            $keywords = mb_substr($this->request->keywords, 0, 20, 'UTF-8');
-                            $ellipsis = (mb_strlen($keywords, 'UTF-8') > 10) ? mb_substr($keywords, 0, 10, 'UTF-8') . '...' : $keywords;
-                            $pageSize = $this->options->pageSize;
+
+                            $keywords = ThemeHelper::filterKeywords($this->request->keywords, 10);
+                            if (ThemeHelper::isBlank($keywords)) {
+                                $this->redirect($this->options->siteUrl);
+                            }
+
+                            $pageSize = $this->options->pageSize ? $this->options->pageSize : 10;
                             $currentPage = isset($_GET['page']) ? intval($_GET['page']) : 1;
-                            $result = Utils::page($pageSize, $currentPage, $keywords);
+                            $uid = $this->user->group == 'administrator' ? -1 : $this->user->uid;
+
+                            $result = ThemeRepository::posts($pageSize, $currentPage, $keywords, $uid);
                             ?>
                             <h1 class="post-title">
-                                <?php echo '包含 "' . $ellipsis . '" 的文章'; ?>
+                                <?php echo '包含 "' . $keywords . '" 的文章'; ?>
                             </h1>
-                            <div class="post-meta d-flex flex-fill justify-content-center align-items-center text-base mt-3 mt-md-3">
+                            <div
+                                class="post-meta d-flex flex-fill justify-content-center align-items-center text-base mt-3 mt-md-3">
                                 <span class="text-muted">共 <?php echo $result['total']; ?> 条结果</span>
                             </div>
                         </div>
                         <div class="card-body">
                             <div class="row g-2 g-md-3 list-grid list-grid-padding">
                                 <?php foreach ($result['data'] as $cid): ?>
-                                    <?php $item = Helper::widgetById('Contents', $cid); ?>
+                                    <?php $item = ThemeRepository::post($cid); ?>
                                     <div class="col-12 col-md-6">
-                                        <div class="list-item block">
-                                            <?php $encrypt = false;
-                                            if (!empty($item->password)) {
-                                                $password = Typecho_Cookie::get('protectPassword_' . $cid);
-                                                $encrypt = empty($password) || $password != $item->password;
-                                            } ?>
-                                            <div role="button" href="<?php $item->permalink(); ?>" title="点击查看详情" class="media w-36 rounded">
-                                                <img src="<?php $this->options->themeUrl('/assets/image/default.gif'); ?>"
-                                                    data-src="<?php echo Utils::favicon($item); ?>"
-                                                    class="media-content lazy" />
-                                            </div>
-                                            <div role="button" href="<?php ($item->fields->navigation == '1' && !$encrypt) ? $item->fields->url() : $item->permalink(); ?>" cid="<?php $item->cid(); ?>" class="list-content" title="<?php $item->fields->text(); ?>">
-                                                <div class="list-body">
-                                                    <div class="list-title text-md h-1x"><?php $item->title(); ?></div>
-                                                    <div class="list-desc text-xx text-muted mt-1">
-                                                        <div class="h-1x"><?php echo $encrypt ? '验证后可查看内容' : $item->fields->text ?></div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
+                                        <?php ThemeView::navitem($item); ?>
                                     </div>
                                 <?php endforeach; ?>
                             </div>
@@ -66,7 +54,8 @@ $this->need("topbar.php");
             </div>
             <?php
             $pageLink = $baseUrl = explode('?', $this->request->getRequestUrl())[0] . '?page=';
-            echo Utils::pagination($pageLink, $result['currentPage'], $result['totalPages']); ?>
+            ThemeView::paginator($pageLink, $result['currentPage'], $result['totalPages']);
+            ?>
         </div>
     </div>
 </main>

@@ -1,7 +1,7 @@
 <?php if (!defined('__TYPECHO_ROOT_DIR__')) exit;
 $this->need('header.php');
 $this->need('sidebar.php');
-$this->need('topbar.php');
+$this->need('navbar.php');
 ?>
 
 <main class="site-main">
