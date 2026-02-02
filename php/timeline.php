@@ -11,7 +11,7 @@ if (!defined("__TYPECHO_ROOT_DIR__")) {
 }
 $this->need("header.php");
 $this->need("sidebar.php");
-$this->need("topbar.php");
+$this->need("navbar.php");
 ?>
 
 <main class="site-main">
@@ -26,28 +26,30 @@ $this->need("topbar.php");
                         <div class="card-body">
                             <div class="post-content">
                                 <?php
-                                $timelinePageSize = $this->options->timelinePageSize;
-                                $pageSize = (isset($timelinePageSize) && is_numeric($timelinePageSize) && intval($timelinePageSize) > 0) ? intval($timelinePageSize) : 5;
+                                $pageSize = $this->options->timelinePageSize ? $this->options->timelinePageSize : 10;
                                 $currentPage = isset($_GET['page']) ? intval($_GET['page']) : 1;
-                                $result = Utils::page($pageSize, $currentPage);
+                                $uid = $this->user->group == 'administrator' ? -1 : $this->user->uid;
+                                $result = ThemeRepository::posts($pageSize, $currentPage, null, $uid);
                                 ?>
                                 <div class="timeline">
                                     <?php foreach ($result['data'] as $cid): ?>
-                                        <?php $post = Helper::widgetById('Contents', $cid); ?>
+                                        <?php $post = ThemeRepository::post($cid); ?>
                                         <div class="timeline-element">
                                             <div>
                                                 <span class="timeline-element-icon">
                                                     <i class="badge badge-dot">
-                                                        <img src="<?php $this->options->themeUrl('/assets/image/default.gif'); ?>" data-src="<?php echo Utils::favicon($post); ?>" class="media-content lazy" />
+                                                        <img src="<?php $this->options->themeUrl(ThemeConfig::DEFAULT_LOADING_ICON); ?>"
+                                                            data-src="<?php echo $post['logo']; ?>"
+                                                            class="media-content lazy" />
                                                     </i>
                                                 </span>
                                                 <div class="timeline-element-content">
                                                     <h4 class="timeline-title">
-                                                        <a href="<?php $post->permalink(); ?>"><?php $post->title(); ?></a>
+                                                        <a href="<?php echo $post['permalink']; ?>"><?php echo $post['title']; ?></a>
                                                     </h4>
-                                                    <p><?php if ($post->fields->text) $post->fields->text();
-                                                        else $post->excerpt(80, '...'); ?></p>
-                                                    <span class="timeline-element-date"><?php echo date('m-d, Y', $post->modified); ?></span>
+                                                    <p><?php echo $post['text']; ?></p>
+                                                    <span
+                                                        class="timeline-element-date"><?php echo date('m-d, Y', $post['modified']); ?></span>
                                                 </div>
                                             </div>
                                         </div>
@@ -65,7 +67,7 @@ $this->need("topbar.php");
             $pageLink = $this->permalink . '?page=';
             $currentPage = $result['currentPage'];
             $totalPages = $result['totalPages'];
-            echo Utils::pagination($pageLink, $currentPage, $totalPages); ?>
+            echo ThemeView::paginator($pageLink, $currentPage, $totalPages); ?>
         </div>
     </div>
 </main>

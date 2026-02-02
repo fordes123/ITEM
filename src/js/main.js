@@ -6,391 +6,286 @@ import LazyLoad from "vanilla-lazyload";
 
   class App {
     constructor() {
+      this.lazy = new LazyLoad();
       this.themeMap = new Map([
         ['default', $('#default')],
         ['dark', $('#dark')],
         ['light', $('#light')]
       ]);
-      this.lazy = new LazyLoad();
-      this.weatherInitialized = false;
-      this.initEventListeners();
+
+      $(() => {
+        this.init();
+        this.initEvents();
+      });
     }
 
-    initEventListeners() {
-      $(document).ready(() => this.initialize());
-      $(window).on('load', () => this.handleWindowLoad());
+    async fetchWithCache(key, url, expireTime = 15 * 60 * 1000, transform = data => data) {
+      try {
+        const cache = JSON.parse(localStorage.getItem(key));
+        if (cache?.time && Date.now() - cache.time < expireTime) {
+          return cache.data;
+        }
+      } catch { }
+
+      const rawData = await $.get(url);
+      const data = transform(rawData);
+
+      if (!data) throw new Error('Invalid data');
+
+      localStorage.setItem(key, JSON.stringify({ data, time: Date.now() }));
+      return data;
     }
 
-    initialize() {
-      this.setupCoreModules();
-      this.initThemeSystem();
-      this.setupWeatherSystem();
+    init() {
+      this.setupTheme();
+      this.setupMenu();
+      this.setupSearch();
+      this.setupScroll();
+      this.setupCategory();
+      this.setupComponents();
+      this.handleAnchor(sessionStorage.getItem('anchor'));
     }
 
-    handleWindowLoad() {
-      this.handleMenuAnchors();
+    initEvents() {
+      $(window).on('load', () => this.handleAnchor());
+      $('.menu-item-has-children > a').append('<span class="menu-sign iconfont icon-chevron-down"></span>')
+        .on('click', e => {
+          e.preventDefault();
+          const $parent = $(e.currentTarget).parent();
+          $parent.toggleClass('in').siblings().removeClass('in').find('.sub-menu').slideUp(300);
+          $parent.find('.sub-menu').slideToggle(300);
+        });
+
+      this.observe('#card__weather', () => this.loadWeather());
+      this.observe('#card__popular', () => this.loadPopular());
     }
 
-    setupCoreModules() {
-      this.setupMenuSystem();
-      this.setupSearchSystem();
-      this.setupScrollBehavior();
-      this.initAjaxComponents();
-      this.setupNavigationMenu();
+    observe(selector, callback) {
+      const el = document.querySelector(selector);
+      if (!el) return;
+      new IntersectionObserver((entries, observer) => {
+        if (entries[0].isIntersecting) {
+          callback();
+          observer.disconnect();
+        }
+      }).observe(el);
     }
 
-    setupMenuSystem() {
-      const $togglers = $('.menu-toggler');
-      const $aside = $('.site-aside');
-      const $wrapper = $('.site-wrapper');
-      const $body = $('body');
-      const $overlay = $('.aside-overlay');
-
-      const closeMenu = () => {
-        $togglers.removeClass('active');
-        $aside.removeClass('in');
-        $body.removeClass('modal-open');
+    setupMenu() {
+      const $togglers = $('.menu-toggler'), $aside = $('.site-aside'), $body = $('body');
+      const toggle = (force) => {
+        $togglers.toggleClass('active', force);
+        $aside.toggleClass('in', force);
+        $body.toggleClass('modal-open', force);
       };
 
-      $togglers.on('click', () => {
-        $togglers.toggleClass('active');
-        $aside.toggleClass('in');
-        $body.toggleClass('modal-open');
-      });
+      $togglers.on('click', () => toggle());
+      $('.aside-overlay, .menu-item a').on('click', () => toggle(false));
+      $(window).on('resize', () => toggle(false));
 
-      $overlay.on('click', closeMenu);
-
-      $(window).on('resize', closeMenu);
-
-      $aside.on({
-        mouseenter: () => $wrapper.addClass('sidemenu-hover-active'),
-        mouseleave: () => $wrapper.removeClass('sidemenu-hover-active')
-      });
+      $aside.hover(
+        () => $('.site-wrapper').addClass('sidemenu-hover-active'),
+        () => $('.site-wrapper').removeClass('sidemenu-hover-active')
+      );
 
       $('#menuCollasped').on('click', () => {
-        $wrapper.toggleClass('menu-collasped-active');
+        $('.site-wrapper').toggleClass('menu-collasped-active');
         $aside.toggleClass('folded');
       });
     }
 
-    setupSearchSystem() {
+    setupSearch() {
       const $search = $('#search');
-
-      $search.find('.search-tab a').on('click', ({ currentTarget }) => {
-        $(currentTarget).addClass('active').siblings().removeClass('active');
+      $search.find('.search-tab a').on('click', function () {
+        $(this).addClass('active').siblings().removeClass('active');
       });
 
       $search.find('form').on('submit', e => {
         e.preventDefault();
-        const keyword = $search.find('input').val().trim();
-        if (!keyword) return;
-
-        const baseUrl = $search.find('.search-tab a.active').data('url');
-        window.open(baseUrl + keyword);
+        const key = $search.find('input').val().trim();
+        if (key) window.open($search.find('.search-tab a.active').data('url') + key);
       });
     }
 
-    initThemeSystem() {
-      const savedTheme = localStorage.getItem('data-bs-theme') || 'default';
-      this.applyTheme(savedTheme);
+    setupTheme() {
+      const apply = (theme) => {
+        const isDark = theme === 'default' ? window.matchMedia('(prefers-color-scheme: dark)').matches : theme === 'dark';
+        document.documentElement.setAttribute('data-bs-theme', isDark ? 'dark' : 'light');
+        localStorage.setItem('data-bs-theme', theme);
 
-      $('.dropdown-item').on('click', ({ currentTarget }) => {
-        const theme = $(currentTarget).attr('id');
-        this.applyTheme(theme);
+        const icon = this.themeMap.get(theme)?.find('i').clone();
+        if (icon) $('#theme-toggle').html(icon);
+        $('.dropdown-item').removeClass('active').filter(`#${theme}`).addClass('active');
+      };
+
+      apply(localStorage.getItem('data-bs-theme') || 'default');
+      $('.dropdown-item').on('click', function () {
+        apply(this.id);
         $('.dropdown-menu').removeClass('show');
       });
     }
 
-    applyTheme(theme) {
-      const isSystemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-      const actualTheme = theme === 'default'
-        ? (isSystemDark ? 'dark' : 'light')
-        : theme;
-
-      document.documentElement.setAttribute('data-bs-theme', actualTheme);
-      localStorage.setItem('data-bs-theme', theme);
-
-      const icon = this.themeMap.get(theme)?.find('i').clone();
-      if (icon) $('#theme-toggle').html(icon);
-
-      $('.dropdown-item').removeClass('active').filter(`#${theme}`).addClass('active');
+    setupScroll() {
+      const $btn = $('#scrollToTOP');
+      $(window).on('scroll', () => $btn.toggle($(window).scrollTop() > 500));
+      $btn.on('click', () => $('html, body').animate({ scrollTop: 0 }, 300));
     }
 
-    setupScrollBehavior() {
-      const $scrollBtn = $('#scrollToTOP');
+    setupCategory() {
+      $('.container .card .nav-link').on('click', async function (event) {
+        const $this = $(event.currentTarget), $row = $this.closest('.card').find('.card-body .row');
+        if ($this.hasClass('active') || $row.hasClass('d-none')) return;
 
-      $(window).on('scroll', () => {
-        $scrollBtn.toggle($(window).scrollTop() > 500);
-      });
+        $('.container .card .nav-link').removeClass('active');
+        $this.addClass('active');
+        const loader = $($('#tmpl-loading').html()).height($row.parent().height());
+        $row.addClass('d-none').before(loader);
 
-      $scrollBtn.on('click', () => {
-        $('html, body').animate({ scrollTop: 0 }, 300);
-      });
-    }
-
-    initAjaxComponents() {
-      this.setupCategoryLoader();
-      this.setupAgreementSystem();
-      this.setupDynamicLinks();
-    }
-
-    setupCategoryLoader() {
-      $('.container .card').each((_, card) => {
-        const $card = $(card);
-
-        $card.find('.nav-link').on('click', async ({ currentTarget }) => {
-          const $link = $(currentTarget);
-          const $row = $card.find('.card-body .row');
-
-          if ($link.hasClass('active') || $row.hasClass('d-none')) return;
-
-          $card.find('.nav-link').removeClass('active');
-          $link.addClass('active');
-
-          const loader = this.createLoader($card.find('.card-body').height());
-          $row.before(loader).addClass('d-none');
-
-          try {
-            const data = await this.fetchCategoryData($link.data('mid'));
-            $row.html(this.generateCategoryItems(data)).removeClass('d-none');
-            this.lazy.update();
-            this.setupDynamicLinks($row);
-          } catch {
-            $row.html('<div class="alert alert-danger">加载失败</div>');
-          } finally {
-            loader.remove();
-          }
-        });
-      });
-    }
-
-    async fetchCategoryData(mid) {
-      const response = await $.ajax({
-        url: window.config.siteUrl,
-        method: 'POST',
-        data: { event: 'category', mid }
-      });
-      return response.status === 'success' ? response.data : [];
-    }
-
-    generateCategoryItems(items) {
-      const template = document.getElementById('tmpl-category-item');
-      if (!template) return '';
-
-      const nodes = items.map(item => {
-        const clone = template.content.cloneNode(true);
-        const $clone = $(clone);
-
-        $clone.find('.media').attr('href', item.permalink);
-        $clone.find('.media-content')
-          .attr('data-src', item.logo)
-          .attr('alt', item.title);
-
-        $clone.find('.list-content')
-          .attr('href', item.url)
-          .attr('cid', item.cid)
-          .attr('title', item.text);
-
-        $clone.find('.list-title').text(item.title);
-        $clone.find('.list-desc .h-1x').text(item.text);
-
-        return $clone[0];
-      });
-
-      return $(nodes);
-    }
-
-    setupAgreementSystem() {
-      $('#agree-btn').on('click', function () {
-        const $btn = $(this);
-        $.ajax({
-          type: 'POST',
-          url: window.config.siteUrl,
-          data: { event: 'agree', cid: $btn.data('cid') },
-          success: () => {
-            const currentCount = parseInt($btn.find('.num').text(), 10) || 0;
-            $btn.prop('disabled', true)
-              .addClass('disabled')
-              .find('.num').text(currentCount + 1);
-          }
-        });
-      });
-    }
-
-    setupDynamicLinks(target = $('body')) {
-      const viewsUrl = $('.aside-wrapper > a:first-child').attr('href');
-
-      target.find('div[href]').each((_, el) => {
-        const $el = $(el);
-        $el.on('click', () => {
-          if (viewsUrl) {
-            $.post(viewsUrl, { event: 'views', cid: $el.attr('cid') });
-          }
-          window.open($el.attr('href'), $el.attr('target') || '_self');
-        });
-      });
-    }
-
-    createLoader(height) {
-      const template = document.getElementById('tmpl-custom-loader');
-      const clone = template.content.cloneNode(true);
-      const $clone = $(clone);
-      $clone.find('.loader-container').css('height', height + 'px');
-      return $clone.contents();
-    }
-
-    setupNavigationMenu() {
-      $('.menu-item-has-children > a').each((_, el) => {
-        const $link = $(el);
-        const $icon = $('<span class="menu-sign iconfont icon-chevron-down"></span>');
-
-        $link.append($icon).on('click', e => {
-          const $parent = $link.parent();
-          const $submenu = $link.siblings('.sub-menu');
-
-          if (!$submenu.length) return;
-
-          e.preventDefault();
-          $parent.toggleClass('in');
-          $submenu.stop(true).slideToggle(300);
-
-          $parent.siblings('.in').removeClass('in')
-            .find('.sub-menu').stop(true).slideUp(300);
-        });
-      });
-    }
-
-    handleMenuAnchors() {
-      const anchor = sessionStorage.getItem('anchor');
-      if (anchor) {
-        document.getElementById(anchor)?.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        sessionStorage.removeItem('anchor');
-      }
-
-      $('.menu-item a[data-target]').on('click', e => {
-        const $link = $(e.currentTarget);
-        const targetId = $link.data('target');
-
-        if (!$link.data('index')) {
-          sessionStorage.setItem('anchor', targetId);
-          const homeUrl = $('.aside-wrapper > a:first-child').attr('href');
-          if (homeUrl) window.location.href = homeUrl;
-          e.preventDefault();
-        } else {
-          document.getElementById(targetId)?.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        }
-      });
-    }
-
-    setupWeatherSystem() {
-      const $container = $('#card__weather');
-      if (!$container.length) return;
-
-      const observer = new IntersectionObserver((entries) => {
-        const entry = entries[0];
-        if (entry.isIntersecting && !this.weatherInitialized) {
-          this.weatherInitialized = true;
-          this.executeWeatherLogic($container);
-          observer.disconnect();
-        }
-      });
-
-      observer.observe($container[0]);
-    }
-
-    async executeWeatherLogic($container) {
-      const CACHE_KEY = 'weather_cache';
-      const CACHE_TIME = 15 * 60 * 1000;
-
-      const getCache = () => {
         try {
-          const cache = JSON.parse(sessionStorage.getItem(CACHE_KEY));
-          return (cache && Date.now() - cache.time < CACHE_TIME) ? cache.data : null;
-        } catch {
-          return null;
+          const res = await $.get(`${window.config.siteUrl}?action=category&mid=${$this.data('mid')}`);
+          const $items = $(res.data.map(item => {
+            const $clone = $($('#tmpl-category').prop('content')).clone();
+            $clone.find('.media').attr('href', item.permalink);
+            $clone.find('.media-content').attr('data-src', item.logo).attr('alt', item.title);
+            $clone.find('.list-content').attr('href', item.url).attr('cid', item.cid).attr('title', item.text);
+            $clone.find('.list-title').text(item.title);
+            $clone.find('.list-desc .h-1x').text(item.text);
+            return $clone[0];
+          }));
+
+          $row.html($items).removeClass('d-none');
+          this.lazy.update();
+          this.bindDynamicLinks($row);
+        } catch (e) {
+          console.error('loadCategory failed', e);
+          $row.html('<div class="alert alert-danger">Loading Failed</div>');
+        } finally {
+          loader.remove();
+          event.preventDefault();
         }
+      }.bind(this));
+    }
+
+    setupComponents() {
+      let likes;
+      try { likes = new Set(JSON.parse(localStorage.getItem('likes') || '[]')); } catch (e) { likes = new Set(); }
+
+      $('#agree-btn').each((_, btn) => {
+        const $btn = $(btn), cid = $btn.data('cid');
+        if (!likes.has(cid)) {
+          $btn.removeClass('disabled').one('click', () => {
+            $.post(window.config.siteUrl, { action: 'likes', cid }, ({ data }) => {
+              $btn.addClass('disabled').find('.num').text(data);
+              likes.add(cid);
+              localStorage.setItem('likes', JSON.stringify([...likes]));
+            });
+          });
+        }
+      });
+      this.bindDynamicLinks($('body'));
+    }
+
+    bindDynamicLinks($container) {
+      const viewsUrl = $('.aside-wrapper > a:first-child').attr('href');
+      $container.find('div[href]').on('click', function () {
+        if (viewsUrl) $.post(viewsUrl, { event: 'views', cid: $(this).attr('cid') });
+        window.open($(this).attr('href'), $(this).attr('target') || '_self');
+      });
+    }
+
+    handleAnchor(id) {
+      const scrollTo = (tid) => {
+        const el = document.getElementById(tid);
+        if (el) {
+          el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          sessionStorage.removeItem('anchor');
+          return true;
+        }
+        return false;
       };
 
-      const setCache = (data) => {
-        sessionStorage.setItem(CACHE_KEY, JSON.stringify({ data, time: Date.now() }));
-      };
+      if (id) scrollTo(id);
+
+      $('.menu-item a[data-target]').off('click').on('click', function (e) {
+        const target = $(this).data('target');
+        if (!scrollTo(target)) {
+          sessionStorage.setItem('anchor', target);
+          const home = $('.aside-wrapper > a:first-child').attr('href');
+          if (home) window.location.href = home;
+          e.preventDefault();
+        }
+      });
+    }
+
+    async loadPopular() {
+      const $box = $('#card__popular');
+      try {
+        const url = `${window.config.siteUrl}?action=popular&size=5`;
+        const list = await this.fetchWithCache('popular_list', url, 15 * 60 * 1000, data => data?.data);
+
+        const html = list.map(e => {
+          const $item = $($('#tmpl-popular-item').prop('content')).clone();
+          $item.find('.list-title').text(`${e.title}${e.text ? ' - ' + e.text : ''}`);
+          $item.find('.list-goto').attr('cid', e.cid).attr('title', e.text).attr('href', e.permalink);
+          return $item[0];
+        });
+        $box.empty().append(html);
+      } catch (e) { console.error(e); }
+    }
+
+    async loadWeather() {
+      const $box = $('#card__weather');
+      const { weatherApiKey: key, weatherNode } = window.config;
 
       try {
-        if (!window.config.weatherApiKey) {
-          throw new Error("Weather API Key missing");
+        if (!key) throw new Error('Weather API Key is not set');
+
+        const host = weatherNode === '1' ? 'assets.msn.com' : 'assets.msn.cn';
+        const url = `https://${host}/service/segments/recoitems/weather?apikey=${key}&cuthour=false&market=zh-cn&locale=zh-cn`;
+
+        const data = await this.fetchWithCache('weather', url, 15 * 60 * 1000, raw => {
+          if (Array.isArray(raw) && raw[0]?.data) return JSON.parse(raw[0].data);
+          return null;
+        });
+
+        const cur = data.responses?.[0]?.weather?.[0]?.current || {};
+        const unit = data.units?.temperature || '°C';
+        const $el = $($('#tmpl-weather-content').prop('content')).clone();
+
+        const map = {
+          '.weather-city': data.userProfile?.location?.City || '未知',
+          '.weather-temp': cur.temp,
+          '.weather-unit-temp': unit,
+          '.weather-text': cur.pvdrCap || cur.cap,
+          '.weather-feels': `${cur.feels || '-'}${unit}`,
+          '.weather-rh': `${cur.rh}%`,
+          '.weather-wind-dir': cur.pvdrWindDir || '风向',
+          '.weather-wind-spd': cur.pvdrWindSpd || `${cur.windSpd}km/h`,
+          '.weather-uv': cur.uvDesc || 'N/A',
+          '.weather-vis': `${cur.vis || 'N/A'} ${data.units?.distance || 'km'}`
+        };
+
+        Object.entries(map).forEach(([sel, val]) => $el.find(sel).text(val));
+
+        const aqi = cur.aqLevel;
+        const bg = aqi <= 1 ? 'success' : aqi <= 2 ? 'warning' : 'danger';
+        $el.find('.weather-aqi').addClass(`bg-${bg} text-${bg} border-${bg}`).text(cur.aqiSeverity || 'N/A');
+
+        const iconMap = data.responses?.[0]?.weather?.[0]?.iconMap;
+        if (iconMap && cur.symbol) {
+          $el.find('.weather-icon').attr('src', `${iconMap.iconBase}${iconMap.symbolMap[cur.symbol] || ''}`);
         }
 
-        let weatherData = getCache();
-
-        if (!weatherData) {
-          const host = window.config.weatherNode === '1' ? 'assets.msn.com' : 'assets.msn.cn';
-          const apiUrl = `https://${host}/service/segments/recoitems/weather?apikey=${window.config.weatherApiKey}&cuthour=false&market=zh-cn&locale=zh-cn`;
-
-          const res = await fetch(apiUrl);
-          const data = await res.json();
-
-          if (Array.isArray(data) && data[0]?.data) {
-            weatherData = JSON.parse(data[0].data);
-            setCache(weatherData);
-          } else {
-            throw new Error('Invalid API response');
-          }
+        $box.empty().append($el);
+      } catch (e) {
+        console.error('loadWeather failed', e);
+        $box.html($($('#tmpl-weather-error').prop('content')).clone());
+        if (!key) {
+          $box.find('.weather-retry-btn').prop('disabled', true);
+        } else {
+          $box.find('.weather-retry-btn').one('click', () => this.loadWeather());
         }
-
-        this.renderWeather($container, weatherData);
-      } catch (error) {
-        console.error('Weather System Error:', error);
-        this.renderWeatherError($container);
       }
-    }
-
-    renderWeatherError($container) {
-      const template = document.getElementById('tmpl-weather-error');
-      const clone = template.content.cloneNode(true);
-      const $clone = $(clone);
-
-      $clone.find('.weather-retry-btn').one('click', () => this.executeWeatherLogic($container));
-      $container.empty().append($clone);
-    }
-
-    renderWeather($container, data) {
-      const weather = data.responses?.[0]?.weather?.[0];
-      const cur = weather?.current || {};
-      const units = data.units || {};
-      const location = data.userProfile?.location || {};
-      const iconMap = weather?.iconMap || {};
-
-      let iconUrl = '';
-      if (iconMap.iconBase && iconMap.symbolMap && cur.symbol) {
-        iconUrl = iconMap.iconBase + (iconMap.symbolMap[cur.symbol] || '');
-      }
-
-      const displayName = location.City || '未知地区';
-      const aqiBg = cur.aqLevel <= 1 ? 'success' : cur.aqLevel <= 2 ? 'warning' : 'danger';
-
-      const template = document.getElementById('tmpl-weather-content');
-      const clone = template.content.cloneNode(true);
-      const $clone = $(clone);
-
-      $clone.find('.weather-city').text(displayName);
-      $clone.find('.weather-aqi')
-        .addClass(`bg-${aqiBg} text-${aqiBg} border-${aqiBg}`)
-        .text(cur.aqiSeverity || 'N/A');
-
-      $clone.find('.weather-temp').text(cur.temp);
-      $clone.find('.weather-unit-temp').text(units.temperature || '°C');
-      $clone.find('.weather-text').text(cur.pvdrCap || cur.cap);
-      $clone.find('.weather-feels').text((cur.feels || '-') + (units.temperature || '°C'));
-
-      $clone.find('.weather-icon').attr('src', iconUrl);
-
-      $clone.find('.weather-rh').text(cur.rh + '%');
-      $clone.find('.weather-wind-dir').text(cur.pvdrWindDir || '风向');
-      $clone.find('.weather-wind-spd').text(cur.pvdrWindSpd || (cur.windSpd + 'km/h'));
-      $clone.find('.weather-uv').text(cur.uvDesc || 'N/A');
-      $clone.find('.weather-vis').text((cur.vis || 'N/A') + ' ' + (units.distance || 'km'));
-
-      $container.empty().append($clone);
     }
   }
 

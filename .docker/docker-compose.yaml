@@ -35,7 +35,7 @@ services:
       TZ: Asia/Shanghai
     volumes:
       - ./caddy/Caddyfile:/etc/caddy/Caddyfile
-      - ../theme:/var/www/html/typecho/usr/themes/ITEM
+      - ../php:/var/www/html/typecho/usr/themes/ITEM
       - typecho:/var/www/html/typecho:copy
     ports:
       - 80:80
@@ -51,7 +51,7 @@ services:
     environment:
       TZ: Asia/Shanghai
     volumes:
-      - ../theme:/var/www/html/typecho/usr/themes/ITEM
+      - ../php:/var/www/html/typecho/usr/themes/ITEM
       - typecho:/var/www/html/typecho:rw
     networks:
       - default

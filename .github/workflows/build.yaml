@@ -43,7 +43,7 @@ jobs:
         with:
           name: ITEM
           path: |
-            ./theme/*
+            ./php/*
 
   deploy:
     if: ${{ github.ref == 'refs/heads/main' }}
