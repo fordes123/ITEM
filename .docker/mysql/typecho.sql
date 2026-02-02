@@ -1,4 +1,3 @@
-USE typecho;
 SET NAMES utf8mb4;
 SET FOREIGN_KEY_CHECKS = 0;
 
@@ -53,20 +52,23 @@ CREATE TABLE `item_contents`  (
   `allowFeed` char(1) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT '0',
   `parent` int UNSIGNED NULL DEFAULT 0,
   `views` int NOT NULL DEFAULT 0,
+  `agree` int UNSIGNED NOT NULL DEFAULT 0,
   PRIMARY KEY (`cid`) USING BTREE,
   UNIQUE INDEX `slug`(`slug` ASC) USING BTREE,
   INDEX `created`(`created` ASC) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 8 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 10 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of item_contents
 -- ----------------------------
-INSERT INTO `item_contents` VALUES (2, '关于', 'start-page', 1725515390, 1725515390, '<!--markdown-->本页面由 Typecho 创建, 这只是个测试页面.', 0, 1, NULL, 'page', 'publish', NULL, 0, '1', '1', '1', 0, 0);
-INSERT INTO `item_contents` VALUES (3, 'Steam', '3', 1725517459, 1725517459, '<!--markdown-->', 0, 1, NULL, 'post', 'publish', NULL, 0, '1', '1', '1', 0, 10);
-INSERT INTO `item_contents` VALUES (4, 'Epic Games', '4', 1725517500, 1725517577, '<!--markdown-->', 0, 1, NULL, 'post', 'publish', NULL, 0, '1', '1', '1', 0, 9);
-INSERT INTO `item_contents` VALUES (5, 'Netflix', '5', 1725517674, 1725517674, '<!--markdown-->', 0, 1, NULL, 'post', 'publish', NULL, 0, '1', '1', '1', 0, 8);
-INSERT INTO `item_contents` VALUES (6, 'Disney+', '6', 1725517740, 1725517788, '<!--markdown-->', 0, 1, NULL, 'post', 'publish', NULL, 0, '1', '1', '1', 0, 7);
-INSERT INTO `item_contents` VALUES (7, 'README', '7', 1725518340, 1725518533, '<!--markdown--><!-- ABOUT THE PROJECT -->\r\n\r\n<h2 id=\'1\'>🎉 项目说明</h2>\r\n\r\n[![Product Name Screen Shot][product-screenshot]](https://example.com)\r\n\r\n在编程语言中，\"item\" 这个单词常用来代表一个元素、一个选项  \r\n希望这个主题能够承载更多的 \"item\"，链接每一个选项~\r\n\r\n---\r\n\r\n<!-- GETTING STARTED -->\r\n\r\n<h2 id=\'2\'>🛠️ 快速开始</h2>\r\n\r\n<a href=\"https://vercel.com/new/clone?project-name=ITEM-vercel&repository-name=ITEM-vercel&repository-url=https://github.com/fordes123/ITEM-vercel&from=templates&integration-ids=oac_coKBVWCXNjJnCEth1zzKoF1j\"><img src=\"https://vercel.com/button\"></a>\r\n> 通过 Vercel 托管需要添加一个 MySQL 集成，如 [TiDB](https://tidbcloud.com/)、[PlanetScale](https://planetscale.com/)，参考: [Vercel 托管 Typecho](https://www.fordes.dev/posts/tutorials/typecho-vercel/)\r\n\r\n### 本地部署\r\n\r\n这是一个 Typecho 主题，因此你必须要先安装 Typecho 才能使用它，同时还需要满足以下条件:\r\n\r\n- php 7.4+\r\n- MySQL 8+\r\n\r\n1. 获取主题文件\r\n   克隆仓库源码或下载最新 [Releases](https://github.com/fordes123/ITEM/releases)，\r\n   ```shell\r\n   git clone https://github.com/fordes123/ITEM.git\r\n   ```\r\n2. 将主题文件重名为 <code>ITEM</code> 并移动至 Typecho 根目录<code>usr/themes</code> 文件夹中\r\n3. 在 Typecho 管理面板中选择更换外观并启用主题\r\n\r\n### 本地开发\r\n\r\n安装 Docker 及 Docker Compose 后，在项目根目录下执行以下命令：\r\n```shell\r\ncd .docker\r\ndocker compose up -d\r\n```\r\n打开浏览器即可访问 `http://localhost:80`，账号: `dev`，密码: `12345678`\r\n\r\n---\r\n\r\n### 配置说明\r\n\r\n#### 文章配置\r\n\r\n**文章类型** 为 **网址导航** 时，点击图标前往详情，点击其他位置直接跳转至对应url；**文章类型** 为 **普通文章** 时，\r\n代表站内文章，点击会前往文章页，所以普通文章无需跳转链接\r\n\r\n#### 分类配置\r\n\r\n分类略缩名表示对应图标名称，可用图标可在 [FontAwesome 5](https://fontawesome.com/v5/search?o=r&m=free) 图标库中浏览；  \r\n(例: FontAwesome 图标类名为 `<i class=\"fas fa-vihara\"></i>` 那么对应略缩名应为 `vihara`)\r\n\r\n#### 搜索引擎配置\r\n\r\n配置格式为 JSON，其中 icon 为 [FontAwesome 5](https://fontawesome.com/v5/search?o=r&m=free) 图标， 需要使用 **完整类名**。\r\n示例如下：\r\n\r\n```json\r\n[\r\n  {\r\n    \"name\": \"谷歌\",\r\n    \"url\": \"https://www.google.com/search?q=\",\r\n    \"icon\": \"fab fa-google\"\r\n  },\r\n  {\r\n    \"name\": \"Github\",\r\n    \"url\": \"https://github.com/search?q=\",\r\n    \"icon\": \"fab fa-github\"\r\n  }\r\n]\r\n\r\n```\r\n\r\n#### 工具直达配置\r\n\r\n配置格式为 JSON，结构类似 搜索引擎配置，增加了 `background` 控制背景色，填写 css 格式的颜色值即可。\r\n示例如下：\r\n\r\n```json\r\n[\r\n  {\r\n    \"name\": \"热榜速览\",\r\n    \"url\": \"https://www.hsmy.fun\",\r\n    \"icon\": \"fas fa-fire\",\r\n    \"background\": \"linear-gradient(45deg, #97b3ff, #2f66ff)\"\r\n  },\r\n  {\r\n    \"name\": \"地图\",\r\n    \"url\": \"https://ditu.amap.com/\",\r\n    \"icon\": \"fas fa-fire\",\r\n    \"background\": \"red\"\r\n  },\r\n  {\r\n    \"name\": \"微信文件助手\",\r\n    \"url\": \"https://filehelper.weixin.qq.com\",\r\n    \"icon\": \"fab fa-weixin\",\r\n    \"background\": \"#1ba784\"\r\n  }\r\n]\r\n```  \r\n\r\n---\r\n\r\n<!-- CONTACT -->\r\n<h2 id=\'3\'>💬 问题反馈</h2>\r\n\r\nIssues - [https://github.com/fordes123/ITEM/issues](https://github.com/fordes123/ITEM/issues)\r\n\r\n博客 - [https://fordes.dev](https://fordes.dev)\r\n\r\n---\r\n\r\n<!-- LICENSE -->\r\n<h2>📃 开源许可</h2>\r\n\r\n基于 GNU General Public License v3.0 协议开源.\r\n\r\n<!-- MARKDOWN LINKS & IMAGES -->\r\n\r\n[contributors-shield]:https://img.shields.io/github/contributors/fordes123/ITEM.svg?style=for-the-badge\r\n\r\n[contributors-url]:https://github.com/fordes123/ITEM/graphs/contributors\r\n\r\n[forks-shield]:https://img.shields.io/github/forks/fordes123/ITEM.svg?style=for-the-badge\r\n\r\n[forks-url]:https://github.com/fordes123/ITEM/network/members\r\n\r\n[stars-shield]:https://img.shields.io/github/stars/fordes123/ITEM.svg?style=for-the-badge\r\n\r\n[stars-url]:https://github.com/fordes123/ITEM/stargazers\r\n\r\n[issues-shield]:https://img.shields.io/github/issues/fordes123/ITEM.svg?style=for-the-badge\r\n\r\n[issues-url]:https://github.com/fordes123/ITEM/issues\r\n\r\n[license-shield]:https://img.shields.io/github/license/fordes123/ITEM.svg?style=for-the-badge\r\n\r\n[license-url]:https://github.com/fordes123/ITEM/blob/master/LICENSE.txt\r\n\r\n[product-screenshot]:https://github.com/fordes123/ITEM/raw/main/screenshot.png\r\n', 0, 1, NULL, 'post', 'publish', NULL, 0, '1', '1', '1', 0, 6);
+INSERT INTO `item_contents` VALUES (2, '关于', 'start-page', 1725515390, 1725515390, '<!--markdown-->本页面由 Typecho 创建, 这只是个测试页面.', 0, 1, NULL, 'page', 'publish', NULL, 0, '1', '1', '1', 0, 1, 0);
+INSERT INTO `item_contents` VALUES (3, 'JavaScript', '3', 1725517440, 1769527216, '<!--markdown-->', 0, 1, NULL, 'post', 'publish', NULL, 0, '1', '1', '1', 0, 12, 0);
+INSERT INTO `item_contents` VALUES (4, 'PHP', '4', 1725517500, 1769527211, '<!--markdown-->一种流行的通用脚本语言，特别适合网页开发。\r\nPHP 快速、灵活且实用，支持从您的博客到全球最受欢迎的网站。', 0, 1, NULL, 'post', 'publish', NULL, 0, '1', '1', '1', 0, 11, 0);
+INSERT INTO `item_contents` VALUES (5, 'MySQL', '5', 1725517620, 1769526542, '<!--markdown-->', 0, 1, NULL, 'post', 'publish', NULL, 0, '1', '1', '1', 0, 11, 1);
+INSERT INTO `item_contents` VALUES (6, 'Typecho', '6', 1725517740, 1769526465, '<!--markdown-->', 0, 1, NULL, 'post', 'publish', NULL, 0, '1', '1', '1', 0, 11, 1);
+INSERT INTO `item_contents` VALUES (7, 'README', '7', 1725518340, 1769700625, '<!--markdown--><p>\r\n  <a href=\"https://github.com/fordes123/ITEM/releases\"><img src=\"https://img.shields.io/github/v/release/fordes123/ITEM\" alt=\"last releases\" /></a>\r\n  <a href=\"https://github.com/fordes123/ITEM/actions/workflows/build.yaml\"><img src=\"https://img.shields.io/github/actions/workflow/status/fordes123/ITEM/build.yaml\" alt=\"build status\" /></a>\r\n  <a href=\"https://github.com/fordes123/ITEM/blob/main/LICENSE.txt\"><img src=\"https://img.shields.io/github/license/fordes123/ITEM\" alt=\"license\" /></a>\r\n</p>\r\n\r\n> ✨ Hugo 版现已推出：[hugo-theme-item](https://github.com/fordes123/hugo-theme-item)\r\n\r\n在编程语言中，\"item\" 这个单词常用来代表一个元素、一个选项  \r\n所以我们以此来命名这个网址导航主题，希望它能够承载更多的 \"item\"，链接每一个选项~\r\n\r\n[文档](https://github.com/fordes123/ITEM/wiki) | [示例站点](https://www.item.ink)\r\n![screenshot](https://github.com/user-attachments/assets/e136be3a-b9fe-48b2-803b-8023edf25309)', 0, 1, NULL, 'post', 'publish', '123456', 0, '1', '1', '1', 0, 15, 1);
+INSERT INTO `item_contents` VALUES (8, 'Bootstrap', '8', 1769526900, 1769527189, '<!--markdown-->', 0, 1, NULL, 'post', 'publish', NULL, 0, '1', '1', '1', 0, 9, 1);
+INSERT INTO `item_contents` VALUES (9, '演示站点', '9', 1769527020, 1769527620, '<!--markdown-->', 0, 1, NULL, 'post', 'publish', NULL, 0, '1', '1', '1', 0, 2, 0);
 
 -- ----------------------------
 -- Table structure for item_fields
@@ -87,26 +89,44 @@ CREATE TABLE `item_fields`  (
 -- ----------------------------
 -- Records of item_fields
 -- ----------------------------
-INSERT INTO `item_fields` VALUES (3, 'logo', 'str', 'https://favicon.im/steamcommunity.com', 0, 0);
+INSERT INTO `item_fields` VALUES (3, 'logo', 'str', '', 0, 0);
 INSERT INTO `item_fields` VALUES (3, 'navigation', 'str', '1', 0, 0);
-INSERT INTO `item_fields` VALUES (3, 'text', 'str', '全球最大的游戏平台', 0, 0);
-INSERT INTO `item_fields` VALUES (3, 'url', 'str', 'https://steamcommunity.com/', 0, 0);
-INSERT INTO `item_fields` VALUES (4, 'logo', 'str', 'https://favicon.im/store.epicgames.com?larger=true', 0, 0);
+INSERT INTO `item_fields` VALUES (3, 'score', 'str', '', 0, 0);
+INSERT INTO `item_fields` VALUES (3, 'text', 'str', '你和Java什么关系？', 0, 0);
+INSERT INTO `item_fields` VALUES (3, 'url', 'str', 'https://www.javascript.com/', 0, 0);
+INSERT INTO `item_fields` VALUES (4, 'logo', 'str', '', 0, 0);
 INSERT INTO `item_fields` VALUES (4, 'navigation', 'str', '1', 0, 0);
-INSERT INTO `item_fields` VALUES (4, 'text', 'str', '游戏平台中最大的慈善家', 0, 0);
-INSERT INTO `item_fields` VALUES (4, 'url', 'str', 'https://store.epicgames.com', 0, 0);
-INSERT INTO `item_fields` VALUES (5, 'logo', 'str', 'https://favicon.im/netflix.com', 0, 0);
+INSERT INTO `item_fields` VALUES (4, 'score', 'str', '', 0, 0);
+INSERT INTO `item_fields` VALUES (4, 'text', 'str', '谁赞成，谁反对？', 0, 0);
+INSERT INTO `item_fields` VALUES (4, 'url', 'str', 'https://www.php.net/', 0, 0);
+INSERT INTO `item_fields` VALUES (5, 'logo', 'str', '', 0, 0);
 INSERT INTO `item_fields` VALUES (5, 'navigation', 'str', '1', 0, 0);
-INSERT INTO `item_fields` VALUES (5, 'text', 'str', '又称网飞，全球知名流媒体平台', 0, 0);
-INSERT INTO `item_fields` VALUES (5, 'url', 'str', 'https://www.netflix.com/', 0, 0);
-INSERT INTO `item_fields` VALUES (6, 'logo', 'str', 'https://favicon.im/www.disneyplus.com', 0, 0);
+INSERT INTO `item_fields` VALUES (5, 'score', 'str', '', 0, 0);
+INSERT INTO `item_fields` VALUES (5, 'text', 'str', '全球最受欢迎的开源数据库', 0, 0);
+INSERT INTO `item_fields` VALUES (5, 'url', 'str', 'https://www.mysql.com/', 0, 0);
+INSERT INTO `item_fields` VALUES (6, 'logo', 'str', '', 0, 0);
 INSERT INTO `item_fields` VALUES (6, 'navigation', 'str', '1', 0, 0);
-INSERT INTO `item_fields` VALUES (6, 'text', 'str', '迪士尼', 0, 0);
-INSERT INTO `item_fields` VALUES (6, 'url', 'str', 'https://www.disneyplus.com/', 0, 0);
+INSERT INTO `item_fields` VALUES (6, 'score', 'str', '', 0, 0);
+INSERT INTO `item_fields` VALUES (6, 'text', 'str', '念念不忘，必有回响', 0, 0);
+INSERT INTO `item_fields` VALUES (6, 'url', 'str', 'https://typecho.org/', 0, 0);
+INSERT INTO `item_fields` VALUES (7, 'description', 'str', '', 0, 0);
+INSERT INTO `item_fields` VALUES (7, 'encryptTip', 'str', '密码 123456', 0, 0);
+INSERT INTO `item_fields` VALUES (7, 'keywords', 'str', '', 0, 0);
 INSERT INTO `item_fields` VALUES (7, 'logo', 'str', 'https://favicon.im/github.com', 0, 0);
 INSERT INTO `item_fields` VALUES (7, 'navigation', 'str', '0', 0, 0);
-INSERT INTO `item_fields` VALUES (7, 'text', 'str', '演示一下站内文章', 0, 0);
-INSERT INTO `item_fields` VALUES (7, 'url', 'str', '', 0, 0);
+INSERT INTO `item_fields` VALUES (7, 'score', 'str', '5.0', 0, 0);
+INSERT INTO `item_fields` VALUES (7, 'text', 'str', '这是站内文章', 0, 0);
+INSERT INTO `item_fields` VALUES (7, 'url', 'str', 'https://github.com/fordes123/ITEM/', 0, 0);
+INSERT INTO `item_fields` VALUES (8, 'logo', 'str', '', 0, 0);
+INSERT INTO `item_fields` VALUES (8, 'navigation', 'str', '1', 0, 0);
+INSERT INTO `item_fields` VALUES (8, 'score', 'str', '', 0, 0);
+INSERT INTO `item_fields` VALUES (8, 'text', 'str', '构建快速响应式网站', 0, 0);
+INSERT INTO `item_fields` VALUES (8, 'url', 'str', 'https://getbootstrap.com/', 0, 0);
+INSERT INTO `item_fields` VALUES (9, 'logo', 'str', '', 0, 0);
+INSERT INTO `item_fields` VALUES (9, 'navigation', 'str', '1', 0, 0);
+INSERT INTO `item_fields` VALUES (9, 'score', 'str', '', 0, 0);
+INSERT INTO `item_fields` VALUES (9, 'text', 'str', '这是一个希望能成为你的主页的导航站', 0, 0);
+INSERT INTO `item_fields` VALUES (9, 'url', 'str', 'https://www.item.ink/', 0, 0);
 
 -- ----------------------------
 -- Table structure for item_metas
@@ -128,11 +148,8 @@ CREATE TABLE `item_metas`  (
 -- ----------------------------
 -- Records of item_metas
 -- ----------------------------
-INSERT INTO `item_metas` VALUES (2, '影音直播', 'hashtag', 'category', '', 2, 1, 0);
-INSERT INTO `item_metas` VALUES (5, '游戏仓库', 'gamepad', 'category', '', 0, 2, 0);
-INSERT INTO `item_metas` VALUES (6, '开源项目', 'code-branch', 'category', '', 1, 3, 0);
-INSERT INTO `item_metas` VALUES (7, '游戏平台', 'chess-rook', 'category', '', 2, 1, 5);
-INSERT INTO `item_metas` VALUES (8, '玩家社区', 'comments', 'category', '', 0, 2, 5);
+INSERT INTO `item_metas` VALUES (2, '开发组件', 'hashtag', 'category', '', 5, 1, 0);
+INSERT INTO `item_metas` VALUES (6, '项目主页', 'code-branch', 'category', '', 2, 2, 0);
 
 -- ----------------------------
 -- Table structure for item_options
@@ -205,7 +222,8 @@ INSERT INTO `item_options` VALUES ('routingTable', 0, 'a:26:{i:0;a:25:{s:5:\"ind
 INSERT INTO `item_options` VALUES ('secret', 0, 'GbjvNwq6kvqgH5J*9gusikOQlO5kfl(5');
 INSERT INTO `item_options` VALUES ('siteUrl', 0, 'http://localhost');
 INSERT INTO `item_options` VALUES ('theme', 0, 'ITEM');
-INSERT INTO `item_options` VALUES ('theme:ITEM', 0, 'a:6:{s:7:\"favicon\";s:57:\"http://localhost/usr/themes/ITEM/assets/image/favicon.ico\";s:7:\"biglogo\";s:54:\"http://localhost/usr/themes/ITEM/assets/image/head.png\";s:9:\"smalllogo\";s:57:\"http://localhost/usr/themes/ITEM/assets/image/favicon.ico\";s:12:\"searchConfig\";s:508:\"[\r\n            {\r\n                \"name\": \"谷歌\",\r\n                \"url\": \"https://www.google.com/search?q=\",\r\n                \"icon\": \"fab fa-google\"\r\n            },\r\n            {\r\n                \"name\": \"Yandex\",\r\n                \"url\": \"https://yandex.com/search/?text=\",\r\n                \"icon\": \"fab fa-yandex\"\r\n            },\r\n            {\r\n                \"name\": \"Github\",\r\n                \"url\": \"https://github.com/search?q=\",\r\n                \"icon\": \"fab fa-github\"\r\n            }\r\n        ]\";s:10:\"toolConfig\";s:659:\"[\r\n            {\r\n                \"name\": \"热榜速览\",\r\n                \"url\": \"https://www.hsmy.fun\",\r\n                \"icon\": \"fas fa-fire\",\r\n                \"background\": \"linear-gradient(45deg, #97b3ff, #2f66ff)\"\r\n            },\r\n            {\r\n                \"name\": \"地图\",\r\n                \"url\": \"https://ditu.amap.com/\",\r\n                \"icon\": \"fas fa-fire\",\r\n                \"background\": \"red\"\r\n            },\r\n            {\r\n                \"name\": \"微信文件助手\",\r\n                \"url\": \"https://filehelper.weixin.qq.com\",\r\n                \"icon\": \"fab fa-weixin\",\r\n                \"background\": \"#1ba784\"\r\n            }\r\n        ]\";s:3:\"icp\";N;}');
+INSERT INTO `item_options` VALUES ('theme:ITEM', 0, 'a:16:{s:7:\"favicon\";s:57:\"http://localhost/usr/themes/ITEM/assets/image/favicon.ico\";s:9:\"smalllogo\";s:57:\"http://localhost/usr/themes/ITEM/assets/image/favicon.ico\";s:7:\"biglogo\";s:54:\"http://localhost/usr/themes/ITEM/assets/image/head.png\";s:3:\"icp\";s:0:\"\";s:12:\"searchConfig\";s:326:\"[\r\n            {\r\n                \"name\": \"站内\",\r\n                \"url\": \"/search/\",\r\n                \"icon\": \"fas fa-search-location\"\r\n            },\r\n            {\r\n                \"name\": \"Github\",\r\n                \"url\": \"https://github.com/search?q=\",\r\n                \"icon\": \"fab fa-github\"\r\n            }\r\n        ]\";s:10:\"toolConfig\";s:466:\"[\r\n            {\r\n                \"name\": \"主题文档\",\r\n                \"url\": \"https://github.com/fordes123/ITEM\",\r\n                \"icon\": \"fas fa-book\",\r\n                \"background\": \"linear-gradient(45deg, #97b3ff, #2f66ff)\"\r\n            },\r\n            {\r\n                \"name\": \"求个star\",\r\n                \"url\": \"https://github.com/fordes123/ITEM\",\r\n                \"icon\": \"fas fa-star\",\r\n                \"background\": \"red\"\r\n            }\r\n        ]\";s:15:\"subCategoryType\";N;s:16:\"timelinePageSize\";s:0:\"\";s:16:\"faviconApiSelect\";s:41:\"https://favicon.im/{hostname}?larger=true\";s:17:\"gravatarApiSelect\";s:34:\"https://weavatar.com/avatar/{hash}\";s:13:\"weatherApiKey\";s:0:\"\";s:11:\"weatherNode\";N;s:10:\"faviconApi\";s:0:\"\";s:11:\"gravatarApi\";s:0:\"\";s:12:\"customHeader\";s:0:\"\";s:12:\"customFooter\";s:0:\"\";}');
+INSERT INTO `item_options` VALUES ('theme:ITEM::version', 0, '1.3.0');
 INSERT INTO `item_options` VALUES ('timezone', 0, '28800');
 INSERT INTO `item_options` VALUES ('title', 0, 'Hello World');
 INSERT INTO `item_options` VALUES ('xmlrpcMarkdown', 0, '0');
@@ -223,11 +241,13 @@ CREATE TABLE `item_relationships`  (
 -- ----------------------------
 -- Records of item_relationships
 -- ----------------------------
-INSERT INTO `item_relationships` VALUES (3, 7);
-INSERT INTO `item_relationships` VALUES (4, 7);
+INSERT INTO `item_relationships` VALUES (3, 2);
+INSERT INTO `item_relationships` VALUES (4, 2);
 INSERT INTO `item_relationships` VALUES (5, 2);
 INSERT INTO `item_relationships` VALUES (6, 2);
 INSERT INTO `item_relationships` VALUES (7, 6);
+INSERT INTO `item_relationships` VALUES (8, 2);
+INSERT INTO `item_relationships` VALUES (9, 6);
 
 -- ----------------------------
 -- Table structure for item_users
@@ -253,6 +273,6 @@ CREATE TABLE `item_users`  (
 -- ----------------------------
 -- Records of item_users
 -- ----------------------------
-INSERT INTO `item_users` VALUES (1, 'dev', '$P$Bi9wNVmP3UFcCr8iVkgrARn06geFrd0', 'none@example.org', 'http://localhost', 'dev', 1725515390, 1725518648, 0, 'administrator', 'ee02d1b0c41b1e7bbad1b7d0bc4714a8');
+INSERT INTO `item_users` VALUES (1, 'dev', '$P$Bi9wNVmP3UFcCr8iVkgrARn06geFrd0', 'fordes.dev@gmail.com', 'http://localhost', 'dev', 1725515390, 1770044549, 1769700638, 'administrator', '3d85e875bf2cb0769c16b89ad9b4faec');
 
 SET FOREIGN_KEY_CHECKS = 1;
