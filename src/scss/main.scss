@@ -1,4 +1,7 @@
 // Abstracts
+@use "@fortawesome/fontawesome-free/scss/variables" with (
+  $font-path: "~@fortawesome/fontawesome-free/webfonts"
+);
 @import 'abstracts/variables';
 @import 'abstracts/mixins';
 
@@ -6,7 +9,10 @@
 @import "bootstrap/scss/bootstrap";
 
 // Font Awesome
-@import '@fortawesome/fontawesome-free/css/all.css';
+@import '@fortawesome/fontawesome-free/scss/fontawesome';
+@import '@fortawesome/fontawesome-free/scss/solid';
+@import '@fortawesome/fontawesome-free/scss/regular';
+@import '@fortawesome/fontawesome-free/scss/brands';
 
 // Base
 @import 'base/reset';

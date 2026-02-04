@@ -1,5 +1,4 @@
 const path = require('path');
-const webpack = require('webpack');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
 const TerserPlugin = require('terser-webpack-plugin');
@@ -65,13 +64,6 @@ module.exports = {
           filename: 'fonts/[name][ext]',
         },
       },
-      {
-        test: /\.svg$/i,
-        type: 'asset/resource',
-        generator: {
-          filename: 'svg/[name][ext]',
-        },
-      },
     ]
   },
   plugins: [
@@ -86,10 +78,6 @@ module.exports = {
         }
       ],
     }),
-    new webpack.ProvidePlugin({
-      $: 'jquery',
-      jQuery: 'jquery',
-    })
   ],
   optimization: {
     minimizer: [
