@@ -2,14 +2,6 @@
     exit;
 if ($this->is('index')): ?>
 
-    <template id="tmpl-loading">
-        <div class="d-flex justify-content-center align-items-center loader-container">
-            <div class="spinner-border" role="status">
-                <span class="visually-hidden">加载中...</span>
-            </div>
-        </div>
-    </template>
-
     <template id="tmpl-category">
         <div class="col-6 col-lg-3">
             <div class="list-item block">
@@ -107,10 +99,22 @@ if ($this->is('index')): ?>
         <div class="list-item">
             <div class="list-content">
                 <div class="list-body">
-                    <div class="list-title h-1x">暂无数据</div>
+                    <div class="list-title h-1x"></div>
                 </div>
             </div>
             <a href="#" target="_self" cid="" title="" class="list-goto nav-item"></a>
         </div>
+    </template>
+
+    <template id="tmpl-loading">
+        <?php ThemeView::loading(); ?>
+    </template>
+
+    <template id="tmpl-empty">
+        <?php ThemeView::empty(); ?>
+    </template>
+
+    <template id="tmpl-load-failed">
+        <?php ThemeView::failed(); ?>
     </template>
 <?php endif; ?>
