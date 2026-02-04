@@ -66,12 +66,16 @@ final class ThemeView
                 <div class="card-body">
                     <div class="row g-2 g-md-3 list-grid list-grid-padding">
                         <?php $posts = $item['posts'];
-                        foreach ($posts as $post):
+                        if (empty($posts)):
+                            self::empty();
+                        else:
+                            foreach ($posts as $post):
                         ?>
-                            <div class="col-6 col-sm-4 col-md-4 col-lg-3 col-xxl-2">
-                                <?php self::navitem($post); ?>
-                            </div>
-                        <?php endforeach; ?>
+                                <div class="col-6 col-sm-4 col-md-4 col-lg-3 col-xxl-2">
+                                    <?php self::navitem($post); ?>
+                                </div>
+                        <?php endforeach;
+                        endif; ?>
                     </div>
                 </div>
             </div>
@@ -100,7 +104,6 @@ final class ThemeView
     /**
      * 分页指示器
      */
-
     public static function paginator($baseUrl, $current, $total)
     {
     ?>
@@ -126,6 +129,41 @@ final class ThemeView
                 ?>
             </div>
         </nav>
+    <?php
+    }
+
+    public static function loading()
+    {
+    ?>
+        <div class="d-flex justify-content-center align-items-center w-100 h-100 ">
+            <div class="spinner-border" role="status">
+                <span class="visually-hidden">加载中...</span>
+            </div>
+        </div>
+    <?php
+    }
+
+    public static function empty()
+    {
+        $options = Helper::options();
+    ?>
+        <div class="col-12 d-flex flex-column justify-content-center align-items-center">
+            <img src="<?php $options->themeUrl("/assets/image/empty.svg"); ?>" alt="empty"
+                class="img-fluid h-100">
+            <p class="text-muted mt-3 mb-1">暂无数据~</p>
+        </div>
+    <?php
+    }
+
+    public static function failed()
+    {
+        $options = Helper::options();
+    ?>
+        <div class="col-12 d-flex flex-column justify-content-center align-items-center">
+            <img src="<?php $options->themeUrl("/assets/image/load-failed.svg"); ?>" alt="load-failed"
+                class="img-fluid h-100">
+            <p class="text-muted mt-3 mb-1">加载失败~</p>
+        </div>
 <?php
     }
 }

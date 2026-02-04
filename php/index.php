@@ -25,22 +25,12 @@ $this->need('navbar.php'); ?>
           <div class="card-header d-flex flex-nowrap text-nowrap gap-2 align-items-center">
             <div class="h4"> <i class="fa-solid fa-sm fa-flag"></i>&nbsp;热门站点</div>
           </div>
-          <div class="card-body">
-            <div class='row g-2'>
-              <div id="card__popular" class="col list-number list-row list-bordered d-none d-sm-block">
-                <div class="d-flex justify-content-center align-items-center w-100 h-100">
-                  <div class="spinner-grow" role="status">
-                    <span class="visually-hidden">Loading...</span>
-                  </div>
-                </div>
-              </div>
-              <div id='card__weather' class="col d-none d-sm-block">
-                <div class="d-flex justify-content-center align-items-center w-100 h-100">
-                  <div class="spinner-grow" role="status">
-                    <span class="visually-hidden">Loading...</span>
-                  </div>
-                </div>
-              </div>
+          <div class="card-body row g-2 d-flex align-items-center">
+            <div id="card__popular" class="col list-number list-row list-bordered d-none d-sm-block">
+              <?php ThemeView::loading(); ?>
+            </div>
+            <div id='card__weather' class="col d-none d-sm-block">
+              <?php ThemeView::loading(); ?>
             </div>
           </div>
         </div>
@@ -66,13 +56,9 @@ $this->need('navbar.php'); ?>
                     <a href='<?php echo $item['url'] ?>' target='_blank' class='list-goto'></a>
                   </div>
                 </div>
-              <?php endforeach;
-            else: ?>
-              <div class="col-12 d-flex justify-content-center align-items-center">
-                <img src="<?php $this->options->themeUrl("/assets/image/empty.svg"); ?>" alt="empty"
-                  class="img-fluid h-100">
-              </div>
-            <?php endif; ?>
+            <?php endforeach;
+            else: ThemeView::empty();
+            endif; ?>
           </div>
         </div>
       </div>

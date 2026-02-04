@@ -155,7 +155,13 @@ import LazyLoad from "vanilla-lazyload";
             return $clone[0];
           }));
 
-          $row.html($items).removeClass('d-none');
+          if ($items.length === 0) {
+            const $clone = $($('#tmpl-empty').prop('content')).clone();
+            $row.html($clone).removeClass('d-none');
+          } else {
+            $row.html($items).removeClass('d-none');
+          }
+
           this.lazy.update();
           this.bindDynamicLinks($row);
         } catch (e) {
@@ -233,8 +239,17 @@ import LazyLoad from "vanilla-lazyload";
           $item.find('.list-goto').attr('cid', e.cid).attr('title', e.text).attr('href', e.permalink);
           return $item[0];
         });
-        $box.empty().append(html);
-      } catch (e) { console.error(e); }
+
+        if (html.length === 0) {
+          $box.empty().append($($('#tmpl-empty').prop('content')).clone());
+        } else {
+          $box.empty().append(html);
+        }
+      } catch (e) {
+        const $item = $($('#tmpl-load-failed').prop('content')).clone();
+        $box.empty().append($item);
+        console.error(e);
+      }
     }
 
     async loadWeather() {
