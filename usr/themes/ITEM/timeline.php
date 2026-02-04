@@ -26,8 +26,8 @@ $this->need("navbar.php");
                         <div class="card-body">
                             <div class="post-content">
                                 <?php
-                                $pageSize = $this->options->timelinePageSize ? $this->options->timelinePageSize : 10;
-                                $currentPage = isset($_GET['page']) ? intval($_GET['page']) : 1;
+                                $pageSize = ThemeHelper::isPositive($this->options->timelinePageSize) ? (int) $this->options->timelinePageSize : 10;
+                                $currentPage = ThemeHelper::isPositive($_GET['page']) ? (int) $_GET['page'] : 1;
                                 $uid = $this->user->group == 'administrator' ? -1 : $this->user->uid;
                                 $result = ThemeRepository::posts($pageSize, $currentPage, null, $uid);
                                 ?>

@@ -7,10 +7,7 @@ $this->need('navbar.php');
 $hidden = $this->status === 'hidden';
 $hasPassword = ThemeHelper::hasPasswd($this);
 
-if ($this->fields->navigation == 2):
-error_log('详情页面未定义导航栏');
-?>
-
+if ($this->fields->navigation == 2): ?>
     <div class="modal fade" id="openWxModal" tabindex="-1" aria-labelledby="openWxModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
@@ -29,7 +26,6 @@ error_log('详情页面未定义导航栏');
         </div>
     </div>
 <?php endif; ?>
-
 <main class="site-main">
     <div class="container">
         <div class="container">

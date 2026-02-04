@@ -147,5 +147,8 @@ final class ThemeHelper
             || !preg_match('/[^\s\p{C}]/u', $str);
     }
 
-
+    public static function isPositive($value)
+    {
+        return ctype_digit((string)$value) && (int)$value > 0;
+    }
 }

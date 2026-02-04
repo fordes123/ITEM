@@ -100,28 +100,30 @@ final class ThemeView
     /**
      * 分页指示器
      */
+
     public static function paginator($baseUrl, $current, $total)
     {
     ?>
         <nav class="navigation pagination" aria-label="Posts Navigation">
             <div class="nav-links">
-                <?php if ($current > 1): ?>
-                    <a class="prev page-numbers" href="<?= $baseUrl . ($current - 1) ?>">上一页</a>
-                <?php endif; ?>
+                <?php
+                if ($current > 1) {
+                    echo '<a class="prev page-numbers" href="' . $baseUrl . ($current - 1) . '">上一页</a>';
+                }
+                for ($i = 1; $i <= $total; $i++) {
+                    if ($i == $current) {
+                        echo '<span aria-current="page" class="page-numbers current">' . $i . '</span>';
+                    } elseif ($i === 1 || $i === $total || abs($i - $current) <= 2) {
+                        echo '<a class="page-numbers" href="' . $baseUrl . $i . '">' . $i . '</a>';
+                    } elseif (abs($i - $current) === 3) {
+                        echo '<span class="page-numbers dots">...</span>';
+                    }
+                }
 
-                <?php for ($i = 1; $i <= $total; $i++): ?>
-                    <?php if ($i === $current): ?>
-                        <span aria-current="page" class="page-numbers current"><?= $i ?></span>
-                    <?php elseif ($i === 1 || $i === $total || abs($i - $current) <= 2): ?>
-                        <a class="page-numbers" href="<?= $baseUrl . $i ?>"><?= $i ?></a>
-                    <?php elseif (abs($i - $current) === 3): ?>
-                        <span class="page-numbers dots">...</span>
-                    <?php endif; ?>
-                <?php endfor; ?>
-
-                <?php if ($current < $total): ?>
-                    <a class="next page-numbers" href="<?= $baseUrl . ($current + 1) ?>">下一页</a>
-                <?php endif; ?>
+                if ($current < $total) {
+                    echo '<a class="next page-numbers" href="' . $baseUrl . ($current + 1) . '">下一页</a>';
+                }
+                ?>
             </div>
         </nav>
 <?php
