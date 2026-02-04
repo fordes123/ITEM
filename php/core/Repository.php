@@ -73,10 +73,11 @@ final class ThemeRepository
 
     /**
      * 获取分类树
-     * @param bool $withPost 是否携带文章信息
+     * 当 $isIndex 为 true 时, 若 subCategoryType=1(收纳) 则只获取首个非空分类下的文章，否则获取所有分类下的文章
+     * @param bool $isIndex 是否为首页数据请求
      * @return array
      */
-    public static function categoryTree(bool $withPost = false): array
+    public static function categoryTree(bool $isIndex = false): array
     {
 
         $options = Helper::options();
@@ -96,35 +97,36 @@ final class ThemeRepository
                 $result[$category['parent']]['children'][$category['mid']] = $category;
             }
         }
-        foreach ($result as $parentMid => &$parent) {
-            if (empty($parent['children'])) {
-                if ($withPost) {
-                    $parent['posts'] = self::postsByCategory($parent['mid']);
 
+        $collapse = $options->subCategoryType == 1;
+        if ($isIndex) {
+            foreach ($result as $parentMid => &$parent) {
+                if (empty($parent['children'])) {
+                    // 无子分类也无文章，直接忽略
+                    $parent['posts'] = self::postsByCategory($parent['mid']);
                     if (empty($parent['posts'])) {
                         unset($result[$parentMid]);
                     }
-                }
-            } else {
-                if ($withPost) {
+                } else {
+
                     $parent['posts'] = [];
                     foreach ($parent['children'] as $childMid => $child) {
                         $posts = self::postsByCategory($child['mid']);
-                        if (empty($posts)) {
-                            unset($parent['children'][$childMid]);
-
-                            continue;
-                        }
                         $parent['children'][$childMid]['posts'] = $posts;
-                        if ($options->subCategoryType == 1) {
-                            $parent['posts'] = $posts;
-                            break;
+
+                        //在折叠模式下，只需要获取第一个非空分类的文章
+                        if ($collapse) {
+                            if (empty($posts)) {
+                                unset($parent['children'][$childMid]);
+                                continue;
+                            } elseif (empty($parent['posts'])) {
+                                $parent['posts'] = $posts;
+                                break;
+                            }
                         }
                     }
-                }
 
-                if (empty($parent['children'])) {
-                    if ($withPost && empty($parent['posts'])) {
+                    if (empty($parent['children'])) {
                         unset($result[$parentMid]);
                     }
                 }
