@@ -32,13 +32,13 @@ if ($this->is('index')): ?>
         <div class="py-4 text-center">
             <div class="d-inline-block">
                 <div class="mb-3 position-relative d-inline-block">
-                    <i class="fas fa-cloud-sun text-muted opacity-25 fs-1"></i>
+                    <i class="fa-solid fa-cloud-sun text-muted opacity-25 fs-1"></i>
                     <i
-                        class="fas fa-exclamation-circle text-warning position-absolute top-50 start-100 translate-middle fs-5"></i>
+                        class="fa-solid fa-exclamation-circle text-warning position-absolute top-50 start-100 translate-middle fs-5"></i>
                 </div>
                 <p class="text-muted mb-3 fw-light">无法获取天气信息,请稍后重试</p>
                 <button type="button" class="btn btn-outline-primary btn-sm px-4 weather-retry-btn">
-                    <i class="fas fa-sync-alt me-2"></i>重试
+                    <i class="fa-solid fa-sync-alt me-2"></i>重试
                 </button>
             </div>
         </div>
@@ -48,7 +48,7 @@ if ($this->is('index')): ?>
         <div class="px-3">
             <div class="d-flex justify-content-between align-items-center">
                 <div class="text-truncate me-2">
-                    <i class="fas fa-map-marker-alt text-primary me-1"></i>
+                    <i class="fa-solid fa-map-marker-alt text-primary me-1"></i>
                     <span class="fw-bold text-dark-emphasis weather-city"></span>
                 </div>
                 <span class="badge rounded-pill bg-opacity-10 border border-opacity-25 px-2 weather-aqi"></span>
@@ -62,7 +62,7 @@ if ($this->is('index')): ?>
                     <div class="px-2">
                         <span class="badge bg-primary text-white mb-1 weather-text"></span>
                         <div class="text-muted small">
-                            <i class="fas fa-thermometer-half me-1"></i>体感 <span class="weather-feels"></span>
+                            <i class="fa-solid fa-thermometer-half me-1"></i>体感 <span class="weather-feels"></span>
                         </div>
                     </div>
                 </div>
@@ -73,28 +73,28 @@ if ($this->is('index')): ?>
             <div class="row g-2">
                 <div class="col-4 col-md-6 col-xl-4 col-xxl-3">
                     <div class="rounded-3 p-2 text-center h-100" style="background-color: var(--bg-body);">
-                        <i class="fas fa-tint text-info mb-1"></i>
+                        <i class="fa-solid fa-tint text-info mb-1"></i>
                         <div class="small text-muted">湿度</div>
                         <div class="fw-bold small text-truncate weather-rh"></div>
                     </div>
                 </div>
                 <div class="col-4 col-md-6 col-xl-4 col-xxl-3">
                     <div class="rounded-3 p-2 text-center h-100" style="background-color: var(--bg-body);">
-                        <i class="fas fa-wind text-secondary mb-1"></i>
+                        <i class="fa-solid fa-wind text-secondary mb-1"></i>
                         <div class="small text-muted weather-wind-dir">风向</div>
                         <div class="fw-bold small text-truncate px-1 weather-wind-spd"></div>
                     </div>
                 </div>
                 <div class="col-4 d-md-none d-xl-block d-lg-none d-xxl-block col-lg-4 col-xxl-3">
                     <div class="rounded-3 p-2 text-center h-100" style="background-color: var(--bg-body);">
-                        <i class="fas fa-sun text-warning mb-1"></i>
+                        <i class="fa-solid fa-sun text-warning mb-1"></i>
                         <div class="small text-muted">紫外线</div>
                         <div class="fw-bold small text-truncate weather-uv"></div>
                     </div>
                 </div>
                 <div class="d-none d-md-none d-xxl-block col-3">
                     <div class="rounded-3 p-2 text-center h-100" style="background-color: var(--bg-body);">
-                        <i class="fas fa-eye text-primary mb-1"></i>
+                        <i class="fa-solid fa-eye text-primary mb-1"></i>
                         <div class="small text-muted">能见度</div>
                         <div class="fw-bold small text-truncate weather-vis"></div>
                     </div>

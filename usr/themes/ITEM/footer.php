@@ -17,7 +17,7 @@
 </div>
 <ul class="site-fixedmenu">
     <li id="scrollToTOP"> <a href="#" class="btn btn-start btn-icon btn-rounded">
-            <span><i class="fas fa-arrow-up"></i></span></a>
+            <span><i class="fa-solid fa-arrow-up"></i></span></a>
     </li>
 </ul>
 

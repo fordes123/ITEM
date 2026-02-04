@@ -30,7 +30,7 @@ final class ThemeConfig
         [
             "name" => "站内",
             "url" => "/search/",
-            "icon" => "fas fa-search-location"
+            "icon" => "fa-solid fa-search-location"
         ]
     ];
     //详情提示语

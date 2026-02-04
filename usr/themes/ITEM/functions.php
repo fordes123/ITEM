@@ -101,12 +101,12 @@ function themeConfig(Typecho_Widget_Helper_Form $form)
             {
                 "name": "站内",
                 "url": "/search/",
-                "icon": "fas fa-search-location"
+                "icon": "fa-solid fa-search-location"
             },
             {
                 "name": "Github",
                 "url": "https://github.com/search?q=",
-                "icon": "fab fa-github"
+                "icon": "fa-brands fa-github"
             }
         ]',
         _t('搜索引擎配置'),
@@ -122,13 +122,13 @@ function themeConfig(Typecho_Widget_Helper_Form $form)
             {
                 "name": "主题文档",
                 "url": "https://github.com/fordes123/ITEM",
-                "icon": "fas fa-book",
+                "icon": "fa-solid fa-book",
                 "background": "linear-gradient(45deg, #97b3ff, #2f66ff)"
             },
             {
                 "name": "求个star",
                 "url": "https://github.com/fordes123/ITEM",
-                "icon": "fas fa-star",
+                "icon": "fa-solid fa-star",
                 "background": "red"
             }
         ]',

@@ -23,7 +23,7 @@ $this->need('navbar.php'); ?>
       <div class="d-none d-sm-block col-12 col-md-7 col-xxxl-6 d-flex">
         <div class="card card-xl flex-fill h-100">
           <div class="card-header d-flex flex-nowrap text-nowrap gap-2 align-items-center">
-            <div class="h4"> <i class="fas fa-sm fa-flag"></i>&nbsp;热门站点</div>
+            <div class="h4"> <i class="fa-solid fa-sm fa-flag"></i>&nbsp;热门站点</div>
           </div>
           <div class="card-body">
             <div class='row g-2'>
@@ -48,7 +48,7 @@ $this->need('navbar.php'); ?>
       <div class="col-12 col-md-5 col-xxxl-6 d-flex">
         <div class="card card-xl flex-fill">
           <div class="card-header d-flex flex-nowrap text-nowrap gap-2 align-items-center">
-            <div class="h4"><i class="fas fa-sm fa-paperclip"></i>&nbsp;工具直达</div>
+            <div class="h4"><i class="fa-solid fa-sm fa-paperclip"></i>&nbsp;工具直达</div>
           </div>
           <div class="card-body index-sudoku row list text-center gx-2 gy-4 overflow-y-scroll scrollable">
             <?php $tool = json_decode($this->options->toolConfig, true);

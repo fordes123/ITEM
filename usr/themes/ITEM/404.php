@@ -15,7 +15,7 @@ $this->need('navbar.php');
                         <p class="fs-6 mb-4 text-muted">
                             按 <kbd>Space</kbd> 玩一会小恐龙dino快跑
                             <a href="https://github.com/zzzmhcn/dino" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom" title="游戏源码来自 Chromium, 本页修改自: zzzmhcn/dino, 点击前往原仓库">
-                                <i class="fas fa-info-circle"></i>
+                                <i class="fa-solid fa-info-circle"></i>
                             </a>
                         </p>
                         <a href="<?php $this->options->siteUrl(); ?>" class="btn btn-primary">
