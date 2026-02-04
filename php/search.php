@@ -25,8 +25,8 @@ $this->need("navbar.php");
                                 $this->redirect($this->options->siteUrl);
                             }
 
-                            $pageSize = $this->options->pageSize ? $this->options->pageSize : 10;
-                            $currentPage = isset($_GET['page']) ? intval($_GET['page']) : 1;
+                            $pageSize = ThemeHelper::isPositive($this->options->pageSize) ? (int) $this->options->pageSize : 10;
+                            $currentPage = ThemeHelper::isPositive($_GET['page']) ? (int) $_GET['page'] : 1;
                             $uid = $this->user->group == 'administrator' ? -1 : $this->user->uid;
 
                             $result = ThemeRepository::posts($pageSize, $currentPage, $keywords, $uid);
