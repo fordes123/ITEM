@@ -1,3 +1,5 @@
+import $ from 'jquery';
+window.$ = window.jQuery = $;
 import { Modal, Tooltip, Dropdown } from 'bootstrap';
 import LazyLoad from "vanilla-lazyload";
 
@@ -206,15 +208,17 @@ import LazyLoad from "vanilla-lazyload";
 
       if (id) scrollTo(id);
 
-      $('.menu-item a[data-target]').off('click').on('click', function (e) {
+
+      $(document).on('click', '.menu-item a[data-target]', function (e) {
+        e.preventDefault();
         const target = $(this).data('target');
-        if (!scrollTo(target)) {
+        const success = scrollTo(target);
+        if (!success) {
           sessionStorage.setItem('anchor', target);
-          const home = $('.aside-wrapper > a:first-child').attr('href');
-          if (home) window.location.href = home;
-          e.preventDefault();
+          window.location.href = window.config.siteUrl;
         }
       });
+
     }
 
     async loadPopular() {

@@ -16,24 +16,24 @@ if (!defined('__TYPECHO_ROOT_DIR__'))
                 $data = ThemeRepository::categoryTree($this->is('index'));
                 foreach ($data as $item):
                     $subMenu = $this->options->subCategoryType != 1;
-                    if (!$subMenu || ThemeHelper::isBlank($item['children'])): ?>
-                        <li class="menu-item menu-item-type-taxonomy menu-item-object-category">
+                    if (!$subMenu || empty($item['children'])): ?>
+                        <li class="menu-item">
                             <a role="button" data-target="<?php echo $item['slug']; ?>"
                                 data-index="<?php echo $this->is('index'); ?>" aria-current="page">
-                                <span class="menu-icon"><i class="fas fa-<?php echo $item['slug']; ?> fa-sm"></i></span>
+                                <span class="menu-icon"><i class="fa-solid fa-<?php echo $item['slug']; ?> fa-sm"></i></span>
                                 <span class="menu-text"><?php echo $item['name'] ?></span>
                             </a>
                         </li>
                     <?php else: ?>
                         <li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children">
                             <a role="button">
-                                <span class="menu-icon"><i class="fas fa-<?php echo $item['slug']; ?> fa-sm"></i></span>
+                                <span class="menu-icon"><i class="fa-solid fa-<?php echo $item['slug']; ?> fa-sm"></i></span>
                                 <span class="menu-text"><?php echo $item['name'] ?></span>
-                                <span class="menu-sign fas fa-arrow-right fa-sm"></span>
+                                <span class="menu-sign fa-solid fa-arrow-right fa-sm"></span>
                             </a>
                             <ul class="sub-menu" role="menu">
                                 <?php foreach ($item['children'] as $c): ?>
-                                    <li class="menu-item menu-item-type-taxonomy menu-item-object-category">
+                                    <li class="menu-item">
                                         <a role="button" data-target="<?php echo $c['slug']; ?>"
                                             data-index="<?php echo $this->is('index'); ?>" aria-current="page">
                                             <span class="menu-text"><?php echo $c['name'] ?></span>

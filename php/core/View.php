@@ -11,7 +11,7 @@ final class ThemeView
     public static function navitem($post)
     {
         $options = Helper::options();
-        ?>
+?>
         <div class="list-item block">
             <div role="button" href="<?php echo $post['permalink']; ?>" title="<?php echo ThemeConfig::DEFAULT_DETAIL_TIPS; ?>"
                 class="media w-36 rounded">
@@ -32,7 +32,7 @@ final class ThemeView
                 </div>
             </div>
         </div>
-        <?php
+    <?php
     }
 
     /**
@@ -41,11 +41,11 @@ final class ThemeView
     public static function navblock($item, $collapse = false)
     {
         $options = Helper::options();
-        ?>
+    ?>
         <div class="col-12">
             <div class="card card-xl" id="<?php echo $item['slug']; ?>">
                 <div class="card-header d-flex flex-nowrap text-nowrap gap-2 align-items-center">
-                    <div class="h4"> <i class="fas fa-sm fa-<?php echo $item['slug']; ?>"></i>&nbsp;<?php echo $item['name']; ?>
+                    <div class="h4"> <i class="fa-solid fa-sm fa-<?php echo $item['slug']; ?>"></i>&nbsp;<?php echo $item['name']; ?>
                     </div>
                     <?php if ($collapse): ?>
                         <ul class="card-tab d-flex flex-nowrap nav text-sm overflow-x-auto">
@@ -56,9 +56,9 @@ final class ThemeView
                                     <?php $first = $i === 0 ? $c : $first; ?>
                                     <span data-mid="<?php echo $c['mid']; ?>"
                                         class="nav-link<?php echo $i === 0 ? ' active' : ''; ?>"><i
-                                            class="fas fa-<?php echo $c['slug']; ?>"></i> <?php echo $c['name']; ?></span>
+                                            class="fa-solid fa-<?php echo $c['slug']; ?>"></i> <?php echo $c['name']; ?></span>
                                 </li>
-                                <?php $i++;
+                            <?php $i++;
                             endforeach; ?>
                         </ul>
                     <?php endif; ?>
@@ -67,7 +67,7 @@ final class ThemeView
                     <div class="row g-2 g-md-3 list-grid list-grid-padding">
                         <?php $posts = $item['posts'];
                         foreach ($posts as $post):
-                            ?>
+                        ?>
                             <div class="col-6 col-sm-4 col-md-4 col-lg-3 col-xxl-2">
                                 <?php self::navitem($post); ?>
                             </div>
@@ -76,7 +76,7 @@ final class ThemeView
                 </div>
             </div>
         </div>
-        <?php
+    <?php
     }
 
     /**
@@ -87,11 +87,11 @@ final class ThemeView
         $score = max(0, min(5, (float) $score));
         for ($i = 1; $i <= 5; $i++) {
             if ($score >= $i) {
-                $icon = 'fas fa-star';
+                $icon = 'fa-solid fa-star';
             } elseif ($score >= $i - 0.5) {
-                $icon = 'fas fa-star-half-alt';
+                $icon = 'fa-solid fa-star-half-alt';
             } else {
-                $icon = 'far fa-star';
+                $icon = 'fa-regular fa-star';
             }
             printf('<i class="%s" style="color: %s;"></i>', $icon, $color);
         }
@@ -102,7 +102,7 @@ final class ThemeView
      */
     public static function paginator($baseUrl, $current, $total)
     {
-        ?>
+    ?>
         <nav class="navigation pagination" aria-label="Posts Navigation">
             <div class="nav-links">
                 <?php if ($current > 1): ?>
@@ -124,6 +124,6 @@ final class ThemeView
                 <?php endif; ?>
             </div>
         </nav>
-        <?php
+<?php
     }
 }

@@ -7,7 +7,10 @@ $this->need('navbar.php');
 $hidden = $this->status === 'hidden';
 $hasPassword = ThemeHelper::hasPasswd($this);
 
-if ($this->fields->navigation == 2): ?>
+if ($this->fields->navigation == 2):
+error_log('详情页面未定义导航栏');
+?>
+
     <div class="modal fade" id="openWxModal" tabindex="-1" aria-labelledby="openWxModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
@@ -44,7 +47,7 @@ if ($this->fields->navigation == 2): ?>
                                             <?php if ($this->user->hasLogin() && ($this->user->group == 'administrator' || $this->authorId == $this->user->uid)): ?>
                                                 <a href="<?php $this->options->adminUrl(); ?>write-post.php?cid=<?php echo $this->cid; ?>"
                                                     target="_blank" class="fs-6 text-muted" title="跳转编辑文章">
-                                                    <i class="fas fa-edit"></i>
+                                                    <i class="fa-solid fa-edit"></i>
                                                 </a>
                                             <?php endif; ?>
                                         </sup></h1>
@@ -67,7 +70,7 @@ if ($this->fields->navigation == 2): ?>
                                     class="date text-muted"><?php echo ThemeHelper::formatTimeAgo($this->modified); ?></span>
                                 <?php if ($this->fields->score): ?>
                                     <i class="text-light mx-2">•</i>
-                                    <span><?php ThemeView::score($this->fields->score) ?>(<?php echo $this->fields->score ?>)</span>
+                                    <span><?php ThemeView::score($this->fields->score) ?> (<?php echo $this->fields->score ?>)</span>
                                 <?php endif; ?>
 
                             </div>
@@ -78,7 +81,7 @@ if ($this->fields->navigation == 2): ?>
                                 <div class="password-form-container text-left mx-5">
                                     <div class="password-form py-4 mx-auto">
                                         <h4 class="mb-3"><i
-                                                class="fas fa-lock"></i>&nbsp;<?php echo $hasPassword ? '验证后可查看内容' : '此内容已隐藏' ?>
+                                                class="fa-solid fa-lock"></i>&nbsp;<?php echo $hasPassword ? '验证后可查看内容' : '此内容已隐藏' ?>
                                         </h4>
                                         <p class="text-muted mb-4">
                                             <?php
@@ -123,20 +126,20 @@ if ($this->fields->navigation == 2): ?>
                                         <?php $metrics = ThemeRepository::postStats($this->cid); ?>
                                         <div class="col">
                                             <a href="#" class="btn btn-icon btn-block btn-lg disabled">
-                                                <span><i class="far fa-eye"></i></span>
+                                                <span><i class="fa-regular fa-eye"></i></span>
                                                 <b class="num"><?php echo $metrics['views']; ?></b>
                                             </a>
                                         </div>
                                         <div class="col">
                                             <a id="agree-btn" data-cid="<?php echo $this->cid; ?>" type="button"
                                                 class="btn btn-icon btn-block btn-lg disabled">
-                                                <span><i class="far fa-thumbs-up"></i></span>
+                                                <span><i class="fa-regular fa-thumbs-up"></i></span>
                                                 <b class="num"><?php echo $metrics['agree'] ?></b>
                                             </a>
                                         </div>
                                         <div class="col">
                                             <a href="#" class="btn-share-toggler btn btn-icon btn-block btn-lg disabled">
-                                                <span><i class="far fa-star"></i></span>
+                                                <span><i class="fa-regular fa-star"></i></span>
                                             </a>
                                         </div>
                                         <?php if ($this->fields->navigation === '2'): ?>
@@ -173,7 +176,7 @@ if ($this->fields->navigation == 2): ?>
                                         <div class="row g-2 g-md-3 list-grid list-grid-padding">
                                             <?php while ($posts->next()):
                                                 $item = ThemeHelper::normalizePost($posts);
-                                                ?>
+                                            ?>
                                                 <div class="col-12 col-md-6">
                                                     <?php ThemeView::navitem($item); ?>
                                                 </div>
