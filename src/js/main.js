@@ -165,8 +165,8 @@ import LazyLoad from "vanilla-lazyload";
           this.lazy.update();
           this.bindDynamicLinks($row);
         } catch (e) {
-          console.error('loadCategory failed', e);
-          $row.html('<div class="alert alert-danger">Loading Failed</div>');
+          const $clone = $($('#tmpl-load-failed').prop('content')).clone();
+          $row.html($clone).removeClass('d-none');
         } finally {
           loader.remove();
           event.preventDefault();
