@@ -140,7 +140,10 @@ import LazyLoad from "vanilla-lazyload";
 
         $('.container .card .nav-link').removeClass('active');
         $this.addClass('active');
-        const loader = $($('#tmpl-loading').html()).height($row.parent().height());
+
+        const $parent = $row.parent();
+        $parent.css('height', $parent.height());
+        const loader = $($('#tmpl-loading').html()).height('100%');
         $row.addClass('d-none').before(loader);
 
         try {
@@ -169,6 +172,7 @@ import LazyLoad from "vanilla-lazyload";
           $row.html($clone).removeClass('d-none');
         } finally {
           loader.remove();
+          $parent.css('height', '');
           event.preventDefault();
         }
       }.bind(this));
