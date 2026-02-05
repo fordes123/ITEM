@@ -136,7 +136,7 @@ final class ThemeView
     {
     ?>
         <div class="d-flex justify-content-center align-items-center w-100 h-100 ">
-            <div class="spinner-border" role="status">
+            <div class="spinner-grow" role="status">
                 <span class="visually-hidden">加载中...</span>
             </div>
         </div>
