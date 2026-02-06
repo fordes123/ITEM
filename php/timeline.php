@@ -26,12 +26,17 @@ $this->need("navbar.php");
                         <div class="card-body">
                             <div class="post-content">
                                 <?php
-                                $pageSize = ThemeHelper::isPositive($this->options->timelinePageSize) ? (int) $this->options->timelinePageSize : 10;
+                                $pageSize = ThemeHelper::isPositive($this->options->pageSize) ? (int) $this->options->pageSize : 10;
                                 $currentPage = ThemeHelper::isPositive($_GET['page']) ? (int) $_GET['page'] : 1;
                                 $uid = $this->user->group == 'administrator' ? -1 : $this->user->uid;
                                 $result = ThemeRepository::posts($pageSize, $currentPage, null, $uid);
+                                $currentPage = $result['currentPage'];
+                                $totalPages = $result['totalPages'];
                                 ?>
-                                <div class="timeline">
+                                <div class="timeline" id="timeline"
+                                    data-current="<?php echo $currentPage; ?>"
+                                    data-total="<?php echo $totalPages; ?>"
+                                    data-page-size="<?php echo $pageSize; ?>">
                                     <?php foreach ($result['data'] as $cid): ?>
                                         <?php $post = ThemeRepository::post($cid); ?>
                                         <div class="timeline-element">
@@ -55,6 +60,12 @@ $this->need("navbar.php");
                                         </div>
                                     <?php endforeach; ?>
                                 </div>
+                                <div id="timeline-loading" class="timeline-loading invisible">
+                                    <?php ThemeView::loading(); ?>
+                                </div>
+                                <div id="timeline-end" class="timeline-end text-center text-muted mt-3 d-none">
+                                    已经到底了
+                                </div>
                             </div>
                             <div class="post-actions row g-2 mt-4">
                             </div>
@@ -62,12 +73,6 @@ $this->need("navbar.php");
                     </div>
                 </div>
             </div>
-
-            <?php
-            $pageLink = $this->permalink . '?page=';
-            $currentPage = $result['currentPage'];
-            $totalPages = $result['totalPages'];
-            echo ThemeView::paginator($pageLink, $currentPage, $totalPages); ?>
         </div>
     </div>
 </main>

@@ -26,10 +26,9 @@ $this->need("navbar.php");
                             }
 
                             $pageSize = ThemeHelper::isPositive($this->options->pageSize) ? (int) $this->options->pageSize : 10;
-                            $currentPage = ThemeHelper::isPositive($_GET['page']) ? (int) $_GET['page'] : 1;
                             $uid = $this->user->group == 'administrator' ? -1 : $this->user->uid;
 
-                            $result = ThemeRepository::posts($pageSize, $currentPage, $keywords, $uid);
+                            $result = ThemeRepository::posts($pageSize, $this->getCurrentPage(), $keywords, $uid);
                             ?>
                             <h1 class="post-title">
                                 <?php echo '包含 "' . $keywords . '" 的文章'; ?>
@@ -53,8 +52,8 @@ $this->need("navbar.php");
                 </div>
             </div>
             <?php
-            $pageLink = $baseUrl = explode('?', $this->request->getRequestUrl())[0] . '?page=';
-            ThemeView::paginator($pageLink, $result['currentPage'], $result['totalPages']);
+            $baseUrl = $this->options->siteUrl . 'search/' . rawurlencode($keywords) . '/';
+            ThemeView::paginator($baseUrl, $result['currentPage'], $result['totalPages']);
             ?>
         </div>
     </div>

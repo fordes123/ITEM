@@ -42,6 +42,7 @@ import LazyLoad from "vanilla-lazyload";
       this.setupTheme();
       this.setupMenu();
       this.setupSearch();
+      this.setupTimeline();
       this.setupScroll();
       this.setupCategory();
       this.setupComponents();
@@ -105,6 +106,80 @@ import LazyLoad from "vanilla-lazyload";
         const key = $search.find('input').val().trim();
         if (key) window.open($search.find('.search-tab a.active').data('url') + key);
       });
+    }
+
+    setupTimeline() {
+      const $timeline = $('#timeline');
+      if ($timeline.length === 0) return;
+
+      let current = parseInt($timeline.data('current') || 1, 10);
+      let total = parseInt($timeline.data('total') || 1, 10);
+      const pageSize = parseInt($timeline.data('page-size') || 10, 10);
+      const siteUrl = window.config?.siteUrl || '/';
+
+      const $loading = $('#timeline-loading');
+      const $end = $('#timeline-end');
+      const $tpl = $('#tmpl-timeline-item');
+
+      let loading = false;
+      $loading.addClass('invisible');
+
+      if (total <= 1) {
+        $end.removeClass('d-none');
+        return;
+      }
+
+      const buildItem = (post) => {
+        const $node = $($tpl.prop('content')).clone();
+        $node.find('.timeline-title a').attr('href', post.permalink || '#').text(post.title || '');
+        $node.find('p').text(post.text || '');
+        $node.find('.timeline-element-date').text(post.date || '');
+        $node.find('img').attr('data-src', post.logo || '');
+        return $node;
+      };
+
+      const fetchPage = async (page) => {
+        const url = `${siteUrl}?action=posts&page=${page}&size=${pageSize}`;
+        const res = await $.get(url);
+        return res?.data || {};
+      };
+
+      const loadNext = async () => {
+        if (loading || current >= total) return;
+        loading = true;
+        $loading.removeClass('invisible');
+
+        const next = current + 1;
+        try {
+          const data = await fetchPage(next);
+          const items = Array.isArray(data.data) ? data.data : [];
+
+          if (items.length) {
+            items.forEach(item => $timeline.append(buildItem(item)));
+            this.lazy.update();
+            current = data.currentPage || next;
+            total = data.totalPages || total;
+            $timeline.data('current', current).data('total', total);
+          } else {
+            total = current;
+          }
+        } catch (e) {
+          console.error('load timeline failed', e);
+        } finally {
+          $loading.addClass('invisible');
+          loading = false;
+          if (current >= total) {
+            observer.disconnect();
+            $end.removeClass('d-none');
+          }
+        }
+      };
+
+      const observer = new IntersectionObserver(entries => {
+        if (entries[0].isIntersecting) loadNext();
+      }, { rootMargin: '0px 0px 200px 0px' });
+
+      observer.observe($loading[0]);
     }
 
     setupTheme() {

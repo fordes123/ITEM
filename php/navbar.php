@@ -1,3 +1,6 @@
+<?php if (!defined('__TYPECHO_ROOT_DIR__'))
+    exit;
+?>
 <header class="site-header">
   <nav class="navbar navbar-expand-lg">
     <div class="container-fluid">

@@ -103,7 +103,7 @@ if ($this->fields->navigation == 2): ?>
                             <?php else: ?>
                                 <div class="post-tags">
                                     <?php foreach ($this->tags as $tag): ?>
-                                        <a><?php echo ($tag['name']); ?></a>
+                                        <a href="<?php echo $tag['permalink']; ?>"><?php echo ($tag['name']); ?></a>
                                     <?php endforeach; ?>
                                 </div>
 

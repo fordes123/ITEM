@@ -18,6 +18,30 @@ final class ThemeApi
                 ]);
                 self::success(ThemeRepository::postsByCategory($params['mid']));
                 break;
+
+            case 'posts':
+                self::checkMethod('GET');
+                $options = Helper::options();
+                $defaultSize = ThemeHelper::isPositive($options->pageSize) ? (int) $options->pageSize : 10;
+                $params = self::getParams([
+                    'page' => ['type' => 'int', 'min' => 1, 'required' => false, 'default' => 1],
+                    'size' => ['type' => 'int', 'min' => 1, 'max' => 50, 'required' => false, 'default' => $defaultSize],
+                ]);
+
+                $user = Typecho_Widget::widget('Widget_User');
+                $uid = $user->group == 'administrator' ? -1 : $user->uid;
+
+                $result = ThemeRepository::posts($params['size'], $params['page'], null, $uid);
+                $items = [];
+                foreach ($result['data'] as $cid) {
+                    $post = ThemeRepository::post($cid);
+                    $post['date'] = date('m-d, Y', $post['modified']);
+                    $items[] = $post;
+                }
+                $result['data'] = $items;
+                self::success($result);
+                break;
+
             case 'popular':
                 self::checkMethod('GET');
                 $params = self::getParams([
