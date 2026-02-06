@@ -117,4 +117,24 @@ if ($this->is('index')): ?>
     <template id="tmpl-load-failed">
         <?php ThemeView::failed(); ?>
     </template>
+<?php elseif ($this->template == 'timeline.php'): ?>
+    <template id="tmpl-timeline-item">
+        <div class="timeline-element">
+            <div>
+                <span class="timeline-element-icon">
+                    <i class="badge badge-dot">
+                        <img src="<?php $this->options->themeUrl(ThemeConfig::DEFAULT_LOADING_ICON); ?>"
+                            class="media-content lazy" />
+                    </i>
+                </span>
+                <div class="timeline-element-content">
+                    <h4 class="timeline-title">
+                        <a href="#"></a>
+                    </h4>
+                    <p></p>
+                    <span class="timeline-element-date"></span>
+                </div>
+            </div>
+        </div>
+    </template>
 <?php endif; ?>
