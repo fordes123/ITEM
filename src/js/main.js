@@ -1,6 +1,6 @@
 import $ from 'jquery';
 window.$ = window.jQuery = $;
-import { Modal, Tooltip, Dropdown } from 'bootstrap';
+import { Modal, Tooltip, Dropdown, Offcanvas } from 'bootstrap';
 import LazyLoad from "vanilla-lazyload";
 
 (function ($) {
@@ -50,14 +50,6 @@ import LazyLoad from "vanilla-lazyload";
 
     initEvents() {
       $(window).on('load', () => this.handleAnchor());
-      $('.menu-item-has-children > a').append('<span class="menu-sign iconfont icon-chevron-down"></span>')
-        .on('click', e => {
-          e.preventDefault();
-          const $parent = $(e.currentTarget).parent();
-          $parent.toggleClass('in').siblings().removeClass('in').find('.sub-menu').slideUp(300);
-          $parent.find('.sub-menu').slideToggle(300);
-        });
-
       this.observe('#card__weather', () => this.loadWeather());
       this.observe('#card__popular', () => this.loadPopular());
     }
@@ -74,24 +66,30 @@ import LazyLoad from "vanilla-lazyload";
     }
 
     setupMenu() {
-      const $togglers = $('.menu-toggler'), $aside = $('.site-aside'), $body = $('body');
-      const toggle = (force) => {
-        $togglers.toggleClass('active', force);
-        $aside.toggleClass('in', force);
-        $body.toggleClass('modal-open', force);
-      };
+      const $aside = $('.site-aside');
+      const $wrapper = $('.site-wrapper');
+      const asideEl = document.getElementById('siteAside');
+      const isDesktop = () => window.matchMedia('(min-width: 1200px)').matches;
 
-      $togglers.on('click', () => toggle());
-      $('.aside-overlay, .menu-item a').on('click', () => toggle(false));
-      $(window).on('resize', () => toggle(false));
+      if (asideEl) {
+        const offcanvas = Offcanvas.getOrCreateInstance(asideEl, { backdrop: true, scroll: false });
+        $(window).on('resize', () => {
+          if (isDesktop()) offcanvas.hide();
+        });
+      }
 
       $aside.hover(
-        () => $('.site-wrapper').addClass('sidemenu-hover-active'),
-        () => $('.site-wrapper').removeClass('sidemenu-hover-active')
+        () => {
+          if (isDesktop()) $wrapper.addClass('sidemenu-hover-active');
+        },
+        () => {
+          if (isDesktop()) $wrapper.removeClass('sidemenu-hover-active');
+        }
       );
 
       $('#menuCollasped').on('click', () => {
-        $('.site-wrapper').toggleClass('menu-collasped-active');
+        if (!isDesktop()) return;
+        $wrapper.toggleClass('menu-collasped-active');
         $aside.toggleClass('folded');
       });
     }

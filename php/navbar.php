@@ -32,8 +32,14 @@
             <li><button id="light" class="dropdown-item" type="button"><i class="fa-solid fa-sun"></i> 浅色模式</button></li>
           </ul>
         </div>
-        <a href="javascript:;" class="btn btn-link btn-icon btn-rounded " id="menuCollasped"><span><i
-              class="fa-solid fa-bars"></i></span></a>
+        <button class="btn btn-link btn-icon btn-rounded d-xl-none" type="button" data-bs-toggle="offcanvas"
+          data-bs-target="#siteAside" aria-controls="siteAside" aria-label="Toggle sidebar">
+          <span><i class="fa-solid fa-bars"></i></span>
+        </button>
+        <button class="btn btn-link btn-icon btn-rounded d-none d-xl-inline-flex" type="button" id="menuCollasped"
+          aria-label="Toggle sidebar width">
+          <span><i class="fa-solid fa-bars"></i></span>
+        </button>
       </div>
     </div>
   </nav>
