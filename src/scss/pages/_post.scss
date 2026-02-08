@@ -114,42 +114,6 @@
     }
 }
 
-.post-related {
-    .related-header {
-        position: relative;
-        padding: 0 0 0 4rem;
-        margin: 0.5rem 0;
-    }
-
-    .related-icon {
-        position: absolute;
-        display: block;
-        left: 0;
-        top: -15px;
-        width: 60px;
-        height: 60px;
-        background-position: center;
-        background-size: contain;
-        background-repeat: no-repeat;
-        background-image: url(../image/guess.png);
-    }
-}
-
-@media (max-width: 767.98px) {
-    .post-related {
-        .related-header {
-            padding: 0 0 0 2.5rem;
-            margin: 0.25rem 0;
-        }
-
-        .related-icon {
-            top: -5px;
-            width: 40px;
-            height: 40px;
-        }
-    }
-}
-
 .post-actions {
     a {
         position: relative;
@@ -182,22 +146,7 @@
 }
 
 .post-excerpt {
-    position: relative;
-    padding: 0 0 0 4rem;
     margin: 0 0 1rem;
-
-    .excerpt-icon {
-        position: absolute;
-        display: block;
-        left: 0;
-        top: -15px;
-        width: 60px;
-        height: 60px;
-        background-position: center;
-        background-size: contain;
-        background-repeat: no-repeat;
-        background-image: url(../image/quote.png);
-    }
 }
 
 .post-tags {
