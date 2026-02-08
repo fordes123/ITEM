@@ -33,10 +33,6 @@
     }
 </script>
 <script src="<?php $this->options->themeUrl('./assets/js/main.min.js'); ?>" type="text/javascript"></script>
-<?php if ($this->is('page') || $this->is('post')): ?>
-    <link rel="stylesheet" href="<?php $this->options->themeUrl('./assets/css/prismjs.min.css'); ?>">
-    <script defer src="<?php $this->options->themeUrl('./assets/js/prismjs.min.js'); ?>"></script>
-<?php endif; ?>
 <?php $this->options->customFooter(); ?>
 <?php $this->footer(); ?>
 </body>
