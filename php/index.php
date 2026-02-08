@@ -27,7 +27,56 @@ $this->need('navbar.php'); ?>
           </div>
           <div class="card-body row g-2 d-flex align-items-center">
             <div id="card__popular" class="col list-number list-row list-bordered d-none d-sm-block">
-              <?php ThemeView::loading(); ?>
+              <div class="list-item">
+                <div class="list-content w-100">
+                  <div class="list-body placeholder-glow">
+                    <div class="list-title h-1x">
+                      <span class="placeholder col-9 placeholder-sm me-2"></span>
+                      <span class="placeholder col-2 placeholder-sm"></span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="list-item">
+                <div class="list-content w-100">
+                  <div class="list-body placeholder-glow">
+                    <div class="list-title h-1x">
+                      <span class="placeholder col-5 placeholder-sm me-2"></span>
+                      <span class="placeholder col-6 placeholder-sm"></span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="list-item">
+                <div class="list-content w-100">
+                  <div class="list-body placeholder-glow">
+                    <div class="list-title h-1x">
+                      <span class="placeholder col-10 placeholder-sm me-2"></span>
+                      <span class="placeholder col-1 placeholder-sm"></span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="list-item">
+                <div class="list-content w-100">
+                  <div class="list-body placeholder-glow">
+                    <div class="list-title h-1x">
+                      <span class="placeholder col-7 placeholder-sm me-2"></span>
+                      <span class="placeholder col-4 placeholder-sm"></span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="list-item">
+                <div class="list-content w-100">
+                  <div class="list-body placeholder-glow">
+                    <div class="list-title h-1x">
+                      <span class="placeholder col-6 placeholder-sm me-2"></span>
+                      <span class="placeholder col-5 placeholder-sm"></span>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
             <div id='card__weather' class="col d-none d-sm-block">
               <?php ThemeView::loading(); ?>
