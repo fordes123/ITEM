@@ -66,7 +66,8 @@ if ($this->fields->navigation == 2): ?>
                                     class="date text-muted"><?php echo ThemeHelper::formatTimeAgo($this->modified); ?></span>
                                 <?php if ($this->fields->score): ?>
                                     <i class="text-light mx-2">•</i>
-                                    <span><?php ThemeView::score($this->fields->score) ?> (<?php echo $this->fields->score ?>)</span>
+                                    <span><?php ThemeView::score($this->fields->score); ?>&nbsp;
+                                        (<?php echo $this->fields->score; ?>)</span>
                                 <?php endif; ?>
 
                             </div>
@@ -110,8 +111,8 @@ if ($this->fields->navigation == 2): ?>
                                 <div class="post-content">
                                     <div class="post-excerpt">
                                         <?php if ($this->fields->text): ?>
-                                            <i class="excerpt-icon"></i>
-                                            <h4><?php echo $this->fields->text; ?></h4>
+                                            <i class="fa-solid fa-quote-left fa-2x align-text-bottom"></i>
+                                            <h4 class="d-inline"><?php echo $this->fields->text; ?></h4>
                                         <?php endif; ?>
                                     </div>
                                     <div class="text-wrap text-break fs-6 mx-3">
@@ -161,18 +162,16 @@ if ($this->fields->navigation == 2): ?>
                         <?php if ($this->is('post')): ?>
                             <?php $this->related(6, count($this->tags) > 0 ? 'tag' : 'author')->to($posts); ?>
                             <?php if ($posts->have()): ?>
-                                <div class="post-related card card-xl mt-4 ">
-                                    <div class="card-header">
-                                        <div class="related-header">
-                                            <div class="related-icon"></div>
-                                            <div class="h4">猜你喜欢</div>
+                                <div class="card card-xl shadow-none rounded-0">
+                                    <div class="card-header d-flex flex-nowrap text-nowrap gap-2 align-items-center">
+                                        <div class="h4"> <i class="fa-solid fa-wand-magic-sparkles fa-sm"></i>&nbsp;相关推荐
                                         </div>
                                     </div>
                                     <div class="card-body">
                                         <div class="row g-2 g-md-3 list-grid list-grid-padding">
                                             <?php while ($posts->next()):
                                                 $item = ThemeHelper::normalizePost($posts);
-                                            ?>
+                                                ?>
                                                 <div class="col-12 col-md-6">
                                                     <?php ThemeView::navitem($item); ?>
                                                 </div>
