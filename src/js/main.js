@@ -1,4 +1,4 @@
-import $ from 'jquery';
+﻿import $ from 'jquery';
 window.$ = window.jQuery = $;
 import { Modal, Tooltip, Dropdown, Offcanvas } from 'bootstrap';
 import LazyLoad from "vanilla-lazyload";
@@ -38,6 +38,38 @@ import LazyLoad from "vanilla-lazyload";
       return data;
     }
 
+    favoritesStore() {
+      if (this._favoritesStore) return this._favoritesStore;
+      const keys = { cids: 'favorites_cids', posts: 'favorites_posts' };
+      const read = (k, d = []) => JSON.parse(localStorage.getItem(k) || JSON.stringify(d));
+      const write = (k, v) => localStorage.setItem(k, JSON.stringify(v));
+
+      this._favoritesStore = {
+        getAll: () => read(keys.posts),
+        has: (cid) => new Set(read(keys.cids).map(String)).has(String(cid)),
+        add: (post) => {
+          const cid = String(post?.cid || '');
+          if (!cid) return;
+          const cids = new Set(read(keys.cids).map(String));
+          const posts = read(keys.posts).filter(p => String(p.cid) !== cid);
+          cids.add(cid);
+          posts.unshift(post);
+          write(keys.cids, [...cids]);
+          write(keys.posts, posts);
+          return cids.size;
+        },
+        remove: (cid) => {
+          const id = String(cid || '');
+          const cids = new Set(read(keys.cids).map(String));
+          const posts = read(keys.posts).filter(p => String(p.cid) !== id);
+          cids.delete(id);
+          write(keys.cids, [...cids]);
+          write(keys.posts, posts);
+          return cids.size;
+        }
+      };
+      return this._favoritesStore;
+    }
     init() {
       this.setupTheme();
       this.setupMenu();
@@ -45,6 +77,7 @@ import LazyLoad from "vanilla-lazyload";
       this.setupTimeline();
       this.setupScroll();
       this.setupCategory();
+      this.setupFavorites();
       this.setupComponents();
       this.handleAnchor(sessionStorage.getItem('anchor'));
     }
@@ -250,7 +283,6 @@ import LazyLoad from "vanilla-lazyload";
         }
       }.bind(this));
     }
-
     setupComponents() {
       let likes;
       try { likes = new Set(JSON.parse(localStorage.getItem('likes') || '[]')); } catch (e) { likes = new Set(); }
@@ -267,9 +299,77 @@ import LazyLoad from "vanilla-lazyload";
           });
         }
       });
+
+      const favorites = this.favoritesStore();
+      const getPost = () => JSON.parse(sessionStorage.getItem('post') || null);
+      const $favBtn = $('#favorite-btn');
+
+      if ($favBtn.length) {
+        const cid = String($favBtn.data('cid'));
+        const $icon = $favBtn.find('i');
+        if (favorites.has(cid)) {
+          $icon.removeClass('fa-regular').addClass('fa-solid');
+          $favBtn.append('<b class="num">已收藏</b>');
+          const post = getPost();
+          if (post?.cid) favorites.add(post);
+        }
+
+        $favBtn.on('click', () => {
+          const post = getPost();
+          if (!post?.cid) return;
+          if (favorites.has(cid)) {
+            favorites.remove(cid);
+            $icon.removeClass('fa-solid').addClass('fa-regular');
+            $favBtn.find('.num').remove();
+          } else {
+            favorites.add(post);
+            $icon.removeClass('fa-regular').addClass('fa-solid');
+            $favBtn.append('<b class="num">已收藏</b>');
+          }
+        });
+      }
+
       this.bindDynamicLinks($('body'));
     }
+    setupFavorites() {
+      if (!$('.site-main[data-id="index"]').length) return;
+      const favorites = this.favoritesStore();
+      const posts = favorites.getAll();
+      if (!posts.length) return;
 
+      const $card = $($('#tmpl-favorite-block').prop('content')).clone();
+      const $grid = $card.find('.list-grid');
+      const $itemTpl = $('#tmpl-favorite-item');
+      const lazyPlaceholder = $('img.lazy').first().attr('src') || '';
+
+      posts.forEach(p => {
+        if (!p?.cid) return;
+        const $item = $($itemTpl.prop('content')).clone();
+        $item.find('.media').attr({ href: p.permalink, title: '' });
+        $item.find('.media-content').attr({ src: lazyPlaceholder, 'data-src': p.logo || '' });
+        $item.find('.list-content').attr({ href: p.url, target: '_blank', cid: p.cid, title: p.text });
+        $item.find('.list-title').text(p.title);
+        $item.find('.list-desc .h-1x').text(p.text);
+        $grid.append($item);
+      });
+
+      if ($grid.children().length === 0) return;
+      $('#search').parent().after($card);
+      $('button.favorite-remove').on('click', (e) => {
+        e.preventDefault();
+        const $btn = $(e.currentTarget);
+        const cid = $btn.siblings('.list-content').attr('cid');
+        if (!cid) return;
+        if (favorites.remove(cid) == 0) {
+          $('#favorite-block').remove();
+        } else {
+          $btn.parent().parent().remove();
+        }
+      });
+
+      this.lazy.update();
+      this.bindDynamicLinks($card);
+    }
     bindDynamicLinks($container) {
       const viewsUrl = $('.aside-wrapper > a:first-child').attr('href');
       $container.find('div[href]').on('click', function () {

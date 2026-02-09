@@ -27,10 +27,15 @@
     window.config = {
         siteUrl: "<?php $this->options->siteUrl(); ?>",
         <?php if ($this->is('index')): ?>
-                        weatherApiKey: "<?php $this->options->weatherApiKey(); ?>",
+            weatherApiKey: "<?php $this->options->weatherApiKey(); ?>",
             weatherNode: "<?php $this->options->weatherNode(); ?>",
+            loading: "<?php $this->options->themeUrl(ThemeConfig::DEFAULT_LOADING_ICON); ?>",
         <?php endif; ?>
     }
+    <?php if ($this->is('post')):
+        $post = ThemeHelper::normalizePost($this);  ?>
+        sessionStorage.setItem('post', '<?php echo json_encode($post); ?>');
+    <?php endif; ?>
 </script>
 <script src="<?php $this->options->themeUrl('./assets/js/main.min.js'); ?>" type="text/javascript"></script>
 <?php $this->options->customFooter(); ?>

@@ -135,7 +135,8 @@ if ($this->fields->navigation == 2): ?>
                                             </a>
                                         </div>
                                         <div class="col">
-                                            <a href="#" class="btn-share-toggler btn btn-icon btn-block btn-lg disabled">
+                                            <a id="favorite-btn" data-cid="<?php echo $this->cid; ?>" type="button"
+                                                class="btn btn-icon btn-block btn-lg">
                                                 <span><i class="fa-regular fa-star"></i></span>
                                             </a>
                                         </div>
@@ -171,7 +172,7 @@ if ($this->fields->navigation == 2): ?>
                                         <div class="row g-2 g-md-3 list-grid list-grid-padding">
                                             <?php while ($posts->next()):
                                                 $item = ThemeHelper::normalizePost($posts);
-                                                ?>
+                                            ?>
                                                 <div class="col-12 col-md-6">
                                                     <?php ThemeView::navitem($item); ?>
                                                 </div>

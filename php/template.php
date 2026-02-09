@@ -106,6 +106,42 @@ if ($this->is('index')): ?>
         </div>
     </template>
 
+    <template id="tmpl-favorite-block">
+        <div class="col-12" id="favorite-block">
+            <div class="card card-xl">
+                <div class="card-header d-flex flex-nowrap text-nowrap gap-2 align-items-center">
+                    <div class="h4"><i class="fa-solid fa-sm fa-star"></i>&nbsp;我的收藏</div>
+                </div>
+                <div class="card-body">
+                    <div class="row g-2 g-md-3 list-grid list-grid-padding"></div>
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <template id="tmpl-favorite-item">
+        <div class="col-6 col-sm-4 col-md-4 col-lg-3 col-xxl-2">
+            <div class="list-item block position-relative">
+                <button type="button"
+                    class="favorite-remove btn btn-link btn-sm shadow-none bg-transparent position-absolute top-50 end-0 translate-middle-y me-2"
+                    aria-label="移除收藏" title="移除收藏">
+                    <i class="fa-solid fa-trash"></i>
+                </button>
+                <div role="button" class="media w-36 rounded">
+                    <img class="media-content lazy" />
+                </div>
+                <div role="button" class="list-content">
+                    <div class="list-body">
+                        <div class="list-title text-md h-1x"></div>
+                        <div class="list-desc text-xx text-muted mt-1">
+                            <div class="h-1x"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </template>
+
     <template id="tmpl-loading">
         <?php ThemeView::loading(); ?>
     </template>
