@@ -17,7 +17,7 @@ if (!defined('__TYPECHO_ROOT_DIR__'))
 $this->need('header.php');
 $this->need('sidebar.php');
 $this->need('navbar.php'); ?>
-<main class="site-main">
+<main class="site-main" data-id="index">
   <div class="container">
     <div class="row g-3 g-xl-4 d-flex">
       <div class="d-none d-sm-block col-12 col-md-7 col-xxxl-6 d-flex">
