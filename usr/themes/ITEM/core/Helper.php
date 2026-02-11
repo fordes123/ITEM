@@ -30,9 +30,7 @@ final class ThemeHelper
             'cid' => $post->cid,
             'title' => $post->title,
             'permalink' => $post->permalink,
-            'url' => $post->fields->navigation == '1' && !$post->hidden
-                ? $post->fields->url
-                : $post->permalink,
+            'url' => $post->permalink . ($post->fields->navigation == '1' && !$post->hidden ? '?go' : ''),
             'text' => $post->password ? '验证后可查看内容' : $post->fields->text,
             'logo' => self::favicon($post),
             'hidden' => $post->hidden,
@@ -149,6 +147,6 @@ final class ThemeHelper
 
     public static function isPositive($value)
     {
-        return ctype_digit((string)$value) && (int)$value > 0;
+        return ctype_digit((string) $value) && (int) $value > 0;
     }
 }

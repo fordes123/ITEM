@@ -1,5 +1,5 @@
 <?php if (!defined('__TYPECHO_ROOT_DIR__'))
-    exit;
+  exit;
 ?>
 <header class="site-header">
   <nav class="navbar navbar-expand-lg">
@@ -23,16 +23,19 @@
       <div class="d-flex align-items-center flex-shrink-0 ms-auto me-lg-4 gap-3">
         <a href="https://github.com/fordes123/ITEM" class="btn btn-link btn-icon btn-rounded "><span><i
               class="fa-brands fa-github"></i></span></a>
-        <div class="dropdown">
+        <div class="dropdown theme-toggle">
           <a class="btn btn-link btn-icon btn-rounded d-flex align-items-center justify-content-center" type="button"
             id="theme-toggle" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false">
 
           </a>
           <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="theme-toggle">
-            <li><button id="default" class="dropdown-item" type="button"><i class="fa-solid fa-circle-half-stroke"></i> 跟随系统</button>
+            <li><button id="default" class="dropdown-item" type="button"><i class="fa-solid fa-circle-half-stroke"></i>
+                跟随系统</button>
             </li>
-            <li><button id="dark" class="dropdown-item" type="button"><i class="fa-solid fa-moon"></i> 深色模式</button></li>
-            <li><button id="light" class="dropdown-item" type="button"><i class="fa-solid fa-sun"></i> 浅色模式</button></li>
+            <li><button id="dark" class="dropdown-item" type="button"><i class="fa-solid fa-moon"></i> 深色模式</button>
+            </li>
+            <li><button id="light" class="dropdown-item" type="button"><i class="fa-solid fa-sun"></i> 浅色模式</button>
+            </li>
           </ul>
         </div>
         <button class="btn btn-link btn-icon btn-rounded d-xl-none" type="button" data-bs-toggle="offcanvas"
