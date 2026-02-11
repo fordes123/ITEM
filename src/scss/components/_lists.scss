@@ -110,7 +110,7 @@
     }
 }
 
-.list-item .favorite-remove {
+.list-item .drop-favorite {
     opacity: 0;
     visibility: hidden;
     pointer-events: none;
@@ -118,8 +118,8 @@
     transition: opacity 0.15s ease-in-out, visibility 0.15s ease-in-out;
 }
 
-.list-item:hover .favorite-remove,
-.list-item .favorite-remove:focus-visible {
+.list-item:hover .drop-favorite,
+.list-item .drop-favorite:focus-visible {
     opacity: 1;
     visibility: visible;
     pointer-events: auto;

@@ -144,7 +144,7 @@ final class ThemeRepository
     public static function postStats($cid, $format = true)
     {
         $cache = unserialize(Typecho_Cookie::get(ThemeConfig::ARTICLE_METRICS_CACHE_KEY . $cid) ?: '') ?: null;
-        if (ThemeHelper::isBlank($cache)) {
+        if (!$cache) {
             $db = Typecho_Db::get();
             $row = $db->fetchRow($db->select('views,agree')->from('table.contents')->where('cid = ?', $cid));
             $cache = array('views' => $row['views'] + 1, 'agree' => $row['agree']);

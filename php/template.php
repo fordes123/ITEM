@@ -4,9 +4,10 @@ if ($this->is('index')): ?>
 
     <template id="tmpl-category">
         <div class="col-6 col-lg-3">
-            <div class="list-item block">
+            <div class="list-item block shadow-none">
                 <div class="media w-36 rounded" role="button">
-                    <img src="<?php $this->options->themeUrl(ThemeConfig::DEFAULT_LOADING_ICON); ?>" class="media-content lazy">
+                    <img src="<?php $this->options->themeUrl(ThemeConfig::DEFAULT_LOADING_ICON); ?>"
+                        class="media-content lazy">
                 </div>
                 <div class="list-content" role="button" target="_blank">
                     <div class="list-body">
@@ -121,23 +122,23 @@ if ($this->is('index')): ?>
 
     <template id="tmpl-favorite-item">
         <div class="col-6 col-sm-4 col-md-4 col-lg-3 col-xxl-2">
-            <div class="list-item block position-relative">
+            <div class="list-item block shadow-none ">
                 <button type="button"
-                    class="favorite-remove btn btn-link btn-sm shadow-none bg-transparent position-absolute top-50 end-0 translate-middle-y me-2"
+                    class="drop-favorite btn btn-link btn-sm shadow-none bg-transparent position-absolute top-50 end-0 translate-middle-y me-2"
                     aria-label="移除收藏" title="移除收藏">
                     <i class="fa-solid fa-trash"></i>
                 </button>
-                <div role="button" class="media w-36 rounded">
+                <a role="button" class="media w-36 rounded">
                     <img class="media-content lazy" />
-                </div>
-                <div role="button" class="list-content">
+                </a>
+                <a role="button" class="list-content">
                     <div class="list-body">
                         <div class="list-title text-md h-1x"></div>
                         <div class="list-desc text-xx text-muted mt-1">
                             <div class="h-1x"></div>
                         </div>
                     </div>
-                </div>
+                </a>
             </div>
         </div>
     </template>
