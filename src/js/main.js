@@ -414,14 +414,14 @@ import LazyLoad from "vanilla-lazyload";
 
       try {
         if (!key) throw new Error('Weather API Key is not set');
-        let data = ls.get('weather');
+        let data = ls.get('weather-data');
         if (!data) {
           const host = weatherNode === '1' ? 'assets.msn.com' : 'assets.msn.cn';
           const url = `https://${host}/service/segments/recoitems/weather?apikey=${key}&cuthour=false&market=zh-cn&locale=zh-cn`;
           data = await fetch(url).then(r => r.json())
-            .then(r => r[0]?.data ?? {});
+            .then(r => JSON.parse(r[0]?.data) ?? {});
 
-          ls.set('weather', data, { ttl: 600 });
+          ls.set('weather-data', data, { ttl: 600 });
         }
 
         const cur = data.responses?.[0]?.weather?.[0]?.current || {};
