@@ -13,9 +13,6 @@ $this->need('header.php');
 $this->need('sidebar.php');
 $this->need('navbar.php');
 
-$hidden = $this->status === 'hidden';
-$hasPassword = ThemeHelper::hasPasswd($this);
-
 if ($this->fields->navigation == 2): ?>
     <div class="modal fade" id="openWxModal" tabindex="-1" aria-labelledby="openWxModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
