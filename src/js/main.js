@@ -378,12 +378,12 @@ import LazyLoad from "vanilla-lazyload";
       const url = `${window.config.siteUrl}?action=popular&size=5`;
 
       try {
-        let list = ls.get('popular_list') || [];
+        let list = ls.get('popular') || [];
         if (!list || list.length === 0) {
           list = await fetch(url, { credentials: 'same-origin' }).then(r => r.json())
             .then(r => r?.data ?? []);
 
-          if (list.length > 0) ls.set('popular_list', list, { ttl: 600 });
+          if (list.length > 0) ls.set('popular', list, { ttl: 600 });
         }
 
         const html = list.map(e => {
