@@ -25,11 +25,7 @@ module.exports = {
           'css-loader',
           {
             loader: 'postcss-loader',
-            options: {
-              postcssOptions: {
-                plugins: [require('autoprefixer')]
-              }
-            }
+            options: {}
           }
         ]
       },
@@ -40,11 +36,7 @@ module.exports = {
           'css-loader',
           {
             loader: 'postcss-loader',
-            options: {
-              postcssOptions: {
-                plugins: [require('autoprefixer')]
-              }
-            }
+            options: {}
           },
           'sass-loader'
         ]

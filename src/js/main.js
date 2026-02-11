@@ -1,5 +1,5 @@
-﻿import $ from 'jquery';
-window.$ = window.jQuery = $;
+﻿import ls from 'localstorage-slim';
+import $ from "cash-dom";
 import { Modal, Tooltip, Dropdown, Offcanvas } from 'bootstrap';
 import LazyLoad from "vanilla-lazyload";
 
@@ -21,55 +21,6 @@ import LazyLoad from "vanilla-lazyload";
       });
     }
 
-    async fetchWithCache(key, url, expireTime = 15 * 60 * 1000, transform = data => data) {
-      try {
-        const cache = JSON.parse(localStorage.getItem(key));
-        if (cache?.time && Date.now() - cache.time < expireTime) {
-          return cache.data;
-        }
-      } catch { }
-
-      const rawData = await $.get(url);
-      const data = transform(rawData);
-
-      if (!data) throw new Error('Invalid data');
-
-      localStorage.setItem(key, JSON.stringify({ data, time: Date.now() }));
-      return data;
-    }
-
-    favoritesStore() {
-      if (this._favoritesStore) return this._favoritesStore;
-      const keys = { cids: 'favorites_cids', posts: 'favorites_posts' };
-      const read = (k, d = []) => JSON.parse(localStorage.getItem(k) || JSON.stringify(d));
-      const write = (k, v) => localStorage.setItem(k, JSON.stringify(v));
-
-      this._favoritesStore = {
-        getAll: () => read(keys.posts),
-        has: (cid) => new Set(read(keys.cids).map(String)).has(String(cid)),
-        add: (post) => {
-          const cid = String(post?.cid || '');
-          if (!cid) return;
-          const cids = new Set(read(keys.cids).map(String));
-          const posts = read(keys.posts).filter(p => String(p.cid) !== cid);
-          cids.add(cid);
-          posts.unshift(post);
-          write(keys.cids, [...cids]);
-          write(keys.posts, posts);
-          return cids.size;
-        },
-        remove: (cid) => {
-          const id = String(cid || '');
-          const cids = new Set(read(keys.cids).map(String));
-          const posts = read(keys.posts).filter(p => String(p.cid) !== id);
-          cids.delete(id);
-          write(keys.cids, [...cids]);
-          write(keys.posts, posts);
-          return cids.size;
-        }
-      };
-      return this._favoritesStore;
-    }
     init() {
       this.setupTheme();
       this.setupMenu();
@@ -79,24 +30,52 @@ import LazyLoad from "vanilla-lazyload";
       this.setupCategory();
       this.setupFavorites();
       this.setupComponents();
-      this.handleAnchor(sessionStorage.getItem('anchor'));
     }
 
     initEvents() {
       $(window).on('load', () => this.handleAnchor());
-      this.observe('#card__weather', () => this.loadWeather());
-      this.observe('#card__popular', () => this.loadPopular());
+      const observe = (selector, callback) =>{
+        const el = document.querySelector(selector);
+        if (!el) return;
+        new IntersectionObserver((entries, observer) => {
+          if (entries[0].isIntersecting) {
+            callback();
+            observer.disconnect();
+          }
+        }).observe(el);
+      }
+      observe('#card__weather', () => this.loadWeather());
+      observe('#card__popular', () => this.loadPopular());
     }
 
-    observe(selector, callback) {
-      const el = document.querySelector(selector);
-      if (!el) return;
-      new IntersectionObserver((entries, observer) => {
-        if (entries[0].isIntersecting) {
-          callback();
-          observer.disconnect();
-        }
-      }).observe(el);
+    setupTheme() {
+      const $items = $('.theme-toggle .dropdown-item');
+      const media = window.matchMedia('(prefers-color-scheme: dark)');
+      let theme = ls.get('data-bs-theme') || 'default';
+
+      const apply = (t) => {
+        const nextTheme = ['default', 'dark', 'light'].includes(t) ? t : 'default';
+        theme = nextTheme;
+
+        document.documentElement.setAttribute(
+          'data-bs-theme',
+          nextTheme === 'default' ? (media.matches ? 'dark' : 'light') : nextTheme
+        );
+
+        ls.set('data-bs-theme', nextTheme);
+
+        const icon = this.themeMap.get(nextTheme)?.find('i').clone();
+        if (icon) $('#theme-toggle').empty().append(icon);
+
+        $items.removeClass('active').filter(`#${nextTheme}`).addClass('active');
+      };
+
+      apply(theme);
+
+      $items.off('click.theme').on('click.theme', e => {
+        apply(e.currentTarget.id);
+        $('.dropdown-menu').removeClass('show');
+      });
     }
 
     setupMenu() {
@@ -112,14 +91,13 @@ import LazyLoad from "vanilla-lazyload";
         });
       }
 
-      $aside.hover(
-        () => {
-          if (isDesktop()) $wrapper.addClass('sidemenu-hover-active');
-        },
-        () => {
-          if (isDesktop()) $wrapper.removeClass('sidemenu-hover-active');
-        }
-      );
+      $aside.on('mouseenter', () => {
+        if (isDesktop()) $wrapper.addClass('sidemenu-hover-active');
+      });
+
+      $aside.on('mouseleave', () => {
+        if (isDesktop()) $wrapper.removeClass('sidemenu-hover-active');
+      });
 
       $('#menuCollasped').on('click', () => {
         if (!isDesktop()) return;
@@ -137,7 +115,7 @@ import LazyLoad from "vanilla-lazyload";
       $search.find('form').on('submit', e => {
         e.preventDefault();
         const key = $search.find('input').val().trim();
-        if (key) window.open($search.find('.search-tab a.active').data('url') + key);
+        if (key) window.open($search.find('.search-tab a.active').data('url') + encodeURIComponent(key));
       });
     }
 
@@ -173,9 +151,14 @@ import LazyLoad from "vanilla-lazyload";
 
       const fetchPage = async (page) => {
         const url = `${siteUrl}?action=posts&page=${page}&size=${pageSize}`;
-        const res = await $.get(url);
-        return res?.data || {};
+        return fetch(url, { credentials: 'same-origin' }).then(r => r.json()).then(r => r?.data || {});
       };
+
+      const observer = new IntersectionObserver((entries) => {
+        if (entries[0].isIntersecting) {
+          loadNext();
+        }
+      }, { rootMargin: '0px 0px 200px 0px' });
 
       const loadNext = async () => {
         if (loading || current >= total) return;
@@ -208,43 +191,22 @@ import LazyLoad from "vanilla-lazyload";
         }
       };
 
-      const observer = new IntersectionObserver(entries => {
-        if (entries[0].isIntersecting) loadNext();
-      }, { rootMargin: '0px 0px 200px 0px' });
-
-      observer.observe($loading[0]);
-    }
-
-    setupTheme() {
-      const apply = (theme) => {
-        const isDark = theme === 'default' ? window.matchMedia('(prefers-color-scheme: dark)').matches : theme === 'dark';
-        document.documentElement.setAttribute('data-bs-theme', isDark ? 'dark' : 'light');
-        localStorage.setItem('data-bs-theme', theme);
-
-        const icon = this.themeMap.get(theme)?.find('i').clone();
-        if (icon) $('#theme-toggle').html(icon);
-        $('.dropdown-item').removeClass('active').filter(`#${theme}`).addClass('active');
-      };
-
-      apply(localStorage.getItem('data-bs-theme') || 'default');
-      $('.dropdown-item').on('click', function () {
-        apply(this.id);
-        $('.dropdown-menu').removeClass('show');
-      });
+      if ($loading[0]) observer.observe($loading[0]);
     }
 
     setupScroll() {
       const $btn = $('#scrollToTOP');
       $(window).on('scroll', () => $btn.toggle($(window).scrollTop() > 500));
-      $btn.on('click', () => $('html, body').animate({ scrollTop: 0 }, 300));
+      $btn.on('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
     }
 
     setupCategory() {
       $('.container .card .nav-link').on('click', async function (event) {
+        event.preventDefault();
         const $this = $(event.currentTarget), $row = $this.closest('.card').find('.card-body .row');
         if ($this.hasClass('active') || $row.hasClass('d-none')) return;
 
-        $('.container .card .nav-link').removeClass('active');
+        $this.closest('.card').find('.nav-link').removeClass('active');
         $this.addClass('active');
 
         const $parent = $row.parent();
@@ -253,8 +215,10 @@ import LazyLoad from "vanilla-lazyload";
         $row.addClass('d-none').before(loader);
 
         try {
-          const res = await $.get(`${window.config.siteUrl}?action=category&mid=${$this.data('mid')}`);
-          const $items = $(res.data.map(item => {
+          const data = await fetch(`${window.config.siteUrl}?action=category&mid=${$this.data('mid')}`, { credentials: 'same-origin' })
+            .then(res => res.json())
+            .then(res => Array.isArray(res?.data) ? res.data : []);
+          const $items = $(data.map(item => {
             const $clone = $($('#tmpl-category').prop('content')).clone();
             $clone.find('.media').attr('href', item.permalink);
             $clone.find('.media-content').attr('data-src', item.logo).attr('alt', item.title);
@@ -272,95 +236,47 @@ import LazyLoad from "vanilla-lazyload";
           }
 
           this.lazy.update();
-          this.bindDynamicLinks($row);
+
         } catch (e) {
           const $clone = $($('#tmpl-load-failed').prop('content')).clone();
           $row.html($clone).removeClass('d-none');
         } finally {
           loader.remove();
           $parent.css('height', '');
-          event.preventDefault();
         }
       }.bind(this));
     }
-    setupComponents() {
-      let likes;
-      try { likes = new Set(JSON.parse(localStorage.getItem('likes') || '[]')); } catch (e) { likes = new Set(); }
 
-      $('#agree-btn').each((_, btn) => {
-        const $btn = $(btn), cid = $btn.data('cid');
-        if (!likes.has(cid)) {
-          $btn.removeClass('disabled').one('click', () => {
-            $.post(window.config.siteUrl, { action: 'likes', cid }, ({ data }) => {
-              $btn.addClass('disabled').find('.num').text(data);
-              likes.add(cid);
-              localStorage.setItem('likes', JSON.stringify([...likes]));
-            });
-          });
-        }
-      });
-
-      const favorites = this.favoritesStore();
-      const getPost = () => JSON.parse(sessionStorage.getItem('post') || null);
-      const $favBtn = $('#favorite-btn');
-
-      if ($favBtn.length) {
-        const cid = String($favBtn.data('cid'));
-        const $icon = $favBtn.find('i');
-        if (favorites.has(cid)) {
-          $icon.removeClass('fa-regular').addClass('fa-solid');
-          $favBtn.append('<b class="num">已收藏</b>');
-          const post = getPost();
-          if (post?.cid) favorites.add(post);
-        }
-
-        $favBtn.on('click', () => {
-          const post = getPost();
-          if (!post?.cid) return;
-          if (favorites.has(cid)) {
-            favorites.remove(cid);
-            $icon.removeClass('fa-solid').addClass('fa-regular');
-            $favBtn.find('.num').remove();
-          } else {
-            favorites.add(post);
-            $icon.removeClass('fa-regular').addClass('fa-solid');
-            $favBtn.append('<b class="num">已收藏</b>');
-          }
-        });
-      }
-
-      this.bindDynamicLinks($('body'));
-    }
     setupFavorites() {
       if (!$('.site-main[data-id="index"]').length) return;
-      const favorites = this.favoritesStore();
-      const posts = favorites.getAll();
-      if (!posts.length) return;
+      const fp = ls.get('favorites') || {};
+      if (Object.keys(fp).length === 0) return;
 
       const $card = $($('#tmpl-favorite-block').prop('content')).clone();
       const $grid = $card.find('.list-grid');
       const $itemTpl = $('#tmpl-favorite-item');
-      const lazyPlaceholder = $('img.lazy').first().attr('src') || '';
-
-      posts.forEach(p => {
-        if (!p?.cid) return;
+      for (const [id, post] of Object.entries(fp)) {
         const $item = $($itemTpl.prop('content')).clone();
-        $item.find('.media').attr({ href: p.permalink, title: '' });
-        $item.find('.media-content').attr({ src: lazyPlaceholder, 'data-src': p.logo || '' });
-        $item.find('.list-content').attr({ href: p.url, target: '_blank', cid: p.cid, title: p.text });
-        $item.find('.list-title').text(p.title);
-        $item.find('.list-desc .h-1x').text(p.text);
+        $item.find('a.media').attr({ href: post.permalink, title: '' });
+        $item.find('img.lazy').attr({ src: window.config.loading, 'data-src': post.logo || '' });
+        $item.find('a.list-content').attr({ href: post.url, target: '_blank', title: post.text });
+        $item.find('.list-title').text(post.title);
+        $item.find('.list-desc .h-1x').text(post.text);
+        $item.find('.drop-favorite').attr('data-id', post.cid)
         $grid.append($item);
-      });
+      }
 
       if ($grid.children().length === 0) return;
       $('#search').parent().after($card);
-      $('button.favorite-remove').on('click', (e) => {
+      $('button.drop-favorite').on('click', (e) => {
         e.preventDefault();
         const $btn = $(e.currentTarget);
-        const cid = $btn.siblings('.list-content').attr('cid');
+        const cid = $btn.attr('data-id');
         if (!cid) return;
-        if (favorites.remove(cid) == 0) {
+        const map = ls.get('favorites') || {};
+        delete map[String(cid)];
+        ls.set('favorites', map);
+        if (Object.keys(map).length === 0) {
           $('#favorite-block').remove();
         } else {
           $btn.parent().parent().remove();
@@ -368,34 +284,87 @@ import LazyLoad from "vanilla-lazyload";
       });
 
       this.lazy.update();
-      this.bindDynamicLinks($card);
     }
-    bindDynamicLinks($container) {
-      const viewsUrl = $('.aside-wrapper > a:first-child').attr('href');
-      $container.find('div[href]').on('click', function () {
-        if (viewsUrl) $.post(viewsUrl, { event: 'views', cid: $(this).attr('cid') });
-        window.open($(this).attr('href'), $(this).attr('target') || '_self');
+
+    setupComponents() {
+      const likes = new Set(ls.get('likes') || []);
+      $('#agree-btn').each((_, btn) => {
+        const $btn = $(btn), cid = String($btn.data('cid'));
+        if (!likes.has(cid)) {
+          $btn.removeClass('disabled').one('click', () => {
+            const body = new URLSearchParams({ action: 'likes', cid });
+            fetch(window.config.siteUrl, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8' },
+              body: body.toString(),
+              credentials: 'same-origin'
+            }).then(res => res.json()).then(({ data }) => {
+              $btn.addClass('disabled').find('.num').text(data);
+              likes.add(cid);
+              ls.set('likes', [...likes]);
+            }).catch(() => {
+              console.error('agree failed');
+            });
+          });
+        }
       });
+
+      const $favBtn = $('#favorite-btn');
+      if ($favBtn.length) {
+        const cid = String($favBtn.data('cid'));
+        const $icon = $favBtn.find('i');
+        const current = ls.get('favorites') || {};
+        if (current[cid]) {
+          $icon.removeClass('fa-regular').addClass('fa-solid');
+          $favBtn.append('<b class="num">已收藏</b>');
+          const post = JSON.parse(sessionStorage.getItem('post') || 'null');
+          if (post?.cid) {
+            current[String(post.cid)] = post;
+            ls.set('favorites', current);
+          }
+        }
+
+        $favBtn.on('click', () => {
+          const post = JSON.parse(sessionStorage.getItem('post') || 'null');
+          if (!post?.cid) return;
+          const map = ls.get('favorites') || {};
+          if (map[cid]) {
+            delete map[cid];
+            ls.set('favorites', map);
+            $icon.removeClass('fa-solid').addClass('fa-regular');
+            $favBtn.find('.num').remove();
+          } else {
+            map[String(post.cid)] = post;
+            ls.set('favorites', map);
+            $icon.removeClass('fa-regular').addClass('fa-solid');
+            $favBtn.append('<b class="num">已收藏</b>');
+          }
+        });
+      }
+
+
     }
 
     handleAnchor(id) {
-      const scrollTo = (tid) => {
-        const el = document.getElementById(tid);
+
+      const scrollToAnchor = (anchor) => {
+        const el = document.getElementById(anchor);
         if (el) {
           el.scrollIntoView({ behavior: 'smooth', block: 'center' });
           sessionStorage.removeItem('anchor');
           return true;
         }
         return false;
-      };
+      }
 
-      if (id) scrollTo(id);
-
-
-      $(document).on('click', '.menu-item a[data-target]', function (e) {
+      const anchor = sessionStorage.getItem('anchor');
+      if (anchor) scrollToAnchor(anchor);
+      $(document)
+        .off('click.anchor', '.menu-item a[data-target]')
+        .on('click.anchor', '.menu-item a[data-target]', function (e) {
         e.preventDefault();
         const target = $(this).data('target');
-        const success = scrollTo(target);
+        const success = scrollToAnchor(target);
         if (!success) {
           sessionStorage.setItem('anchor', target);
           window.location.href = window.config.siteUrl;
@@ -406,9 +375,16 @@ import LazyLoad from "vanilla-lazyload";
 
     async loadPopular() {
       const $box = $('#card__popular');
+      const url = `${window.config.siteUrl}?action=popular&size=5`;
+
       try {
-        const url = `${window.config.siteUrl}?action=popular&size=5`;
-        const list = await this.fetchWithCache('popular_list', url, 15 * 60 * 1000, data => data?.data);
+        let list = ls.get('popular_list') || [];
+        if (!list || list.length === 0) {
+          list = await fetch(url, { credentials: 'same-origin' }).then(r => r.json())
+            .then(r => r?.data ?? []);
+
+          if (list.length > 0) ls.set('popular_list', list, { ttl: 600 });
+        }
 
         const html = list.map(e => {
           const $item = $($('#tmpl-popular-item').prop('content')).clone();
@@ -422,11 +398,14 @@ import LazyLoad from "vanilla-lazyload";
         } else {
           $box.empty().append(html);
         }
+
       } catch (e) {
+        console.error('loadPopular failed', e);
         const $item = $($('#tmpl-load-failed').prop('content')).clone();
         $box.empty().append($item);
-        console.error(e);
       }
+
+
     }
 
     async loadWeather() {
@@ -435,14 +414,15 @@ import LazyLoad from "vanilla-lazyload";
 
       try {
         if (!key) throw new Error('Weather API Key is not set');
+        let data = ls.get('weather');
+        if (!data) {
+          const host = weatherNode === '1' ? 'assets.msn.com' : 'assets.msn.cn';
+          const url = `https://${host}/service/segments/recoitems/weather?apikey=${key}&cuthour=false&market=zh-cn&locale=zh-cn`;
+          data = await fetch(url).then(r => r.json())
+            .then(r => r[0]?.data ?? {});
 
-        const host = weatherNode === '1' ? 'assets.msn.com' : 'assets.msn.cn';
-        const url = `https://${host}/service/segments/recoitems/weather?apikey=${key}&cuthour=false&market=zh-cn&locale=zh-cn`;
-
-        const data = await this.fetchWithCache('weather', url, 15 * 60 * 1000, raw => {
-          if (Array.isArray(raw) && raw[0]?.data) return JSON.parse(raw[0].data);
-          return null;
-        });
+          ls.set('weather', data, { ttl: 600 });
+        }
 
         const cur = data.responses?.[0]?.weather?.[0]?.current || {};
         const unit = data.units?.temperature || '°C';
@@ -463,8 +443,8 @@ import LazyLoad from "vanilla-lazyload";
 
         Object.entries(map).forEach(([sel, val]) => $el.find(sel).text(val));
 
-        const aqi = cur.aqLevel;
-        const bg = aqi <= 1 ? 'success' : aqi <= 2 ? 'warning' : 'danger';
+        const aqi = Number(cur.aqLevel);
+        const bg = Number.isFinite(aqi) ? (aqi <= 1 ? 'success' : aqi <= 2 ? 'warning' : 'danger') : 'secondary';
         $el.find('.weather-aqi').addClass(`bg-${bg} text-${bg} border-${bg}`).text(cur.aqiSeverity || 'N/A');
 
         const iconMap = data.responses?.[0]?.weather?.[0]?.iconMap;
@@ -475,7 +455,7 @@ import LazyLoad from "vanilla-lazyload";
         $box.empty().append($el);
       } catch (e) {
         console.error('loadWeather failed', e);
-        $box.html($($('#tmpl-weather-error').prop('content')).clone());
+        $box.empty().append($($('#tmpl-weather-error').prop('content')).clone());
         if (!key) {
           $box.find('.weather-retry-btn').prop('disabled', true);
         } else {

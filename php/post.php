@@ -1,5 +1,14 @@
 <?php if (!defined('__TYPECHO_ROOT_DIR__'))
     exit;
+
+$isRedirect = isset($_GET['go']);
+$hidden = $this->status === 'hidden';
+$hasPassword = ThemeHelper::hasPasswd($this);
+$metrics = ThemeRepository::postStats($this->cid);
+if ($isRedirect && !$hidden && !$hasPassword && $this->fields->navigation === '1') {
+    $this->response->redirect($this->fields->url, true, 302);
+}
+
 $this->need('header.php');
 $this->need('sidebar.php');
 $this->need('navbar.php');
@@ -120,7 +129,6 @@ if ($this->fields->navigation == 2): ?>
                                     </div>
 
                                     <div class="post-actions row g-2 mt-4">
-                                        <?php $metrics = ThemeRepository::postStats($this->cid); ?>
                                         <div class="col">
                                             <a href="#" class="btn btn-icon btn-block btn-lg disabled">
                                                 <span><i class="fa-regular fa-eye"></i></span>
@@ -149,7 +157,7 @@ if ($this->fields->navigation == 2): ?>
                                             </div>
                                         <?php elseif ($this->fields->navigation === '1'): ?>
                                             <div class="col-12 col-md-7">
-                                                <a href="<?php echo $this->fields->url(); ?>" target="_blank"
+                                                <a href="<?php echo $this->fields->url(); ?>" target=" _blank"
                                                     title="<?php $this->title(); ?>"
                                                     class="btn btn-primary btn-lg btn-block btn-goto">
                                                     访问网站
@@ -172,7 +180,7 @@ if ($this->fields->navigation == 2): ?>
                                         <div class="row g-2 g-md-3 list-grid list-grid-padding">
                                             <?php while ($posts->next()):
                                                 $item = ThemeHelper::normalizePost($posts);
-                                            ?>
+                                                ?>
                                                 <div class="col-12 col-md-6">
                                                     <?php ThemeView::navitem($item); ?>
                                                 </div>

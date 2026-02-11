@@ -11,15 +11,15 @@ final class ThemeView
     public static function navitem($post)
     {
         $options = Helper::options();
-?>
-        <div class="list-item block">
-            <div role="button" href="<?php echo $post['permalink']; ?>" title="<?php echo ThemeConfig::DEFAULT_DETAIL_TIPS; ?>"
+        ?>
+        <div class="list-item block shadow-none">
+            <a role="button" href="<?php echo $post['permalink']; ?>" title="<?php echo ThemeConfig::DEFAULT_DETAIL_TIPS; ?>"
                 class="media w-36 rounded">
                 <img src="<?php echo $options->themeUrl(ThemeConfig::DEFAULT_LOADING_ICON); ?>"
                     data-src="<?php echo $post['logo']; ?>" class="media-content lazy" />
-            </div>
-            <div role="button" href="<?php echo $post['url']; ?>" target="_blank" cid="<?php echo $post['cid']; ?>"
-                title="<?php echo $post['text']; ?>" class="list-content">
+            </a>
+            <a role="button" href="<?php echo $post['url']; ?>" target="_blank" title="<?php echo $post['text']; ?>"
+                class="list-content">
                 <div class="list-body">
                     <div class="list-title text-md h-1x">
                         <?php echo $post['title']; ?>
@@ -30,9 +30,9 @@ final class ThemeView
                         </div>
                     </div>
                 </div>
-            </div>
+            </a>
         </div>
-    <?php
+        <?php
     }
 
     /**
@@ -41,11 +41,12 @@ final class ThemeView
     public static function navblock($item, $collapse = false)
     {
         $options = Helper::options();
-    ?>
+        ?>
         <div class="col-12">
             <div class="card card-xl" id="<?php echo $item['slug']; ?>">
                 <div class="card-header d-flex flex-nowrap text-nowrap gap-2 align-items-center">
-                    <div class="h4"> <i class="fa-solid fa-sm fa-<?php echo $item['slug']; ?>"></i>&nbsp;<?php echo $item['name']; ?>
+                    <div class="h4"> <i
+                            class="fa-solid fa-sm fa-<?php echo $item['slug']; ?>"></i>&nbsp;<?php echo $item['name']; ?>
                     </div>
                     <?php if ($collapse): ?>
                         <ul class="card-tab d-flex flex-nowrap nav text-sm overflow-x-auto">
@@ -58,7 +59,7 @@ final class ThemeView
                                         class="nav-link<?php echo $i === 0 ? ' active' : ''; ?>"><i
                                             class="fa-solid fa-<?php echo $c['slug']; ?>"></i> <?php echo $c['name']; ?></span>
                                 </li>
-                            <?php $i++;
+                                <?php $i++;
                             endforeach; ?>
                         </ul>
                     <?php endif; ?>
@@ -70,17 +71,17 @@ final class ThemeView
                             self::empty();
                         else:
                             foreach ($posts as $post):
-                        ?>
+                                ?>
                                 <div class="col-6 col-sm-4 col-md-4 col-lg-3 col-xxl-2">
                                     <?php self::navitem($post); ?>
                                 </div>
-                        <?php endforeach;
+                            <?php endforeach;
                         endif; ?>
                     </div>
                 </div>
             </div>
         </div>
-    <?php
+        <?php
     }
 
     /**
@@ -106,7 +107,7 @@ final class ThemeView
      */
     public static function paginator($baseUrl, $current, $total)
     {
-    ?>
+        ?>
         <nav class="navigation pagination" aria-label="Posts Navigation">
             <div class="nav-links">
                 <?php
@@ -129,41 +130,39 @@ final class ThemeView
                 ?>
             </div>
         </nav>
-    <?php
+        <?php
     }
 
     public static function loading()
     {
-    ?>
+        ?>
         <div class="d-flex justify-content-center align-items-center w-100 h-100 ">
             <div class="spinner-grow" role="status">
                 <span class="visually-hidden">加载中...</span>
             </div>
         </div>
-    <?php
+        <?php
     }
 
     public static function empty()
     {
         $options = Helper::options();
-    ?>
+        ?>
         <div class="col-12 d-flex flex-column justify-content-center align-items-center">
-            <img src="<?php $options->themeUrl("/assets/image/empty.svg"); ?>" alt="empty"
-                class="img-fluid h-100">
+            <img src="<?php $options->themeUrl("/assets/image/empty.svg"); ?>" alt="empty" class="img-fluid h-100">
             <p class="text-muted mt-3 mb-1">暂无数据~</p>
         </div>
-    <?php
+        <?php
     }
 
     public static function failed()
     {
         $options = Helper::options();
-    ?>
+        ?>
         <div class="col-12 d-flex flex-column justify-content-center align-items-center">
-            <img src="<?php $options->themeUrl("/assets/image/load-failed.svg"); ?>" alt="load-failed"
-                class="img-fluid h-100">
+            <img src="<?php $options->themeUrl("/assets/image/load-failed.svg"); ?>" alt="load-failed" class="img-fluid h-100">
             <p class="text-muted mt-3 mb-1">加载失败~</p>
         </div>
-<?php
+        <?php
     }
 }
