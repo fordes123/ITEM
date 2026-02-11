@@ -196,7 +196,10 @@ import LazyLoad from "vanilla-lazyload";
 
     setupScroll() {
       const $btn = $('#scrollToTOP');
-      $(window).on('scroll', () => $btn.toggle($(window).scrollTop() > 500));
+      $(window).on('scroll', () => {
+        const top = window.pageYOffset || document.documentElement.scrollTop || 0;
+        $btn.toggle(top > 500);
+      });
       $btn.on('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
     }
 
