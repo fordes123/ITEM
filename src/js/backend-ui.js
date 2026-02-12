@@ -14,7 +14,7 @@
       })
       .catch(error => {
         console.error('检查更新失败:', error);
-        document.getElementById('versionDesc').innerHTML = '🥲 检查更新失败，请稍后再试~';
+        document.getElementById('versionDesc').innerHTML = '🥲 检查更新失败, 请稍后再试~';
       });
   })
 })();

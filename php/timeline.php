@@ -28,7 +28,7 @@ $this->need("navbar.php");
                                 <?php
                                 $pageSize = ThemeHelper::isPositive($this->options->pageSize) ? (int) $this->options->pageSize : 10;
                                 $currentPage = ThemeHelper::isPositive($_GET['page']) ? (int) $_GET['page'] : 1;
-                                $uid = $this->user->group == 'administrator' ? -1 : $this->user->uid;
+                                $uid = ThemeHelper::getUid();
                                 $result = ThemeRepository::posts($pageSize, $currentPage, null, $uid);
                                 $currentPage = $result['currentPage'];
                                 $totalPages = $result['totalPages'];
@@ -38,7 +38,7 @@ $this->need("navbar.php");
                                     data-total="<?php echo $totalPages; ?>"
                                     data-page-size="<?php echo $pageSize; ?>">
                                     <?php foreach ($result['data'] as $cid): ?>
-                                        <?php $post = ThemeRepository::post($cid); ?>
+                                        <?php $post = ThemeRepository::post($cid, $uid); ?>
                                         <div class="timeline-element">
                                             <div>
                                                 <span class="timeline-element-icon">

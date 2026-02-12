@@ -5,12 +5,33 @@ if (!defined('__TYPECHO_ROOT_DIR__'))
 final class ThemeHelper
 {
 
+    /**
+     *  获取当前登录用户的uid 如未登录则返回0, 如为管理员则返回-1
+     */
+    public static function getUid()
+    {
+
+        $user = Typecho_Widget::widget('Widget_User');
+        if ($user && $user->hasLogin()) {
+            if ($user->group == 'administrator') {
+                return -1;
+            }
+            return $user->uid;
+        }
+
+        return 0;
+    }
+
     /*
      * 文章是否被密码保护，已通过验证视为无密码
      */
-    public static function hasPasswd($post)
+    public static function hasPasswd($post, int $uid = 0)
     {
         if (!isset($post->password) || $post->password === '') {
+            return false;
+        }
+
+        if ($uid && ($uid === $post->authorId || $uid === -1)) {
             return false;
         }
         $cookiePassword = Typecho_Cookie::get('protectPassword_' . $post->cid);
@@ -24,14 +45,15 @@ final class ThemeHelper
     /**
      * 规范化文章数据
      */
-    public static function normalizePost($post): array
+    public static function normalizePost($post, int $uid = 0): array
     {
+        $hasPasswd = self::hasPasswd($post, $uid);
         return array(
             'cid' => $post->cid,
             'title' => $post->title,
             'permalink' => $post->permalink,
             'url' => $post->permalink . ($post->fields->navigation == '1' && !$post->hidden ? '?go' : ''),
-            'text' => $post->password ? '验证后可查看内容' : $post->fields->text,
+            'text' => $hasPasswd ? '验证后可查看内容' : $post->fields->text,
             'logo' => self::favicon($post),
             'hidden' => $post->hidden,
             'modified' => $post->modified,
