@@ -5,7 +5,7 @@ if (!defined('__TYPECHO_ROOT_DIR__'))
 final class ThemeConfig
 {
     // 主题版本
-    const THEME_VERSION = '2.0.0';
+    const THEME_VERSION = '2.0.1';
 
     // 主题版本配置项名称
     const VERSION_OPTION = 'theme:ITEM::version';
