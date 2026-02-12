@@ -15,7 +15,7 @@
             if (empty($item['children'])) {
           ?>
               <li class="menu-item">
-                <a role="button" target="_blank" class="dropdown-item" href="<?php echo $item['url']; ?>" title="<?php echo $item['text']; ?>"><?php echo $item['title']; ?></a>
+                <a role="button" target="<?php echo $item['target']; ?>" class="dropdown-item" href="<?php echo $item['url']; ?>" title="<?php echo $item['text']; ?>"><?php echo $item['title']; ?></a>
               </li>
             <?php
             } else {
@@ -27,7 +27,7 @@
                 <ul class="dropdown-menu" aria-labelledby="<?php echo $item['slug']; ?>">
                   <?php foreach ($item['children'] as $c): ?>
                     <li class="m-0">
-                      <a role="button" target="_blank" class="dropdown-item py-1 pe-2 ps-3" href="<?php echo $c['url']; ?>" title="<?php echo $c['text']; ?>"><?php echo $c['title']; ?></a>
+                      <a role="button" target="<?php echo $c['target']; ?>" class="dropdown-item py-1 pe-2 ps-3" href="<?php echo $c['url']; ?>" title="<?php echo $c['text']; ?>"><?php echo $c['title']; ?></a>
                     </li>
                   <?php endforeach; ?>
                 </ul>
