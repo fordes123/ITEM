@@ -11,6 +11,9 @@ define('__TYPECHO_THEME_DIR__', '/usr/themes');
 // admin directory (relative path)
 define('__TYPECHO_ADMIN_DIR__', '/admin/');
 
+// debug mode
+define('__TYPECHO_DEBUG__', true);
+
 // register autoload
 require_once __TYPECHO_ROOT_DIR__ . '/var/Typecho/Common.php';
 
