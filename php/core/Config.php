@@ -35,4 +35,7 @@ final class ThemeConfig
     ];
     //详情提示语
     const DEFAULT_DETAIL_TIPS = "点击查看详情";
+
+    //默认Header输出参数
+    const DEFAULT_HEADER_OPTS = 'generator=&pingback=&xmlrpc=&wlw=&rss2=&rss1=&atom=&commentReply=';
 }
