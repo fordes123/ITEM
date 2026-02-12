@@ -32,7 +32,8 @@
         <?php endif; ?>
     }
     <?php if ($this->is('post')):
-        $post = ThemeHelper::normalizePost($this);  ?>
+        global $uid;
+        $post = ThemeHelper::normalizePost($this, $uid);  ?>
         sessionStorage.setItem('post', '<?php echo json_encode($post); ?>');
     <?php endif; ?>
 </script>
