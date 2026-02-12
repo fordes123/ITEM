@@ -29,7 +29,6 @@
         <?php if ($this->is('index')): ?>
             weatherApiKey: "<?php $this->options->weatherApiKey(); ?>",
             weatherNode: "<?php $this->options->weatherNode(); ?>",
-            loading: "<?php $this->options->themeUrl(ThemeConfig::DEFAULT_LOADING_ICON); ?>",
         <?php endif; ?>
     }
     <?php if ($this->is('post')):

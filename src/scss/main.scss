@@ -2,8 +2,11 @@
 @use "@fortawesome/fontawesome-free/scss/variables" with (
   $font-path: "~@fortawesome/fontawesome-free/webfonts"
 );
+
+/*! purgecss start ignore */
 @import 'abstracts/variables';
 @import 'abstracts/mixins';
+/*! purgecss end ignore */
 
 // Bootstrap
 @import "bootstrap/scss/bootstrap";
@@ -14,6 +17,7 @@
 @import '@fortawesome/fontawesome-free/scss/regular';
 @import '@fortawesome/fontawesome-free/scss/brands';
 
+/*! purgecss start ignore */
 // Base
 @import 'base/reset';
 @import 'base/typography';
@@ -41,3 +45,4 @@
 @import 'pages/post';
 @import 'pages/error';
 @import 'pages/search'; 
+/*! purgecss end ignore */

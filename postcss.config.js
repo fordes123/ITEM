@@ -1,23 +1,27 @@
 const purgecss = require('@fullhuman/postcss-purgecss');
 
-module.exports = ({ env }) => ({
+module.exports = () => ({
     plugins: [
         require('autoprefixer'),
-        ...(env === 'production'
-            ? [purgecss({
-                content: [
-                    './php/**/*.php',
-                    './src/**/main.js'
-                ],
-                safelist: {
-                    standard: [
-                        /^fa-/,
-                        /^bg-(success|warning|danger)$/,
-                        /^text-(success|warning|danger)$/,
-                        /^border-(success|warning|danger)$/
-                    ]
-                }
-            })]
-            : [])
+        purgecss({
+            content: [
+                './php/**/*.php',
+                './src/**/main.js'
+            ],
+            safelist: {
+                standard: [
+                    'show',
+                    'showing',
+                    'hiding',
+                    'collapsing',
+                    'collapse-horizontal',
+                    'modal-backdrop',
+                    'offcanvas-backdrop',
+                    /^fa-/,
+                    /^fa(s|r|b)$/,
+                    /^(bg|text|border)-(success|warning|danger)$/,
+                ]
+            }
+        })
     ]
 });

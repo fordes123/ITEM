@@ -5,7 +5,6 @@ const TerserPlugin = require('terser-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 module.exports = {
-  mode: 'production',
   entry: {
     main: ['./src/js/main.js', './src/scss/main.scss'],
     dino: ['./src/js/dino.js'],

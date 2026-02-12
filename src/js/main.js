@@ -222,27 +222,23 @@ import LazyLoad from "vanilla-lazyload";
             .then(res => res.json())
             .then(res => Array.isArray(res?.data) ? res.data : []);
           const $items = $(data.map(item => {
-            const $clone = $($('#tmpl-category').prop('content')).clone();
-            $clone.find('.media').attr('href', item.permalink);
-            $clone.find('.media-content').attr('data-src', item.logo).attr('alt', item.title);
-            $clone.find('.list-content').attr('href', item.url).attr('cid', item.cid).attr('title', item.text);
-            $clone.find('.list-title').text(item.title);
-            $clone.find('.list-desc .h-1x').text(item.text);
+            const $clone = this.cloneNavItem(item);
+            $clone.find('.drop-favorite').remove();
             return $clone[0];
           }));
 
           if ($items.length === 0) {
             const $clone = $($('#tmpl-empty').prop('content')).clone();
-            $row.html($clone).removeClass('d-none');
+            $row.empty().append($clone).removeClass('d-none');
           } else {
-            $row.html($items).removeClass('d-none');
+            $row.empty().append($items).removeClass('d-none');
           }
 
           this.lazy.update();
 
         } catch (e) {
           const $clone = $($('#tmpl-load-failed').prop('content')).clone();
-          $row.html($clone).removeClass('d-none');
+          $row.empty().append($clone).removeClass('d-none');
         } finally {
           loader.remove();
           $parent.css('height', '');
@@ -257,14 +253,9 @@ import LazyLoad from "vanilla-lazyload";
 
       const $card = $($('#tmpl-favorite-block').prop('content')).clone();
       const $grid = $card.find('.list-grid');
-      const $itemTpl = $('#tmpl-favorite-item');
+      const $itemTpl = $('#tmpl-nav-item');
       for (const [id, post] of Object.entries(fp)) {
-        const $item = $($itemTpl.prop('content')).clone();
-        $item.find('a.media').attr({ href: post.permalink, title: '' });
-        $item.find('img.lazy').attr({ src: window.config.loading, 'data-src': post.logo || '' });
-        $item.find('a.list-content').attr({ href: post.url, target: '_blank', title: post.text });
-        $item.find('.list-title').text(post.title);
-        $item.find('.list-desc .h-1x').text(post.text);
+        const $item = this.cloneNavItem(post);
         $item.find('.drop-favorite').attr('data-id', post.cid)
         $grid.append($item);
       }
@@ -465,6 +456,16 @@ import LazyLoad from "vanilla-lazyload";
           $box.find('.weather-retry-btn').one('click', () => this.loadWeather());
         }
       }
+    }
+
+    cloneNavItem(item) {
+      const $clone = $($('#tmpl-nav-item').prop('content')).clone();
+      $clone.find('a.media').attr({ href: item.permalink });
+      $clone.find('img.lazy').attr({ 'data-src': item.logo || '' });
+      $clone.find('a.list-content').attr({ href: item.url, title: item.text });
+      $clone.find('.list-title').text(item.title);
+      $clone.find('.list-desc .h-1x').text(item.text);
+      return $clone;
     }
   }
 
