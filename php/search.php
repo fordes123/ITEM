@@ -26,8 +26,7 @@ $this->need("navbar.php");
                             }
 
                             $pageSize = ThemeHelper::isPositive($this->options->pageSize) ? (int) $this->options->pageSize : 10;
-                            $uid = $this->user->group == 'administrator' ? -1 : $this->user->uid;
-
+                            $uid = ThemeHelper::getUid();
                             $result = ThemeRepository::posts($pageSize, $this->getCurrentPage(), $keywords, $uid);
                             ?>
                             <h1 class="post-title">
@@ -41,7 +40,7 @@ $this->need("navbar.php");
                         <div class="card-body">
                             <div class="row g-2 g-md-3 list-grid list-grid-padding">
                                 <?php foreach ($result['data'] as $cid): ?>
-                                    <?php $item = ThemeRepository::post($cid); ?>
+                                    <?php $item = ThemeRepository::post($cid, $uid); ?>
                                     <div class="col-12 col-md-6">
                                         <?php ThemeView::navitem($item); ?>
                                     </div>

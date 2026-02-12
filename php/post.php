@@ -3,7 +3,9 @@
 
 $isRedirect = isset($_GET['go']);
 $hidden = $this->status === 'hidden';
-$hasPassword = ThemeHelper::hasPasswd($this);
+
+$uid = ThemeHelper::getUid();
+$hasPassword = ThemeHelper::hasPasswd($this, $uid);
 $metrics = ThemeRepository::postStats($this->cid);
 if ($isRedirect && !$hidden && !$hasPassword && $this->fields->navigation === '1') {
     $this->response->redirect($this->fields->url, true, 302);

@@ -15,7 +15,8 @@ if (!defined('__TYPECHO_ROOT_DIR__'))
             <div class="aside-scroll scrollable hover flex-grow-1">
                 <ul class="aside-menu py-1 px-3" id="asideMenu">
                     <?php global $data;
-                    $data = ThemeRepository::categoryTree($this->is('index'));
+                    $uid = ThemeHelper::getUid();
+                    $data = ThemeRepository::categoryTree($this->is('index'), $uid);
                     foreach ($data as $item):
                         $subMenu = $this->options->subCategoryType != 1;
                         if (!$subMenu || empty($item['children'])): ?>
