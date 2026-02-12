@@ -282,4 +282,63 @@ final class ThemeRepository
             'total' => $totalPosts
         );
     }
+
+    public static function singlePageTree()
+    {
+        $pages = Typecho_Widget::widget('Widget_Contents_Page_List');
+        $nodes = array();
+
+        while ($pages->next()) {
+            $cid = (int) $pages->cid;
+            $nodes[$cid] = array(
+                'cid' => $cid,
+                'title' => $pages->title,
+                'slug' => $pages->slug,
+                'parent' => (int) $pages->parent,
+                'order' => (int) $pages->order,
+                'url' => $post->fields->navigation == '1' ? $pages->fields->url : $pages->permalink,
+                'text' => ThemeHelper::isBlank($pages->fields->text) ? $pages->title : $pages->fields->text,
+            );
+        }
+
+        if (empty($nodes)) {
+            return array();
+        }
+
+        $childrenMap = array();
+        foreach ($nodes as $cid => $node) {
+            $parent = $node['parent'];
+            if ($parent > 0 && !isset($nodes[$parent])) {
+                $parent = 0;
+            }
+            $childrenMap[$parent][] = $cid;
+        }
+
+        foreach ($childrenMap as &$childIds) {
+            usort($childIds, function ($a, $b) use (&$nodes) {
+                $orderCmp = $nodes[$a]['order'] <=> $nodes[$b]['order'];
+                if (0 !== $orderCmp) {
+                    return $orderCmp;
+                }
+                return $a <=> $b;
+            });
+        }
+        unset($childIds);
+
+        $buildTree = function ($parentId) use (&$buildTree, &$childrenMap, &$nodes) {
+            $branch = array();
+            if (empty($childrenMap[$parentId])) {
+                return $branch;
+            }
+
+            foreach ($childrenMap[$parentId] as $cid) {
+                $node = $nodes[$cid];
+                $node['children'] = $buildTree($cid);
+                $branch[$cid] = $node;
+            }
+            return $branch;
+        };
+
+        return $buildTree(0);
+    }
 }
