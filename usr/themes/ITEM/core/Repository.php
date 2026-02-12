@@ -296,8 +296,9 @@ final class ThemeRepository
                 'slug' => $pages->slug,
                 'parent' => (int) $pages->parent,
                 'order' => (int) $pages->order,
-                'url' => $post->fields->navigation == '1' ? $pages->fields->url : $pages->permalink,
+                'url' => $pages->fields->navigation == '1' ? $pages->fields->url : $pages->permalink,
                 'text' => ThemeHelper::isBlank($pages->fields->text) ? $pages->title : $pages->fields->text,
+                'target' => $pages->fields->navigation == '1' ? '_blank' : '_self',
             );
         }
 
