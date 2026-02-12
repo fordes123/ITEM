@@ -4,6 +4,7 @@
 $isRedirect = isset($_GET['go']);
 $hidden = $this->status === 'hidden';
 
+global $uid;
 $uid = ThemeHelper::getUid();
 $hasPassword = ThemeHelper::hasPasswd($this, $uid);
 $metrics = ThemeRepository::postStats($this->cid);
