@@ -16,7 +16,8 @@ final class ThemeApi
                 $params = self::getParams([
                     'mid' => ['type' => 'int', 'min' => 1]
                 ]);
-                self::success(ThemeRepository::postsByCategory($params['mid']));
+                $uid = ThemeHelper::getUid();
+                self::success(ThemeRepository::postsByCategory($params['mid']), $uid);
                 break;
 
             case 'posts':
@@ -27,14 +28,11 @@ final class ThemeApi
                     'page' => ['type' => 'int', 'min' => 1, 'required' => false, 'default' => 1],
                     'size' => ['type' => 'int', 'min' => 1, 'max' => 50, 'required' => false, 'default' => $defaultSize],
                 ]);
-
-                $user = Typecho_Widget::widget('Widget_User');
-                $uid = $user->group == 'administrator' ? -1 : $user->uid;
-
+                $uid = ThemeHelper::getUid();
                 $result = ThemeRepository::posts($params['size'], $params['page'], null, $uid);
                 $items = [];
                 foreach ($result['data'] as $cid) {
-                    $post = ThemeRepository::post($cid);
+                    $post = ThemeRepository::post($cid, $uid);
                     $post['date'] = date('m-d, Y', $post['modified']);
                     $items[] = $post;
                 }

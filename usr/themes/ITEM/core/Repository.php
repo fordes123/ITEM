@@ -58,14 +58,14 @@ final class ThemeRepository
      * @param int $mid
      * @return array[]
      */
-    public static function postsByCategory(int $mid): array
+    public static function postsByCategory(int $mid, int $uid = 0): array
     {
 
         $result = array();
         $posts = Typecho_Widget::widget("Widget_Archive@category-" . $mid, "type=category", "mid=" . $mid);
         while ($posts->next()) {
             if (!is_null($posts->fields->navigation)) {
-                $result[] = ThemeHelper::normalizePost($posts);
+                $result[] = ThemeHelper::normalizePost($posts, $uid);
             }
         }
         return $result;
@@ -77,7 +77,7 @@ final class ThemeRepository
      * @param bool $isIndex 是否为首页数据请求
      * @return array
      */
-    public static function categoryTree(bool $isIndex = false): array
+    public static function categoryTree(bool $isIndex = false, int $uid = 0): array
     {
 
         $options = Helper::options();
@@ -103,7 +103,7 @@ final class ThemeRepository
             foreach ($result as $parentMid => &$parent) {
                 if (empty($parent['children'])) {
                     // 无子分类也无文章，直接忽略
-                    $parent['posts'] = self::postsByCategory($parent['mid']);
+                    $parent['posts'] = self::postsByCategory($parent['mid'], $uid);
                     if (empty($parent['posts'])) {
                         unset($result[$parentMid]);
                     }
@@ -111,7 +111,7 @@ final class ThemeRepository
 
                     $parent['posts'] = [];
                     foreach ($parent['children'] as $childMid => $child) {
-                        $posts = self::postsByCategory($child['mid']);
+                        $posts = self::postsByCategory($child['mid'], $uid);
                         $parent['children'][$childMid]['posts'] = $posts;
 
                         //在折叠模式下，只需要获取第一个非空分类的文章
@@ -165,10 +165,10 @@ final class ThemeRepository
      * @param mixed $cid
      * @return array
      */
-    public static function post($cid): array
+    public static function post($cid, int $uid = 0): array
     {
         $posts = Typecho_Widget::widget("Widget_Archive@post-$cid", "pageSize=1&type=post", "cid=$cid");
-        return ThemeHelper::normalizePost($posts);
+        return ThemeHelper::normalizePost($posts, $uid);
     }
 
     /**
@@ -220,7 +220,7 @@ final class ThemeRepository
      * @param mixed $uid
      * @return array{currentPage: float|int|mixed, data: array, total: mixed, totalPages: float|array{currentPage: mixed, data: array, total: int, totalPages: int}}
      */
-    public static function posts($pageSize, $currentPage, $keyword = null, $uid = null)
+    public static function posts($pageSize, $currentPage, $keyword = null, int $uid = 0)
     {
         $db = Typecho_Db::get();
         $keyword = empty($keyword) ? null : '%' . str_replace('%', '\%', $keyword) . '%';
