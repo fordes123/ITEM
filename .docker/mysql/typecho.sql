@@ -226,7 +226,7 @@ INSERT INTO `item_options` VALUES ('secret', 0, 'GbjvNwq6kvqgH5J*9gusikOQlO5kfl(
 INSERT INTO `item_options` VALUES ('siteUrl', 0, 'http://localhost');
 INSERT INTO `item_options` VALUES ('theme', 0, 'ITEM');
 INSERT INTO `item_options` VALUES ('theme:ITEM', 0, '{\"favicon\":\"http:\\/\\/localhost\\/usr\\/themes\\/ITEM\\/assets\\/image\\/favicon.ico\",\"smalllogo\":\"http:\\/\\/localhost\\/usr\\/themes\\/ITEM\\/assets\\/image\\/favicon.ico\",\"biglogo\":\"http:\\/\\/localhost\\/usr\\/themes\\/ITEM\\/assets\\/image\\/head.png\",\"icp\":null,\"searchConfig\":\"[\\r\\n            {\\r\\n                \\\"name\\\": \\\"\\u7ad9\\u5185\\\",\\r\\n                \\\"url\\\": \\\"\\/search\\/\\\",\\r\\n                \\\"icon\\\": \\\"fa-solid fa-search-location\\\"\\r\\n            },\\r\\n            {\\r\\n                \\\"name\\\": \\\"Github\\\",\\r\\n                \\\"url\\\": \\\"https:\\/\\/github.com\\/search?q=\\\",\\r\\n                \\\"icon\\\": \\\"fa-brands fa-github\\\"\\r\\n            }\\r\\n        ]\",\"toolConfig\":null,\"subCategoryType\":\"0\",\"timelinePageSize\":\"5\",\"faviconApiSelect\":\"https:\\/\\/favicon.im\\/{hostname}?larger=true\",\"gravatarApiSelect\":\"https:\\/\\/weavatar.com\\/avatar\\/{hash}\",\"weatherApiKey\":null,\"weatherNode\":\"0\",\"faviconApi\":null,\"gravatarApi\":null,\"customHeader\":null,\"customFooter\":null}');
-INSERT INTO `item_options` VALUES ('theme:ITEM::version', 0, '2.0.0');
+INSERT INTO `item_options` VALUES ('theme:ITEM::version', 0, '2.0.1');
 INSERT INTO `item_options` VALUES ('timezone', 0, '28800');
 INSERT INTO `item_options` VALUES ('title', 0, 'Hello World');
 INSERT INTO `item_options` VALUES ('xmlrpcMarkdown', 0, '0');
