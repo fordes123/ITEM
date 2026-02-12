@@ -25,9 +25,9 @@ final class ThemeView
                         <?php echo $post['title']; ?>
                     </div>
                     <div class="list-desc text-xx text-muted mt-1">
-                        <div class="h-1x">
+                        <span class="h-1x">
                             <?php echo $post['text']; ?>
-                        </div>
+                        </span>
                     </div>
                 </div>
             </a>
