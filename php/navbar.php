@@ -10,13 +10,32 @@
       <div class="collapse navbar-collapse">
         <ul class="navbar-nav navbar-site me-auto ms-5 ms-xl-0">
           <?php
-          $this->widget('Widget_Contents_Page_List')->to($pages);
-          while ($pages->next()): ?>
-            <li class="menu-item">
-              <a href="<?php echo $pages->fields->navigation ? $pages->fields->url : $pages->permalink; ?>"
-                title="<?php echo $pages->fields->navigation ? $pages->fields->text : $pages->title; ?>"><?php $pages->title(); ?></a>
-            </li>
-          <?php endwhile; ?>
+          $data = ThemeRepository::singlePageTree();
+          foreach ($data as $item):
+            if (empty($item['children'])) {
+          ?>
+              <li class="menu-item">
+                <a role="button" target="_blank" class="dropdown-item" href="<?php echo $item['url']; ?>" title="<?php echo $item['text']; ?>"><?php echo $item['title']; ?></a>
+              </li>
+            <?php
+            } else {
+            ?>
+              <li class="menu-item dropdown">
+                <a class="dropdown-toggle dropdown-item" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                  <?php echo $item['title']; ?>
+                </a>
+                <ul class="dropdown-menu" aria-labelledby="<?php echo $item['slug']; ?>">
+                  <?php foreach ($item['children'] as $c): ?>
+                    <li class="m-0">
+                      <a role="button" target="_blank" class="dropdown-item py-1 pe-2 ps-3" href="<?php echo $c['url']; ?>" title="<?php echo $c['text']; ?>"><?php echo $c['title']; ?></a>
+                    </li>
+                  <?php endforeach; ?>
+                </ul>
+              </li>
+          <?php
+            }
+          endforeach;
+          ?>
         </ul>
       </div>
 
