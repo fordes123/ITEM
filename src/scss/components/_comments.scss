@@ -1,0 +1,51 @@
+.comment-avatar {
+  width: 2.25rem;
+  height: 2.25rem;
+  background: var(--bg-secondary);
+  box-shadow: 0 0 0 5px var(--bg-body);
+}
+
+.comment-author-name {
+  font-size: 1.0625rem;
+}
+
+#comment-form {
+  .comment-form-control {
+    color: var(--body-color);
+    background-color: var(--bg-secondary) !important;
+    border: 1px solid var(--border-color) !important;
+    box-shadow: none;
+
+    &::placeholder {
+      color: var(--tertiary-color);
+    }
+
+    &:focus {
+      color: var(--body-color);
+      background-color: var(--bg-base) !important;
+      border-color: var(--color-primary) !important;
+      box-shadow: 0 0 0 0.2rem rgb(47 102 255 / 15%);
+    }
+  }
+
+  .comment-submit-btn {
+    color: var(--bg-base) !important;
+    background-color: var(--color-primary) !important;
+    border-color: var(--border-color) !important;
+
+    &:hover,
+    &:focus,
+    &:focus-visible {
+      color: var(--bg-base) !important;
+      background-color: var(--color-dark) !important;
+      border-color: var(--border-color) !important;
+    }
+  }
+}
+
+@media (max-width: 767.98px) {
+  .comment-avatar {
+    width: 2rem;
+    height: 2rem;
+  }
+}

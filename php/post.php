@@ -168,14 +168,18 @@ if ($this->fields->navigation == 2): ?>
                                 </div>
                             <?php endif; ?>
                         </div>
+                        <?php $this->need('comments.php'); ?>
                         <?php if ($this->is('post')): ?>
                             <?php $this->related(6, count($this->tags) > 0 ? 'tag' : 'author')->to($posts); ?>
                             <?php if ($posts->have()): ?>
-                                <div class="card card-xl shadow-none rounded-0">
-                                    <div class="card-header d-flex flex-nowrap text-nowrap gap-2 align-items-center">
-                                        <div class="h4"> <i class="fa-solid fa-wand-magic-sparkles fa-sm"></i>&nbsp;相关推荐
+                                <div class="card card-xl shadow-none rounded-0 px-0">
+                                    <div class="card-header d-flex flex-wrap text-nowrap gap-2 align-items-center justify-content-between">
+                                            <div class="d-flex align-items-center gap-3 h4 mb-0">
+                                                <i class="fa-solid fa-wand-magic-sparkles"></i>
+                                                相关推荐
+                                            </div>
                                         </div>
-                                    </div>
+
                                     <div class="card-body">
                                         <div class="row g-2 g-md-3 list-grid list-grid-padding">
                                             <?php while ($posts->next()):

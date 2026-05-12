@@ -160,6 +160,16 @@ function themeConfig(Typecho_Widget_Helper_Form $form)
     );
     $form->addInput($timelinePageSize->addRule('isInteger', _t('请填入一个数字')));
 
+    // 评论编辑器提示
+    $commentHint = new Typecho_Widget_Helper_Form_Element_Text(
+        'commentHint',
+        NULL,
+        ThemeConfig::DEFAULT_COMMENT_HINT,
+        _t('评论提示文案'),
+        _t('显示在评论输入框下方的说明文案')
+    );
+    $form->addInput($commentHint);
+
     //Favicon API选择
     $faviconApiSelect = new Typecho_Widget_Helper_Form_Element_Select(
         'faviconApiSelect',
@@ -264,6 +274,7 @@ function themeConfig(Typecho_Widget_Helper_Form $form)
     );
     $form->addInput($customFooter);
 }
+
 
 /**
  * 添加自定义字段
