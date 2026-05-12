@@ -39,7 +39,7 @@ jobs:
           cache: 'pnpm'
 
       - name: Install npm dependencies
-        run: pnpm install
+        run: pnpm install --approve-all
 
       - name: Build
         run: pnpm run build
