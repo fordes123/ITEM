@@ -198,29 +198,6 @@ function themeConfig(Typecho_Widget_Helper_Form $form)
     $advancedSetting->html(_t('<hr color="#ECECEC"/><h2>高级设置</h2>'));
     $form->addItem($advancedSetting);
 
-    // 天气API Key
-    $weatherApiKey = new Typecho_Widget_Helper_Form_Element_Text(
-        'weatherApiKey',
-        NULL,
-        _t(''),
-        _t('天气接口密钥'),
-        _t('来自必应天气，获取方式请查看本项目 <a href="https://github.com/fordes123/ITEM/wiki">文档</a>')
-    );
-    $form->addInput($weatherApiKey);
-
-    //天气API CDN区域
-    $weatherNode = new Typecho_Widget_Helper_Form_Element_Radio(
-        'weatherNode',
-        array(
-            '0' => '中国',
-            '1' => '全球',
-        ),
-        '0',
-        _t('天气接口节点'),
-        _t('此选项可能会影响天气接口查询速度以及区域识别, 默认为 <b>中国</b>')
-    );
-    $form->addInput($weatherNode);
-
     //自定义Favicon API地址
     $faviconApi = new Typecho_Widget_Helper_Form_Element_Text(
         'faviconApi',

@@ -26,10 +26,6 @@
 <script>
     window.config = {
         siteUrl: "<?php $this->options->siteUrl(); ?>",
-        <?php if ($this->is('index')): ?>
-            weatherApiKey: "<?php $this->options->weatherApiKey(); ?>",
-            weatherNode: "<?php $this->options->weatherNode(); ?>",
-        <?php endif; ?>
     }
     <?php if ($this->is('post')):
         global $uid;
