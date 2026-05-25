@@ -52,7 +52,7 @@ import LazyLoad from "vanilla-lazyload";
     setupTheme() {
       const $items = $('.theme-toggle .dropdown-item');
       const media = window.matchMedia('(prefers-color-scheme: dark)');
-      let theme = ls.get('data-bs-theme') || 'default';
+      let theme = localStorage.get('data-bs-theme') || 'default';
 
       const apply = (t) => {
         const nextTheme = ['default', 'dark', 'light'].includes(t) ? t : 'default';
@@ -63,7 +63,7 @@ import LazyLoad from "vanilla-lazyload";
           nextTheme === 'default' ? (media.matches ? 'dark' : 'light') : nextTheme
         );
 
-        ls.set('data-bs-theme', nextTheme);
+        localStorage.set('data-bs-theme', nextTheme);
 
         const icon = this.themeMap.get(nextTheme)?.find('i').clone();
         if (icon) $('#theme-toggle').empty().append(icon);
