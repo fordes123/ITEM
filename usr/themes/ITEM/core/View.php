@@ -166,26 +166,6 @@ final class ThemeView
         <?php
     }
 
-    public static function comments(array $comments): void
-    {
-        if (empty($comments)) {
-            ?>
-            <div class="comments-empty text-center py-5 rounded-4 bg-body-tertiary">
-                <div class="comments-empty-icon mx-auto mb-3 rounded-circle d-flex align-items-center justify-content-center">
-                    <i class="fa-regular fa-comment-dots fs-4"></i>
-                </div>
-                <h5 class="mb-2">还没有评论</h5>
-                <p class="text-muted mb-0">第一条回复通常最容易开启一场有价值的讨论。</p>
-            </div>
-            <?php
-            return;
-        }
-
-        foreach ($comments as $comment) {
-            self::commentItem($comment);
-        }
-    }
-
     public static function threadedComments($comments, $options): void
     {
         $createdAt = (int) $comments->created;

@@ -138,10 +138,10 @@ final class ThemeHelper
      */
     public static function avatar($email)
     {
-        $email ??= '';
+        $email = strtolower(trim((string) ($email ?? '')));
         $options = Helper::options();
 
-        $template = ($options->avatarApiSelect === 'custom' ? $options->avatarApi : $options->avatarApiSelect)
+        $template = ($options->gravatarApiSelect === 'custom' ? $options->gravatarApi : $options->gravatarApiSelect)
             ?? ThemeConfig::DEFAULT_GRAVATAR_API;
 
         return strtr($template, ['{hash}' => hash('sha256', $email)]);
