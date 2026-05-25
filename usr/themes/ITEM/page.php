@@ -33,6 +33,7 @@ $this->need('navbar.php');
                                 </div>
                             </div>
                         </div>
+                        <?php $this->need('comments.php'); ?>
                     </div>
                 </div>
             </div>
