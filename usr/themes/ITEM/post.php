@@ -84,7 +84,7 @@ if ($this->fields->navigation == 2): ?>
                         <div class="card-body">
                             <?php if ($hidden || $hasPassword): ?>
 
-                                <div class="password-form-container text-left mx-5">
+                                <div class="post-content password-form-container text-left ">
                                     <div class="password-form py-4 mx-auto">
                                         <h4 class="mb-3"><i
                                                 class="fa-solid fa-lock"></i>&nbsp;<?php echo $hasPassword ? '验证后可查看内容' : '此内容已隐藏' ?>
@@ -168,15 +168,19 @@ if ($this->fields->navigation == 2): ?>
                                 </div>
                             <?php endif; ?>
                         </div>
+                        <?php $this->need('comments.php'); ?>
                         <?php if ($this->is('post')): ?>
                             <?php $this->related(6, count($this->tags) > 0 ? 'tag' : 'author')->to($posts); ?>
                             <?php if ($posts->have()): ?>
-                                <div class="card card-xl shadow-none rounded-0">
-                                    <div class="card-header d-flex flex-nowrap text-nowrap gap-2 align-items-center">
-                                        <div class="h4"> <i class="fa-solid fa-wand-magic-sparkles fa-sm"></i>&nbsp;相关推荐
+                                <div class="card card-xl card-body px-0 shadow-none rounded-0">
+                                    <div class="card-header d-flex flex-wrap text-nowrap gap-2 px-0">
+                                            <div class="d-flex align-items-center gap-3 h4 mb-0">
+                                                <i class="fa-solid fa-wand-magic-sparkles"></i>
+                                                相关推荐
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div class="card-body">
+
+                                    <div class="card-body mx-0">
                                         <div class="row g-2 g-md-3 list-grid list-grid-padding">
                                             <?php while ($posts->next()):
                                                 $item = ThemeHelper::normalizePost($posts);

@@ -8,7 +8,7 @@
           src="<?php ThemeHelper::isBlank($this->options->biglogo) ? $this->options->themeUrl('/assets/image/head.png') : $this->options->biglogo(); ?>"
           class="logo nc-no-lazy" alt="<?php $this->options->title(); ?>"></a>
       <div class="collapse navbar-collapse">
-        <ul class="navbar-nav navbar-site me-auto ms-5 ms-xl-0">
+        <ul class="navbar-nav navbar-site me-auto">
           <?php
           $data = ThemeRepository::singlePageTree();
           foreach ($data as $item):

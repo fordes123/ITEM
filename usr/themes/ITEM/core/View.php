@@ -165,4 +165,80 @@ final class ThemeView
         </div>
         <?php
     }
+
+    public static function comments(array $comments): void
+    {
+        if (empty($comments)) {
+            ?>
+            <div class="comments-empty text-center py-5 rounded-4 bg-body-tertiary">
+                <div class="comments-empty-icon mx-auto mb-3 rounded-circle d-flex align-items-center justify-content-center">
+                    <i class="fa-regular fa-comment-dots fs-4"></i>
+                </div>
+                <h5 class="mb-2">还没有评论</h5>
+                <p class="text-muted mb-0">第一条回复通常最容易开启一场有价值的讨论。</p>
+            </div>
+            <?php
+            return;
+        }
+
+        foreach ($comments as $comment) {
+            self::commentItem($comment);
+        }
+    }
+
+    public static function threadedComments($comments, $options): void
+    {
+        $createdAt = (int) $comments->created;
+        $createdText = date('Y-m-d H:i', $createdAt);
+        $author = htmlspecialchars((string) ($comments->author ?? ''), ENT_QUOTES, 'UTF-8');
+        $url = trim((string) ($comments->url ?? ''));
+        $avatar = htmlspecialchars(ThemeHelper::avatar((string) ($comments->mail ?? '')), ENT_QUOTES, 'UTF-8');
+        $isAuthor = ($comments->authorId > 0) && ((int) $comments->authorId === (int) $comments->ownerId);
+        ?>
+        <article id="comment-<?php echo (int) $comments->coid; ?>" data-coid="<?php echo (int) $comments->coid; ?>">
+            <div class="d-flex align-items-start gap-3 rounded-4 pt-3">
+                <div class="comment-avatar rounded-circle overflow-hidden flex-shrink-0 lh-1">
+                    <img src="<?php echo $avatar; ?>" alt="<?php echo $author; ?>" loading="lazy" class="w-100 h-100 object-fit-cover">
+                </div>
+                <div class="flex-grow-1">
+                    <div class="d-flex flex-wrap align-items-center justify-content-between gap-2">
+                        <div class="d-flex flex-wrap align-items-center gap-2">
+                            <?php if (!ThemeHelper::isBlank($url)): ?>
+                                <a href="<?php echo htmlspecialchars($url, ENT_QUOTES, 'UTF-8'); ?>" target="_blank" rel="nofollow noopener" class="comment-author-name link-body-emphasis text-decoration-none fw-semibold"><?php echo $author; ?></a>
+                            <?php else: ?>
+                                <span class="comment-author-name fw-semibold text-body-emphasis"><?php echo $author; ?></span>
+                            <?php endif; ?>
+                            <?php if ($isAuthor): ?>
+                                <span class="badge rounded-pill bg-primary-subtle text-primary-emphasis">作者</span>
+                            <?php endif; ?>
+                        </div>
+                        <time class="small text-body-secondary" datetime="<?php echo $createdText; ?>" title="<?php echo $createdText; ?>">
+                            <?php echo ThemeHelper::formatTimeAgo($createdAt); ?>
+                        </time>
+                    </div>
+                    <div class="my-2 text-break">
+                        <?php if ('waiting' === $comments->status): ?>
+                            <div class="alert alert-light border rounded-4 px-3 py-2 mb-3"><?php $options->commentStatus(); ?></div>
+                        <?php endif; ?>
+                        <?php $comments->content(); ?>
+                    </div>
+                    <div class="d-flex flex-wrap align-items-center gap-3 mt-2">
+                        <span class="badge rounded-pill text-bg-light text-secondary fw-normal">#<?php echo (int) $comments->coid; ?></span>
+                        <button type="button" class="comment-reply-trigger badge rounded-pill text-bg-light text-secondary fw-normal border-0"
+                            data-coid="<?php echo (int) $comments->coid; ?>"
+                            data-author="<?php echo $author; ?>">
+                            <i class="fa-solid fa-reply me-1"></i>回复
+                        </button>
+                    </div>
+                    <?php if ($comments->children): ?>
+                        <div class="comment-children">
+                            <?php $comments->threadedComments(); ?>
+                        </div>
+                    <?php endif; ?>
+                </div>
+            </div>
+        </article>
+        <?php
+    }
+
 }

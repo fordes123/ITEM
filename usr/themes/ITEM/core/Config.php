@@ -33,6 +33,10 @@ final class ThemeConfig
             "icon" => "fa-solid fa-search-location"
         ]
     ];
+
+    //默认评论编辑器提示
+    const DEFAULT_COMMENT_HINT = '部分支持 Markdown 语法';
+
     //详情提示语
     const DEFAULT_DETAIL_TIPS = "点击查看详情";
 
