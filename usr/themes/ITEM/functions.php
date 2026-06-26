@@ -228,6 +228,16 @@ function themeConfig(Typecho_Widget_Helper_Form $form)
     );
     $form->addInput($gravatarApi->addRule('url', _t('请填入一个有效的URL')));
 
+    //天气 API
+    $weatherApi = new Typecho_Widget_Helper_Form_Element_Text(
+        'weatherApi',
+        NULL,
+        'https://edge-api.item.ink/api/weather/current?locale=zh-cn',
+        _t('天气 API 地址'),
+        _t('首页天气模块的数据接口地址。可使用 <a href="https://github.com/fordes123/cloudflare-workers-api" target="_blank">cloudflare-workers-api</a> 自托管')
+    );
+    $form->addInput($weatherApi->addRule('url', _t('请填入一个有效的URL')));
+
     // 自定义Header
     $customHeader = new Typecho_Widget_Helper_Form_Element_Textarea(
         'customHeader',

@@ -25,7 +25,8 @@
 
 <script>
     window.config = {
-        siteUrl: "<?php $this->options->siteUrl(); ?>",
+        siteUrl: <?php echo json_encode($this->options->siteUrl); ?>,
+        weatherApi: <?php echo json_encode((string) $this->options->weatherApi); ?>,
     }
     <?php if ($this->is('post')):
         global $uid;
