@@ -1,4 +1,5 @@
-FROM php:8.1.13-fpm-alpine
+# Development/debugging image only; not intended for production deployment.
+FROM php:8.4-fpm-alpine
 RUN apk update \
     && apk add tzdata --no-cache \
     && ln -sf "/usr/share/zoneinfo/$TZ" /etc/localtime \
